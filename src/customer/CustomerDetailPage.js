@@ -7,7 +7,7 @@ import * as Lodash from "lodash";
 
 import { actions } from "../redux/actions";
 
-function CustomerDetailPage({ customer, history, updateCustomer, removeCustomer }) {
+function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
   const [customerState, setCustomerState] = useState(customer);
 
   if (!customer) {
@@ -28,7 +28,6 @@ function CustomerDetailPage({ customer, history, updateCustomer, removeCustomer 
         width: "500px",
       }}
     >
-      <a onClick={() => history.goBack()}>GO BACK</a>
       <p>{JSON.stringify(customerState)}</p>
       <TextField
         label="Name"
@@ -83,7 +82,7 @@ const actionCreators = {
 };
 
 const ConnectedCustomerDetailPage = connect(mapState, actionCreators)(
-  withRouter(CustomerDetailPage)
+  CustomerDetailPage
 );
 
 export default ConnectedCustomerDetailPage;
