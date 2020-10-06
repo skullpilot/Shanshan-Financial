@@ -82,7 +82,7 @@ function PrivateApp({ customers, fetchCustomers }) {
   }
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <Switch>
         <Route path="/customers">
           <AppTopBar title="珊珊财富 - 用户列表" />
