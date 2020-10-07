@@ -13,6 +13,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -129,10 +130,13 @@ function EnhancedTable({ customers }) {
 
   return (
     <div className={classes.root}>
+      <div style={{ display: "flex", flexDirection: "row",  justifyContent: "space-between", marginBottom: "15px"}}>
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
+      <Button variant="contained" color="primary" onClick={() => history.push(`/customer`)}>Create Customer</Button>
+      </div>
       <Paper className={classes.paper}>
         <TableContainer>
           <Table

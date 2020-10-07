@@ -14,7 +14,7 @@ import { history } from "./history";
 import { store } from "./redux/store";
 import { actions } from "./redux/actions";
 import { PolicyDetailPage, PolicyListPage } from "./policy";
-import { CustomerDetailPage, CustomerListPage } from "./customer";
+import { CustomerDetailPage, CustomerListPage, CreateCustomerPage } from "./customer";
 import { BirthdayListPage } from "./birthday";
 import HomePage from "./homepage";
 
@@ -98,6 +98,15 @@ function PrivateApp({ customers, fetchCustomers }) {
             <div>
               <AppTopBar needReturn={true} />
               <CustomerDetailPage {...props} />
+            </div>
+          )}
+        />
+        <Route
+          path="/customer"
+          render={(props) => (
+            <div>
+              <AppTopBar needReturn={true} />
+              <CreateCustomerPage {...props} />
             </div>
           )}
         />

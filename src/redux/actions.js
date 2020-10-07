@@ -3,7 +3,7 @@ import { SSF_API } from "../config";
 
 export const customerConstants = {
   FETCH_CUSTOMERS_REQUEST_SUCCESS: "FETCH_CUSTOMERS_REQUEST_SUCCESS",
-  ADD_CUSTOMER_REQUEST_SUCCESS: "ADD_CUSTOMER_REQUEST_SUCCESS",
+  CREATE_CUSTOMER_REQUEST_SUCCESS: "CREATE_CUSTOMER_REQUEST_SUCCESS",
   UPDATE_CUSTOMER_REQUEST_SUCCESS: "UPDATE_CUSTOMER_REQUEST_SUCCESS",
   DELETE_CUSTOMER_REQUEST_SUCCESS: "DELETE_CUSTOMER_REQUEST_SUCCESS",
 };
@@ -12,19 +12,25 @@ export const policyConstants = {
   FETCH_POLICIES_REQUEST_SUCCESS: "FETCH_POLICIES_REQUEST_SUCCESS",
 };
 
-function addCustomer(customer, userToken) {
+function createCustomer(customer, userToken) {
+  //TODO: need to verify post api does return data (@peter)
   return (dispatch) => {
-    axios.post(`${SSF_API}/customer`, customer, {
-      headers: {
-        "x-auth-token": userToken,
-      },
-    }).then(response => {
-      dispatch({
-        type: customerConstants.ADD_CUSTOMER_REQUEST_SUCCESS,
-        payload: response.data,
-      });
-    })
+    // axios.post(`${SSF_API}/customer`, customer, {
+    //   headers: {
+    //     "x-auth-token": userToken,
+    //   },
+    // }).then(response => {
+    //   dispatch({
+    //     type: customerConstants.CREATE_CUSTOMER_REQUEST_SUCCESS,
+    //     payload: response.data,
+    //   });
+    // })
     // TODO: error handling
+
+    dispatch({
+      type: customerConstants.CREATE_CUSTOMER_REQUEST_SUCCESS,
+      payload: customer,
+    });
   }
 }
 
@@ -101,7 +107,7 @@ function fetchPolicies(userToken) {
 }
 
 export const actions = {
-  addCustomer,
+  createCustomer,
   removeCustomer,
   updateCustomer,
   fetchCustomers,
