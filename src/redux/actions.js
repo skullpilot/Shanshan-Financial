@@ -1,5 +1,6 @@
 import axios from "axios";
 import { SSF_API } from "../config";
+import { history } from "../history"
 
 export const customerConstants = {
   FETCH_CUSTOMERS_REQUEST_SUCCESS: "FETCH_CUSTOMERS_REQUEST_SUCCESS",
@@ -31,6 +32,7 @@ function createCustomer(customer, userToken) {
       type: customerConstants.CREATE_CUSTOMER_REQUEST_SUCCESS,
       payload: customer,
     });
+    history.push("/customers")
   }
 }
 
