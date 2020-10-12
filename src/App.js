@@ -76,9 +76,16 @@ function AppTopBar({ title, needReturn=false }) {
   );
 }
 
-function PrivateApp({ customers, fetchCustomers }) {
+function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies }) {
   if (!customers.isInitialized) {
     fetchCustomers(
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNzZiIsImlhdCI6MTYwMDc0ODcxNiwiZXhwIjoxNjAzMzQwNzE2fQ.1cpvPyQv6fT3qeP2FvuTRUQ4KkkO7pI_atw-KqeGzuo"
+    );
+    return <div>Loading...</div>;
+  }
+
+  if (!policies.isInitialized) {
+    fetchPolicies(
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNzZiIsImlhdCI6MTYwMDc0ODcxNiwiZXhwIjoxNjAzMzQwNzE2fQ.1cpvPyQv6fT3qeP2FvuTRUQ4KkkO7pI_atw-KqeGzuo"
     );
     return <div>Loading...</div>;
@@ -133,11 +140,13 @@ function PrivateApp({ customers, fetchCustomers }) {
 function mapState(state) {
   return {
     customers: state.customers,
+    policies: state.policies,
   };
 }
 
 const actionCreators = {
   fetchCustomers: actions.fetchCustomers,
+  fetchPolicies: actions.fetchPolicies,
 };
 
 const ConnectedPrivateApp = connect(mapState, actionCreators)(PrivateApp);

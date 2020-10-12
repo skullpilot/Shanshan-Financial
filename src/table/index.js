@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EnhancedTable({
-  customers,
+  rows,
   headCells,
   handleItemClick,
   handleCreateItem,
@@ -156,7 +156,7 @@ export default function EnhancedTable({
               headCells={headCells}
             />
             <TableBody>
-              {stableSort(customers, getComparator(order, orderBy)).map(
+              {stableSort(rows, getComparator(order, orderBy)).map(
                 (row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -168,8 +168,8 @@ export default function EnhancedTable({
                       tabIndex={-1}
                       key={row.id}
                     >
-                      {names.map((name) => (
-                        <TableCell>{row[name]}</TableCell>
+                      {names.map((name, index) => (
+                        <TableCell key={index}>{row[name]}</TableCell>
                       ))}
                     </TableRow>
                   );

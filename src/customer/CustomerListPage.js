@@ -17,7 +17,7 @@ function CustomerListPage({ customers }) {
   const history = useHistory();
 
   return (
-      <Table customers={customers} headCells={headCells} handleItemClick={(id) => history.push(`/customer/${id}`)} handleCreateItem={() => history.push(`/customer`)} createItemText="Create Customer" />
+      <Table rows={customers} headCells={headCells} handleItemClick={(id) => history.push(`/customer/${id}`)} handleCreateItem={() => history.push(`/customer`)} createItemText="Create Customer" />
   );
 }
 
