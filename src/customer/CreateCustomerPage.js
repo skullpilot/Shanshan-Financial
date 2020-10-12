@@ -147,7 +147,7 @@ function CreateCustomerPage({ createCustomer }) {
             multiline
             value={customer.notes || ''}
             onChange={setField("notes")}
-            style={{ width: "600px" }}
+            style={{ width: "50%" }} // TODO: support responsive design here, use css media (@maria)
           />
         </div>
         <Button
