@@ -7,6 +7,13 @@ import * as Lodash from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import { actions } from "../redux/actions";
 
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import AttachmentIcon from "@material-ui/icons/Attachment";
+
 const useStyles = makeStyles((theme) => ({
   TextFieldRoot: {
     "& .MuiTextField-root": {
@@ -20,7 +27,18 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(2, 5),
       width: 300,
     },
-  }
+  },
+  AttachementsRoot: {
+    "& .MuiAvatar-root": {
+      width: "30px",
+      height: "30px",
+    },
+    "& .MuiListItemAvatar-root": {
+      minWidth: "40px",
+    },
+    display: "flex",
+    justifyContent: "center",
+  },
 }));
 
 function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
@@ -37,16 +55,13 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
   });
 
   return (
-    <div className={classes.TextFieldRoot}
-    >
+    <div className={classes.TextFieldRoot}>
       <div>
-
         <TextField
           label="Name"
           variant="outlined"
           value={customerState.name}
           onChange={setField("name")}
-
         />
         <TextField
           label="Email"
@@ -57,40 +72,57 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
         <TextField
           label="Phone"
           variant="outlined"
-          value={customerState.phone || ''}
+          value={customerState.phone || ""}
           onChange={setField("phone")}
         />
         <TextField
           label="Birthday"
           variant="outlined"
-          value={customerState.birthday || ''}
+          value={customerState.birthday || ""}
           onChange={setField("birthday")}
         />
         <TextField
           label="Wechat Name"
           variant="outlined"
-          value={customerState.wechatName || ''}
+          value={customerState.wechatName || ""}
           onChange={setField("wechatName")}
         />
         <TextField
           label="wechat ID"
           variant="outlined"
-          value={customerState.wechatID || ''}
+          value={customerState.wechatID || ""}
           onChange={setField("wechatID")}
         />
         <TextField
           label="City"
           variant="outlined"
-          value={customerState.city || ''}
+          value={customerState.city || ""}
           onChange={setField("city")}
         />
 
         <TextField
           label="Address"
           variant="outlined"
-          value={customerState.address || ''}
+          value={customerState.address || ""}
           onChange={setField("address")}
         />
+      </div>
+      <h5>Attachments: </h5>
+      <div className={classes.AttachementsRoot}>
+        <List>
+          {customerState.attachments &&
+            customerState.attachments.map((attachment) => (
+              <ListItem button onClick={() => document.getElementById(attachment.fileName).click() }>
+                <ListItemAvatar>
+                  <Avatar>
+                    <AttachmentIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText secondary={attachment.fileName} />
+                <a id={attachment.fileName} href={attachment.url} download hidden></a>
+              </ListItem>
+            ))}
+        </List>
       </div>
       <div className={classes.ButtonRoot}>
         <Button
@@ -105,7 +137,7 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
           }}
         >
           Submit
-      </Button>
+        </Button>
         <Button
           variant="contained"
           color="primary"
@@ -118,7 +150,7 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
           }}
         >
           Remove
-      </Button>
+        </Button>
       </div>
     </div>
   );
@@ -132,11 +164,12 @@ function mapState(state, ownProps) {
 
 const actionCreators = {
   updateCustomer: actions.updateCustomer,
-  removeCustomer: actions.removeCustomer
+  removeCustomer: actions.removeCustomer,
 };
 
-const ConnectedCustomerDetailPage = connect(mapState, actionCreators)(
-  CustomerDetailPage
-);
+const ConnectedCustomerDetailPage = connect(
+  mapState,
+  actionCreators
+)(CustomerDetailPage);
 
 export default ConnectedCustomerDetailPage;
