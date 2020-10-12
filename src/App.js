@@ -62,6 +62,9 @@ function AppTopBar({ title, needReturn=false }) {
       <Typography variant="h6" className={classes.title}>
         {title}
       </Typography>
+      <Button color="inherit" onClick={() => history.push("/customers")}><u>Customers</u></Button>
+      <Button color="inherit" onClick={() => history.push("/policies")}><u>Policies</u></Button>
+      <Button color="inherit" onClick={() => history.push("/birthdays")}><u>Birthdays</u></Button>
       <Button color="inherit">Logout</Button>
     </Toolbar>
   );
