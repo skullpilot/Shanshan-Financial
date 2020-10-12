@@ -41,6 +41,43 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
         value={customerState.email}
         onChange={setField("email")}
       />
+      <TextField
+        label="Phone"
+        variant="outlined"
+        value={customerState.phone || ''}
+        onChange={setField("phone")}
+      />
+      <TextField
+        label="Birthday"
+        variant="outlined"
+        value={customerState.birthday || ''}
+        onChange={setField("birthday")}
+      />
+      <TextField
+        label="Wechat Name"
+        variant="outlined"
+        value={customerState.wechatName || ''}
+        onChange={setField("wechatName")}
+      />
+      <TextField
+        label="wechat ID"
+        variant="outlined"
+        value={customerState.wechatID || ''}
+        onChange={setField("wechatID")}
+      />
+      <TextField
+        label="City"
+        variant="outlined"
+        value={customerState.city || ''}
+        onChange={setField("city")}
+      />
+
+      <TextField
+        label="Address"
+        variant="outlined"
+        value={customerState.address || ''}
+        onChange={setField("address")}
+      />
       <Button
         variant="contained"
         color="primary"
