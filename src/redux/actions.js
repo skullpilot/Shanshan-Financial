@@ -1,6 +1,19 @@
 import axios from "axios";
 import { SSF_API } from "../config";
-import { history } from "../history"
+import { history } from "../history";
+
+// TODO: add authentication
+export const SESSION_REQUEST = "SESSION_REQUEST";
+export const SESSION_SUCCESS = "SESSION_SUCCESS";
+export const SESSION_FAILURE = "SESSION_FAILURE";
+export const DELETE_SESSION = "DELETE_SESSION";
+
+export const sessionConstants = {
+  CREATE_SESSION: "CREATE_SESSION",
+  CREATE_SESSION_SUCCESS: "CREATE_SESSION_SUCCESS",
+  CREATE_SESSION_FAILURE: "CREATE_SESSION_FAILURE",
+  DELETE_SESSION: "DELETE_SESSION"
+}
 
 export const customerConstants = {
   FETCH_CUSTOMERS_REQUEST_SUCCESS: "FETCH_CUSTOMERS_REQUEST_SUCCESS",
