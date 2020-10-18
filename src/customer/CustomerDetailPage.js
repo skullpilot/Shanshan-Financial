@@ -78,7 +78,7 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
       return;
     }
     const [name, type] = file.name.split(".");
-    const fileName = `client-${"1"}-${name}.${type}`; // TODO: user id
+    const fileName = `client-${customer.id}-${name}.${type}`; // TODO: user id
     const fileType = type;
     setIsUploading(true);
 
@@ -125,7 +125,7 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
       attachments.push(newFile);
   
       response = await Axios.post(
-        `${SSF_API}/customer/1`,
+        `${SSF_API}/customer/${customer.id}`,
         {
           ...customerState,
           attachments,
