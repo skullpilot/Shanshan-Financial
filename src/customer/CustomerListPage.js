@@ -10,7 +10,7 @@ const headCells = [
   { id: 'email', numeric: true, disablePadding: false, label: 'Email' },
   { id: 'wechatId', numeric: true, disablePadding: false, label: 'Wechat ID' },
   { id: 'wechatName', numeric: true, disablePadding: false, label: 'Wechat Name' },
-  { id: 'followDate', numeric: true, disablePadding: false, label: 'Followup Date' },
+  { id: 'followUpDate', numeric: true, disablePadding: false, label: 'Followup Date' },
 ];
 
 function CustomerListPage({ customers }) {

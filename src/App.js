@@ -1,6 +1,6 @@
 import React from "react";
 import { Provider, connect } from "react-redux";
-import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -14,7 +14,11 @@ import { history } from "./history";
 import { store } from "./redux/store";
 import { actions } from "./redux/actions";
 import { PolicyDetailPage, PolicyListPage } from "./policy";
-import { CustomerDetailPage, CustomerListPage, CreateCustomerPage } from "./customer";
+import {
+  CustomerDetailPage,
+  CustomerListPage,
+  CreateCustomerPage,
+} from "./customer";
 import { BirthdayListPage } from "./birthday";
 import HomePage from "./homepage";
 
@@ -30,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AppTopBar({ title, needReturn=false }) {
+function AppTopBar({ title, needReturn = false }) {
   const classes = useStyles();
 
   const content = needReturn ? (
@@ -62,9 +66,15 @@ function AppTopBar({ title, needReturn=false }) {
       <Typography variant="h6" className={classes.title}>
         {title}
       </Typography>
-      <Button color="inherit" onClick={() => history.push("/customers")}><u>Customers</u></Button>
-      <Button color="inherit" onClick={() => history.push("/policies")}><u>Policies</u></Button>
-      <Button color="inherit" onClick={() => history.push("/birthdays")}><u>Birthdays</u></Button>
+      <Button color="inherit" onClick={() => history.push("/customers")}>
+        <u>Customers</u>
+      </Button>
+      <Button color="inherit" onClick={() => history.push("/policies")}>
+        <u>Policies</u>
+      </Button>
+      <Button color="inherit" onClick={() => history.push("/birthdays")}>
+        <u>Birthdays</u>
+      </Button>
       <Button color="inherit">Logout</Button>
     </Toolbar>
   );
@@ -129,9 +139,15 @@ function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies }) {
             </div>
           )}
         />
-        <Route path="/birthdays">
-          <BirthdayListPage />
-        </Route>
+        <Route
+          path="/birthdays"
+          render={(props) => (
+            <div>
+              <AppTopBar needReturn={true} />
+              <BirthdayListPage {...props} />
+            </div>
+          )}
+        ></Route>
       </Switch>
     </div>
   );
@@ -151,7 +167,7 @@ const actionCreators = {
 
 const ConnectedPrivateApp = connect(mapState, actionCreators)(PrivateApp);
 
-// TODO: deal with non existing page/route
+// TODO: deal with non existing page/route (@maria)
 function App() {
   return (
     <Router history={history}>
