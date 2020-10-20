@@ -26,4 +26,21 @@ function policies(state = { isInitialized: false, data: [] }, action) {
     }
 }
 
-export default combineReducers({ customers, policies });
+const userToken = localStorage.getItem("user") ? localStorage.getItem("user") : null;
+
+function sessions(state = { userToken, requesting: false }, action) {
+    switch (action.type) {
+        case Actions.sessionConstants.CREATE_SESSION:
+            return { ...state, requesting: true }
+        case Actions.sessionConstants.CREATE_SESSION_SUCCESS:
+            return { userToken: action.payload, requesting: false }
+        case Actions.sessionConstants.CREATE_SESSION_FAILURE:
+            return { userToken: null, requesting: false }
+        case Actions.sessionConstants.DELETE_SESSION:
+            return { userToken: null, requesting: false }
+        default:
+            return state;
+    }
+}
+
+export default combineReducers({ customers, policies, sessions });

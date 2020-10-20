@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import * as Lodash from "lodash";
@@ -55,10 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNzZiIsImlhdCI6MTYwMDc0ODcxNiwiZXhwIjoxNjAzMzQwNzE2fQ.1cpvPyQv6fT3qeP2FvuTRUQ4KkkO7pI_atw-KqeGzuo";
-
-function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
+function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustomer }) {
   const classes = useStyles();
   const [customerState, setCustomerState] = useState(customer);
   const [file, setFile] = useState(null);
@@ -91,7 +87,7 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
         },
         {
           headers: {
-            "x-auth-token": token,
+            "x-auth-token": userToken,
           },
         }
       );
@@ -110,7 +106,7 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
         },
         {
           headers: {
-            "x-auth-token": token,
+            "x-auth-token": userToken,
           },
         }
       );
@@ -132,7 +128,7 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
         },
         {
           headers: {
-            "x-auth-token": token,
+            "x-auth-token": userToken,
           },
         }
       );
@@ -258,13 +254,14 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
           Upload File
         </Button>
       </div>
+      {/* TODO: provide loading animation here (@maria) */}
       <div className={classes.ButtonRoot}>
         <Button
           variant="contained"
           color="primary"
           style={{ marginTop: "100px", marginBottom: "200px" }}
           onClick={() => {
-            updateCustomer(customerState, token);
+            updateCustomer(customerState, userToken);
           }}
         >
           Submit
@@ -274,7 +271,7 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
           color="primary"
           style={{ marginTop: "100px", marginBottom: "200px" }}
           onClick={() => {
-            removeCustomer(customer.id, token);
+            removeCustomer(customer.id, userToken);
           }}
         >
           Remove
@@ -287,6 +284,7 @@ function CustomerDetailPage({ customer, updateCustomer, removeCustomer }) {
 function mapState(state, ownProps) {
   return {
     customer: state.customers.data[ownProps.match.params.customer_id],
+    userToken: state.sessions.userToken
   };
 }
 

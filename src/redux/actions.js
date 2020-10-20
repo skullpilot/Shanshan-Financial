@@ -121,6 +121,33 @@ function fetchPolicies(userToken) {
   };
 }
 
+function createSession(username, password) {
+  return (dispatch) => {
+    dispatch({ type: sessionConstants.CREATE_SESSION });
+
+    axios.post(`${SSF_API}/session`, {username, password}).then(
+      (res) => {
+        const { token } = res.data;
+        localStorage.setItem("user", token);
+        dispatch({ type: sessionConstants.CREATE_SESSION_SUCCESS, payload: token});
+
+        history.push("/customers");
+      },
+      (error) => {
+        dispatch({ type: sessionConstants.CREATE_SESSION_FAILURE, payload: error });
+      }
+    );
+  };
+}
+
+function deleteSession() {
+  return (dispatch) => {
+    localStorage.removeItem("user");
+    dispatch({ type: sessionConstants.DELETE_SESSION });
+    history.push("/");
+  };
+}
+
 export const actions = {
   createCustomer,
   removeCustomer,
@@ -130,4 +157,6 @@ export const actions = {
   removePolicy,
   updatePolicy,
   fetchPolicies,
+  createSession,
+  deleteSession
 };

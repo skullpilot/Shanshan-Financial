@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AppTopBar({ title, needReturn = false }) {
+function AppTopBar({ title, needReturn = false, deleteSession }) {
   const classes = useStyles();
 
   const content = needReturn ? (
@@ -51,7 +51,9 @@ function AppTopBar({ title, needReturn = false }) {
       <Typography variant="h6" className={classes.title}>
         Back
       </Typography>
-      <Button color="inherit">Logout</Button>
+      <Button color="inherit" onClick={() => deleteSession()}>
+        Logout
+      </Button>
     </Toolbar>
   ) : (
     <Toolbar>
@@ -75,7 +77,9 @@ function AppTopBar({ title, needReturn = false }) {
       <Button color="inherit" onClick={() => history.push("/birthdays")}>
         <u>Birthdays</u>
       </Button>
-      <Button color="inherit">Logout</Button>
+      <Button color="inherit" onClick={() => deleteSession()}>
+        Logout
+      </Button>
     </Toolbar>
   );
 
@@ -86,18 +90,20 @@ function AppTopBar({ title, needReturn = false }) {
   );
 }
 
-function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies }) {
+const ConnectedAppTopBar = connect(null, {
+  deleteSession: actions.deleteSession,
+})(AppTopBar);
+
+function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies, userToken }) {
+  // TODO: remove default token (@Vincent)
+  const defaultToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNzZiIsImlhdCI6MTYwMDc0ODcxNiwiZXhwIjoxNjAzMzQwNzE2fQ.1cpvPyQv6fT3qeP2FvuTRUQ4KkkO7pI_atw-KqeGzuo";
   if (!customers.isInitialized) {
-    fetchCustomers(
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNzZiIsImlhdCI6MTYwMDc0ODcxNiwiZXhwIjoxNjAzMzQwNzE2fQ.1cpvPyQv6fT3qeP2FvuTRUQ4KkkO7pI_atw-KqeGzuo"
-    );
+    fetchCustomers(userToken || defaultToken);
     return <div>Loading...</div>;
   }
 
   if (!policies.isInitialized) {
-    fetchPolicies(
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNzZiIsImlhdCI6MTYwMDc0ODcxNiwiZXhwIjoxNjAzMzQwNzE2fQ.1cpvPyQv6fT3qeP2FvuTRUQ4KkkO7pI_atw-KqeGzuo"
-    );
+    fetchPolicies(userToken || defaultToken);
     return <div>Loading...</div>;
   }
 
@@ -105,18 +111,18 @@ function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies }) {
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Switch>
         <Route path="/customers">
-          <AppTopBar title="珊珊财富 - 用户列表" />
+          <ConnectedAppTopBar title="珊珊财富 - 用户列表" />
           <CustomerListPage />
         </Route>
         <Route path="/policies">
-          <AppTopBar title="珊珊财富 - 保单列表" />
+          <ConnectedAppTopBar title="珊珊财富 - 保单列表" />
           <PolicyListPage />
         </Route>
         <Route
           path="/customer/:customer_id"
           render={(props) => (
             <div>
-              <AppTopBar needReturn={true} />
+              <ConnectedAppTopBar needReturn={true} />
               <CustomerDetailPage {...props} />
             </div>
           )}
@@ -125,7 +131,7 @@ function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies }) {
           path="/customer"
           render={(props) => (
             <div>
-              <AppTopBar needReturn={true} />
+              <ConnectedAppTopBar needReturn={true} />
               <CreateCustomerPage {...props} />
             </div>
           )}
@@ -134,7 +140,7 @@ function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies }) {
           path="/policy/:policy_id"
           render={(props) => (
             <div>
-              <AppTopBar needReturn={true} />
+              <ConnectedAppTopBar needReturn={true} />
               <PolicyDetailPage {...props} />
             </div>
           )}
@@ -143,7 +149,7 @@ function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies }) {
           path="/birthdays"
           render={(props) => (
             <div>
-              <AppTopBar needReturn={true} />
+              <ConnectedAppTopBar needReturn={true} />
               <BirthdayListPage {...props} />
             </div>
           )}
@@ -157,6 +163,7 @@ function mapState(state) {
   return {
     customers: state.customers,
     policies: state.policies,
+    userToken: state.sessions.userToken,
   };
 }
 

@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function CreateCustomerPage({ createCustomer }) {
+function CreateCustomerPage({ createCustomer, userToken }) {
     const classes = useStyles();
     const [customer, setCustomer] = useState({});
     const [customerError, setCustomerError] = useState({
@@ -160,7 +160,7 @@ function CreateCustomerPage({ createCustomer }) {
                             createCustomer({
                                 id: "100",
                                 ...customer,
-                            })
+                            }, userToken)
                         }
                     }}
                 >
@@ -171,12 +171,18 @@ function CreateCustomerPage({ createCustomer }) {
     );
 }
 
+function mapState(state, ownProps) {
+    return {
+      userToken: state.sessions.userToken
+    };
+  }
+
 const actionCreators = {
-    createCustomer: actions.createCustomer,
+    createCustomer: actions.createCustomer
 };
 
 const ConnectedCreateCustomerPage = connect(
-    null,
+    mapState,
     actionCreators
 )(CreateCustomerPage);
 
