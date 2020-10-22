@@ -12,15 +12,17 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { actions } from "../redux/actions";
 import { SSF_API } from "../config";
 
 // TODO: (@peter) this page will generate following warnings:
 /*
-Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of Transition which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
+Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed
+ an instance of Transition which is inside StrictMode. Instead, add a ref directly to the
+  element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
 */
 
 const useStyles = makeStyles((theme) => ({
@@ -50,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+    color: "#fff",
   },
 }));
 
@@ -73,6 +75,7 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
     if (!file) {
       return;
     }
+    console.log("file upload");
     const [name, type] = file.name.split(".");
     const fileName = `client-${customer.id}-${name}.${type}`; // TODO: user id
     const fileType = type;
@@ -92,7 +95,7 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
         }
       );
       const { signedRequest, url } = response.data.data.returnData;
-  
+
       // TODO: need to verify if override and create behave similarily here(@peter)
       // I think if we need to implement delete, we only need to delete metadata in customer
       // no need to delete the actual file in S3, but this dependes the behavoir of S3 put api here
@@ -110,16 +113,14 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
           },
         }
       );
-  
-      const attachments = customerState.attachments
-        ? customerState.attachments
-        : [];
-  
+
+      const attachments = customerState.attachments ? customerState.attachments : [];
+
       // TODO: need to deal with duplicate files (@maria/@peter)
       const newFile = { url, fileName };
-  
+
       attachments.push(newFile);
-  
+
       response = await Axios.post(
         `${SSF_API}/customer/${customer.id}`,
         {
@@ -133,8 +134,8 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
         }
       );
 
-      setCustomerState(prevState => ({...prevState, attachments}))
-    } catch(err) {
+      setCustomerState((prevState) => ({ ...prevState, attachments }));
+    } catch (err) {
       // TODO: better error handling here(@maria)
       console.log(err);
     } finally {
@@ -203,24 +204,14 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
         <List>
           {customerState.attachments &&
             customerState.attachments.map((attachment) => (
-              <ListItem
-                button
-                onClick={() =>
-                  document.getElementById(attachment.fileName).click()
-                }
-              >
+              <ListItem button onClick={() => document.getElementById(attachment.fileName).click()}>
                 <ListItemAvatar>
                   <Avatar>
                     <AttachmentIcon />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText secondary={attachment.fileName} />
-                <a
-                  id={attachment.fileName}
-                  href={attachment.url}
-                  download
-                  hidden
-                ></a>
+                <a id={attachment.fileName} href={attachment.url} download hidden></a>
               </ListItem>
             ))}
         </List>
@@ -255,6 +246,7 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
         </Button>
       </div>
       {/* TODO: provide loading animation here (@maria) */}
+
       <div className={classes.ButtonRoot}>
         <Button
           variant="contained"
@@ -284,7 +276,7 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
 function mapState(state, ownProps) {
   return {
     customer: state.customers.data[ownProps.match.params.customer_id],
-    userToken: state.sessions.userToken
+    userToken: state.sessions.userToken,
   };
 }
 
@@ -293,9 +285,6 @@ const actionCreators = {
   removeCustomer: actions.removeCustomer,
 };
 
-const ConnectedCustomerDetailPage = connect(
-  mapState,
-  actionCreators
-)(CustomerDetailPage);
+const ConnectedCustomerDetailPage = connect(mapState, actionCreators)(CustomerDetailPage);
 
 export default ConnectedCustomerDetailPage;
