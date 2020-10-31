@@ -116,10 +116,11 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
 
       const attachments = customerState.attachments ? customerState.attachments : [];
 
-      // TODO: need to deal with duplicate files (@maria/@peter)
       const newFile = { url, fileName };
 
-      attachments.push(newFile);
+      if (!Lodash.find(attachments, (user) => user.fileName === newFile.fileName)) {
+        attachments.push(newFile);
+      }
 
       response = await Axios.post(
         `${SSF_API}/customer/${customer.id}`,
