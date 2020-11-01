@@ -13,7 +13,7 @@ import ArrowBack from "@material-ui/icons/ArrowBack";
 import { history } from "./history";
 import { store } from "./redux/store";
 import { actions } from "./redux/actions";
-import { PolicyDetailPage, PolicyListPage } from "./policy";
+import { PolicyDetailPage, PolicyListPage, CreatePolicyPage } from "./policy";
 import {
   CustomerDetailPage,
   CustomerListPage,
@@ -146,10 +146,19 @@ function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies, userTo
           )}
         />
         <Route
-          path="/birthdays"
+          path="/policy"
           render={(props) => (
             <div>
               <ConnectedAppTopBar needReturn={true} />
+              <CreatePolicyPage {...props} />
+            </div>
+          )}
+        />
+        <Route
+          path="/birthdays"
+          render={(props) => (
+            <div>
+              <ConnectedAppTopBar title="珊珊财富 - 生日列表" />
               <BirthdayListPage {...props} />
             </div>
           )}
