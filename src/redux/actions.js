@@ -52,11 +52,22 @@ function createCustomer(customer, userToken) {
 
 function removeCustomer(customerId, userToken) {
   return (dispatch) => {
-    dispatch({
-      type: customerConstants.DELETE_CUSTOMER_REQUEST_SUCCESS,
-      payload: customerId,
-    });
-    // TODO: need to update api (@peter)
+    axios
+      .delete(`${SSF_API}/customer/${customerId}`, {
+        headers: {
+          "x-auth-token": userToken,
+        },
+      })
+      .then((res) => {
+        dispatch({
+          type: customerConstants.DELETE_CUSTOMER_REQUEST_SUCCESS,
+          payload: customerId,
+        });
+        history.push("/customers");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 }
 
@@ -65,7 +76,7 @@ function updateCustomer(customer, userToken) {
     dispatch({
       type: customerConstants.UPDATE_CUSTOMER_REQUEST,
     });
-    // TODO: need to update api (@peter)
+
     axios
       .post(`${SSF_API}/customer/${customer.id}`, customer, {
         headers: {
@@ -131,12 +142,18 @@ function createSession(username, password) {
       (res) => {
         const { token } = res.data;
         localStorage.setItem("user", token);
-        dispatch({ type: sessionConstants.CREATE_SESSION_SUCCESS, payload: token });
+        dispatch({
+          type: sessionConstants.CREATE_SESSION_SUCCESS,
+          payload: token,
+        });
 
         history.push("/customers");
       },
       (error) => {
-        dispatch({ type: sessionConstants.CREATE_SESSION_FAILURE, payload: error });
+        dispatch({
+          type: sessionConstants.CREATE_SESSION_FAILURE,
+          payload: error,
+        });
       }
     );
   };
