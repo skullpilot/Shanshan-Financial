@@ -157,9 +157,15 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
           onChange={setField("name")}
         />
         <TextField
+          label="Gender"
+          variant="outlined"
+          value={customerState.gender || ""}
+          onChange={setField("gender")}
+        />
+        <TextField
           label="Email"
           variant="outlined"
-          value={customerState.email}
+          value={customerState.email || ""}
           onChange={setField("email")}
         />
         <TextField
@@ -192,12 +198,36 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
           value={customerState.city || ""}
           onChange={setField("city")}
         />
-
         <TextField
           label="Address"
           variant="outlined"
           value={customerState.address || ""}
           onChange={setField("address")}
+        />
+        <TextField
+          label="Postcode"
+          variant="outlined"
+          value={customerState.postcode || ""}
+          onChange={setField("postcode")}
+        />
+        <TextField
+          label="Occupation"
+          variant="outlined"
+          value={customerState.occupation || ""}
+          onChange={setField("occupation")}
+        />
+        <TextField
+          label="CustomerSegment"
+          variant="outlined"
+          value={customerState.customerSegment || ""}
+          onChange={setField("customerSegment")}
+        />
+        {/* TODO: @maria Make it similar to create customer page */}
+        <TextField
+          label="Notes"
+          variant="outlined"
+          value={customerState.notes || ""}
+          onChange={setField("notes")}
         />
       </div>
       <h5>Attachments: </h5>
@@ -217,7 +247,6 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
             ))}
         </List>
       </div>
-      {/* TODO: better font here (@maria) */}
       <p>Selected File To Upload: {file && file.name}</p>
       <div>
         <label style={{ margin: "10px" }}>

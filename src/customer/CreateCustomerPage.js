@@ -8,7 +8,6 @@ import Validator from "validator";
 import { actions } from "../redux/actions";
 import MaskedInput from "react-text-mask";
 import PropTypes from "prop-types";
-import { positions } from "@material-ui/system";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -174,6 +173,12 @@ function CreateCustomerPage({ createCustomer, userToken }) {
             onChange={setField("name")}
           />
           <TextField
+            label="Gender"
+            variant="outlined"
+            value={customer.gender || ""}
+            onChange={setField("gender")}
+          />
+          <TextField
             label="Email"
             variant="outlined"
             value={customer.email || ""}
@@ -226,6 +231,24 @@ function CreateCustomerPage({ createCustomer, userToken }) {
             variant="outlined"
             value={customer.address || ""}
             onChange={setField("address")}
+          />
+          <TextField
+            label="Postcode"
+            variant="outlined"
+            value={customer.postcode || ""}
+            onChange={setField("postcode")}
+          />
+          <TextField
+            label="Occupation"
+            variant="outlined"
+            value={customer.occupation || ""}
+            onChange={setField("occupation")}
+          />
+          <TextField
+            label="CustomerSegment"
+            variant="outlined"
+            value={customer.customerSegment || ""}
+            onChange={setField("customerSegment")}
           />
         </div>
 
