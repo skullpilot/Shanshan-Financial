@@ -275,8 +275,6 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
           Upload File
         </Button>
       </div>
-      {/* TODO: provide loading animation here (@maria) */}
-
       <div className={classes.ButtonRoot}>
         <Button
           variant="contained"
@@ -284,6 +282,8 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
           style={{ marginTop: "100px", marginBottom: "200px" }}
           onClick={() => {
             updateCustomer(customerState, userToken);
+
+            //TODO: Maria
           }}
         >
           Submit

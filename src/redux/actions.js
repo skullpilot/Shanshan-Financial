@@ -12,13 +12,14 @@ export const sessionConstants = {
   CREATE_SESSION: "CREATE_SESSION",
   CREATE_SESSION_SUCCESS: "CREATE_SESSION_SUCCESS",
   CREATE_SESSION_FAILURE: "CREATE_SESSION_FAILURE",
-  DELETE_SESSION: "DELETE_SESSION"
-}
+  DELETE_SESSION: "DELETE_SESSION",
+};
 
 export const customerConstants = {
   FETCH_CUSTOMERS_REQUEST_SUCCESS: "FETCH_CUSTOMERS_REQUEST_SUCCESS",
   CREATE_CUSTOMER_REQUEST_SUCCESS: "CREATE_CUSTOMER_REQUEST_SUCCESS",
   UPDATE_CUSTOMER_REQUEST_SUCCESS: "UPDATE_CUSTOMER_REQUEST_SUCCESS",
+  UPDATE_CUSTOMER_REQUEST: "UPDATE_CUSTOMER_REQUEST",
   DELETE_CUSTOMER_REQUEST_SUCCESS: "DELETE_CUSTOMER_REQUEST_SUCCESS",
 };
 
@@ -45,8 +46,8 @@ function createCustomer(customer, userToken) {
       type: customerConstants.CREATE_CUSTOMER_REQUEST_SUCCESS,
       payload: customer,
     });
-    history.push("/customers")
-  }
+    history.push("/customers");
+  };
 }
 
 function removeCustomer(customerId, userToken) {
@@ -56,28 +57,29 @@ function removeCustomer(customerId, userToken) {
       payload: customerId,
     });
     // TODO: need to update api (@peter)
-  }
+  };
 }
 
 function updateCustomer(customer, userToken) {
   return (dispatch) => {
     dispatch({
-      type: customerConstants.UPDATE_CUSTOMER_REQUEST_SUCCESS,
-      payload: customer,
+      type: customerConstants.UPDATE_CUSTOMER_REQUEST,
     });
     // TODO: need to update api (@peter)
-    // axios.post(`${SSF_API}/customer/${customer}`, customer, {
-    //   headers: {
-    //     "x-auth-token": userToken,
-    //   },
-    // }).then(response => {
-    //   dispatch({
-    //     type: customerConstants.UPDATE_CUSTOMER_REQUEST_SUCCESS,
-    //     payload: response.data,
-    //   });
-    // })
+    axios
+      .post(`${SSF_API}/customer/${customer.id}`, customer, {
+        headers: {
+          "x-auth-token": userToken,
+        },
+      })
+      .then((response) => {
+        dispatch({
+          type: customerConstants.UPDATE_CUSTOMER_REQUEST_SUCCESS,
+          payload: response.data,
+        });
+      });
     // TODO: error handling
-  }
+  };
 }
 
 function fetchCustomers(userToken) {
@@ -94,7 +96,7 @@ function fetchCustomers(userToken) {
           payload: response.data,
         });
       });
-      // TODO: error handling
+    // TODO: error handling
   };
 }
 
@@ -125,11 +127,11 @@ function createSession(username, password) {
   return (dispatch) => {
     dispatch({ type: sessionConstants.CREATE_SESSION });
 
-    axios.post(`${SSF_API}/session`, {username, password}).then(
+    axios.post(`${SSF_API}/session`, { username, password }).then(
       (res) => {
         const { token } = res.data;
         localStorage.setItem("user", token);
-        dispatch({ type: sessionConstants.CREATE_SESSION_SUCCESS, payload: token});
+        dispatch({ type: sessionConstants.CREATE_SESSION_SUCCESS, payload: token });
 
         history.push("/customers");
       },
@@ -158,5 +160,5 @@ export const actions = {
   updatePolicy,
   fetchPolicies,
   createSession,
-  deleteSession
+  deleteSession,
 };
