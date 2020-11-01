@@ -25,6 +25,10 @@ export const customerConstants = {
 
 export const policyConstants = {
   FETCH_POLICIES_REQUEST_SUCCESS: "FETCH_POLICIES_REQUEST_SUCCESS",
+  CREATE_POLICY_REQUEST_SUCCESS: "CREATE_POLICY_REQUEST_SUCCESS",
+  UPDATE_POLICY_REQUEST_SUCCESS: "UPDATE_POLICY_REQUEST_SUCCESS",
+  UPDATE_POLICY_REQUEST: "UPDATE_POLICY_REQUEST",
+  DELETE_POLICY_REQUEST_SUCCESS: "DELETE_POLICY_REQUEST_SUCCESS",
 };
 
 function createCustomer(customer, userToken) {
@@ -111,11 +115,58 @@ function fetchCustomers(userToken) {
   };
 }
 
-function addPolicy() {}
+function createPolicy(policy, userToken) {
+  //TODO: need to update once create policy api is fixed
+  return (dispatch) => {
+    dispatch({
+      type: policyConstants.CREATE_POLICY_REQUEST_SUCCESS,
+      payload: policy,
+    });
+    history.push("/policies");
+  };
+}
 
-function removePolicy() {}
+function removePolicy(policyId, userToken) {
+  return (dispatch) => {
+    axios.delete(`${SSF_API}/policy/${policyId}`, {
+      headers: {
+        "x-auth-token": userToken,
+      },
+    })
+    .then((res) => {
+      dispatch({
+        type: policyConstants.DELETE_POLICY_REQUEST_SUCCESS,
+        payload: policyId,
+      });
+      history.push("/policies");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+}
 
-function updatePolicy() {}
+function updatePolicy(policy, userToken) {
+  return (dispatch) => {
+    dispatch({
+      type: policyConstants.UPDATE_POLICY_REQUEST,
+    });
+
+    axios
+      .post(`${SSF_API}/policy/${policy.id}`, policy, {
+        headers: {
+          "x-auth-token": userToken,
+        },
+      })
+      .then((response) => {
+        dispatch({
+          type: policyConstants.UPDATE_POLICY_REQUEST_SUCCESS,
+          payload: policy, // TODO: need to change back to response.data when api is refactored
+        });
+      });
+    // TODO: error handling
+  };
+}
 
 function fetchPolicies(userToken) {
   return (dispatch) => {
@@ -172,7 +223,7 @@ export const actions = {
   removeCustomer,
   updateCustomer,
   fetchCustomers,
-  addPolicy,
+  createPolicy,
   removePolicy,
   updatePolicy,
   fetchPolicies,

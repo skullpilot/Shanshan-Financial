@@ -27,6 +27,18 @@ function policies(state = { isInitialized: false, data: [] }, action) {
   switch (action.type) {
     case Actions.policyConstants.FETCH_POLICIES_REQUEST_SUCCESS:
       return { isInitialized: true, data: Lodash.keyBy(action.payload, "id") };
+    case Actions.policyConstants.CREATE_POLICY_REQUEST_SUCCESS:
+      return { ...state, data: { ...state.data, [action.payload.id]: action.payload } };
+    case Actions.policyConstants.UPDATE_POLICY_REQUEST_SUCCESS:
+        return {
+          ...state,
+          data: { ...state.data, [action.payload.id]: action.payload },
+          isUpdatingPolicy: false,
+        };
+      case Actions.policyConstants.UPDATE_POLICY_REQUEST:
+        return { ...state, isUpdatingPolicy: true };
+    case Actions.policyConstants.DELETE_POLICY_REQUEST_SUCCESS:
+      return { ...state, data: { ...Lodash.omit(state.data, [action.payload]) } };
     default:
       return state;
   }

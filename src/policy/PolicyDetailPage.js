@@ -55,7 +55,7 @@ function PolicyDetailPage({ policy, insurer, owner, userToken, updatePolicy, rem
         <TextField
           label="Company"
           variant="outlined"
-          value={policyState.company}
+          value={policyState.company || ""}
           onChange={setField("company")}
         />
         <TextField
@@ -171,10 +171,10 @@ function PolicyDetailPage({ policy, insurer, owner, userToken, updatePolicy, rem
 
 function mapState(state, ownProps) {
   const policy = state.policies.data[ownProps.match.params.policy_id];
-  const insurer = policy.insurerId
+  const insurer = (policy && policy.insurerId)
     ? state.customers.data[policy.insurerId]
     : null;
-  const owner = policy.ownerId ? state.customers.data[policy.ownerId] : null;
+  const owner = (policy && policy.ownerId) ? state.customers.data[policy.ownerId] : null;
   return {
     policy,
     insurer,
