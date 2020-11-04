@@ -4,19 +4,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import * as Lodash from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
-import Axios from "axios";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import AttachmentIcon from "@material-ui/icons/Attachment";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import Backdrop from "@material-ui/core/Backdrop";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { actions } from "../redux/actions";
-import { SSF_API } from "../config";
 
 // TODO: (@peter) this page will generate following warnings:
 /*
@@ -38,29 +27,12 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(2, 5),
       width: 300,
     },
-  },
-  AttachementsRoot: {
-    "& .MuiAvatar-root": {
-      width: "30px",
-      height: "30px",
-    },
-    "& .MuiListItemAvatar-root": {
-      minWidth: "40px",
-    },
-    display: "flex",
-    justifyContent: "center",
-  },
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: "#fff",
-  },
+  }
 }));
 
 function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustomer }) {
   const classes = useStyles();
   const [customerState, setCustomerState] = useState(customer);
-  const [file, setFile] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
 
   if (!customer) {
     return <div>Can't find the customer information</div>;
@@ -71,84 +43,8 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
     setCustomerState((prevState) => ({ ...prevState, [field]: value }));
   });
 
-  const handleFileUpload = async () => {
-    if (!file) {
-      return;
-    }
-    console.log("file upload");
-    const [name, type] = file.name.split(".");
-    const fileName = `client-${customer.id}-${name}.${type}`; // TODO: user id
-    const fileType = type;
-    setIsUploading(true);
-
-    try {
-      let response = await Axios.post(
-        `${SSF_API}/attachment`,
-        {
-          fileName: fileName,
-          fileType: fileType,
-        },
-        {
-          headers: {
-            "x-auth-token": userToken,
-          },
-        }
-      );
-      const { signedRequest, url } = response.data.data.returnData;
-
-      // TODO: need to verify if override and create behave similarily here(@peter)
-      // I think if we need to implement delete, we only need to delete metadata in customer
-      // no need to delete the actual file in S3, but this dependes the behavoir of S3 put api here
-      response = await Axios.put(
-        signedRequest,
-        file,
-        {
-          headers: {
-            "Content-Type": fileType,
-          },
-        },
-        {
-          headers: {
-            "x-auth-token": userToken,
-          },
-        }
-      );
-
-      const attachments = customerState.attachments ? customerState.attachments : [];
-
-      const newFile = { url, fileName };
-
-      if (!Lodash.find(attachments, (user) => user.fileName === newFile.fileName)) {
-        attachments.push(newFile);
-      }
-
-      response = await Axios.post(
-        `${SSF_API}/customer/${customer.id}`,
-        {
-          ...customerState,
-          attachments,
-        },
-        {
-          headers: {
-            "x-auth-token": userToken,
-          },
-        }
-      );
-
-      setCustomerState((prevState) => ({ ...prevState, attachments }));
-    } catch (err) {
-      // TODO: better error handling here(@maria)
-      console.log(err);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
   return (
     <div className={classes.TextFieldRoot}>
-      <Backdrop className={classes.backdrop} open={isUploading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
       <div>
         <TextField
           label="Name"
@@ -229,51 +125,6 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
           value={customerState.notes || ""}
           onChange={setField("notes")}
         />
-      </div>
-      <h5>Attachments: </h5>
-      <div className={classes.AttachementsRoot}>
-        <List>
-          {customerState.attachments &&
-            customerState.attachments.map((attachment) => (
-              <ListItem button onClick={() => document.getElementById(attachment.fileName).click()}>
-                <ListItemAvatar>
-                  <Avatar>
-                    <AttachmentIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText secondary={attachment.fileName} />
-                <a id={attachment.fileName} href={attachment.url} download hidden></a>
-              </ListItem>
-            ))}
-        </List>
-      </div>
-      <p>Selected File To Upload: {file && file.name}</p>
-      <div>
-        <label style={{ margin: "10px" }}>
-          <input
-            style={{ display: "none" }}
-            type="file"
-            onChange={(event) => setFile(event.target.files[0])}
-          />
-          <Button
-            color="default"
-            variant="contained"
-            component="span"
-            startIcon={<AttachmentIcon />}
-          >
-            Choose File
-          </Button>
-        </label>
-        <Button
-          color="default"
-          variant="contained"
-          component="span"
-          startIcon={<CloudUploadIcon />}
-          style={{ margin: "10px" }}
-          onClick={() => handleFileUpload()}
-        >
-          Upload File
-        </Button>
       </div>
       <div className={classes.ButtonRoot}>
         <Button

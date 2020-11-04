@@ -61,4 +61,22 @@ function sessions(state = { userToken, requesting: false }, action) {
   }
 }
 
-export default combineReducers({ customers, policies, sessions });
+function attachments( state = { isInitialized: false, requesting: false, data: [] }, action) {
+  switch (action.type) {
+    case Actions.attachmentConstants.FETCH_ATTACHMENTS_REQUEST_SUCCESS:
+      return { isInitialized: true, data: action.payload };
+    case Actions.attachmentConstants.CREATE_ATTACHMENT:
+      return { ...state, requesting: true };
+    case Actions.attachmentConstants.CREATE_ATTACHMENT_SUCCESS:
+      const isUpdate = Lodash.find(state.data, (attachment) => attachment.fileName === action.payload.fileName)
+      return isUpdate ? { ...state, requesting: false } : { ...state, requesting: false, data: state.data.concat([action.payload]) };
+    case Actions.attachmentConstants.DELETE_ATTACHMENT:
+      return state;
+    case Actions.attachmentConstants.DELETE_ATTACHMENT_SUCCESS:
+      return { ...state, requesting: false, data: state.data.filter(attachment => attachment.fileName !== action.payload.fileName) };
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({ customers, policies, sessions, attachments });

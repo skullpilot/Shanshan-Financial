@@ -31,6 +31,14 @@ export const policyConstants = {
   DELETE_POLICY_REQUEST_SUCCESS: "DELETE_POLICY_REQUEST_SUCCESS",
 };
 
+export const attachmentConstants = {
+  FETCH_ATTACHMENTS_REQUEST_SUCCESS: "FETCH_ATTACHMENTS_REQUEST_SUCCESS",
+  CREATE_ATTACHMENT: "CREATE_ATTACHMENT",
+  CREATE_ATTACHMENT_SUCCESS: "CREATE_ATTACHMENT_SUCCESS",
+  DELETE_ATTACHMENT: "DELETE_ATTACHMENT",
+  DELETE_ATTACHMENT_SUCCESS: "DELETE_ATTACHMENT_SUCCESS"
+}
+
 function createCustomer(customer, userToken) {
   //TODO: need to verify post api does return data (@peter)
   return (dispatch) => {
@@ -218,6 +226,63 @@ function deleteSession() {
   };
 }
 
+function createAttachment(file, userToken) {
+  return async (dispatch) => {
+    dispatch({ type: attachmentConstants.CREATE_ATTACHMENT });
+
+    const [fileName, fileType] = file.name.split(".");
+
+    try {
+      let response = await axios.post(
+        `${SSF_API}/attachment`,
+        {
+          fileName,
+          fileType
+        },
+        {
+          headers: {
+            "x-auth-token": userToken,
+          },
+        }
+      );
+      const { signedRequest, url } = response.data.data.returnData;
+
+      // TODO: need to verify if override and create behave similarily here(@peter)
+      // I think if we need to implement delete, we only need to delete metadata in customer
+      // no need to delete the actual file in S3, but this dependes the behavoir of S3 put api here
+      response = await axios.put(
+        signedRequest,
+        file,
+        {
+          headers: {
+            "Content-Type": fileType,
+          },
+        },
+        {
+          headers: {
+            "x-auth-token": userToken,
+          },
+        }
+      );
+
+      dispatch({ type: attachmentConstants.CREATE_ATTACHMENT_SUCCESS, payload: { url, fileName } });
+    } catch (err) {
+      // TODO: better error handling here(@maria)
+      console.log(err);
+    }
+  }
+}
+
+function deleteAttachment(filename, userToken) {
+
+}
+
+function fetchAttachments(userToken) {
+  return (dispatch) => {
+    dispatch({ type: attachmentConstants.FETCH_ATTACHMENTS_REQUEST_SUCCESS, payload: [] });
+  }
+}
+
 export const actions = {
   createCustomer,
   removeCustomer,
@@ -229,4 +294,7 @@ export const actions = {
   fetchPolicies,
   createSession,
   deleteSession,
+  createAttachment,
+  deleteAttachment,
+  fetchAttachments
 };

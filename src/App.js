@@ -94,16 +94,19 @@ const ConnectedAppTopBar = connect(null, {
   deleteSession: actions.deleteSession,
 })(AppTopBar);
 
-function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies, userToken }) {
-  // TODO: remove default token (@Vincent)
-  const defaultToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNzZiIsImlhdCI6MTYwMDc0ODcxNiwiZXhwIjoxNjAzMzQwNzE2fQ.1cpvPyQv6fT3qeP2FvuTRUQ4KkkO7pI_atw-KqeGzuo";
+function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies, attachments, fetchAttachments, userToken }) {
   if (!customers.isInitialized) {
-    fetchCustomers(userToken || defaultToken);
+    fetchCustomers(userToken);
     return <div>Loading...</div>;
   }
 
   if (!policies.isInitialized) {
-    fetchPolicies(userToken || defaultToken);
+    fetchPolicies(userToken);
+    return <div>Loading...</div>;
+  }
+
+  if (!attachments.isInitialized) {
+    fetchAttachments(userToken)
     return <div>Loading...</div>;
   }
 
@@ -172,6 +175,7 @@ function mapState(state) {
   return {
     customers: state.customers,
     policies: state.policies,
+    attachments: state.attachments,
     userToken: state.sessions.userToken,
   };
 }
@@ -179,6 +183,7 @@ function mapState(state) {
 const actionCreators = {
   fetchCustomers: actions.fetchCustomers,
   fetchPolicies: actions.fetchPolicies,
+  fetchAttachments: actions.fetchAttachments
 };
 
 const ConnectedPrivateApp = connect(mapState, actionCreators)(PrivateApp);
