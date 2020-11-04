@@ -40,25 +40,19 @@ export const attachmentConstants = {
 }
 
 function createCustomer(customer, userToken) {
-  //TODO: need to verify post api does return data (@peter)
   return (dispatch) => {
-    // axios.post(`${SSF_API}/customer`, customer, {
-    //   headers: {
-    //     "x-auth-token": userToken,
-    //   },
-    // }).then(response => {
-    //   dispatch({
-    //     type: customerConstants.CREATE_CUSTOMER_REQUEST_SUCCESS,
-    //     payload: response.data,
-    //   });
-    // })
+    axios.post(`${SSF_API}/customer`, customer, {
+      headers: {
+        "x-auth-token": userToken,
+      },
+    }).then(response => {
+      dispatch({
+        type: customerConstants.CREATE_CUSTOMER_REQUEST_SUCCESS,
+        payload: response.data,
+      });
+      history.push("/customers");
+    })
     // TODO: error handling
-
-    dispatch({
-      type: customerConstants.CREATE_CUSTOMER_REQUEST_SUCCESS,
-      payload: customer,
-    });
-    history.push("/customers");
   };
 }
 

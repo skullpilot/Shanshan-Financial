@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import * as Lodash from "lodash";
 import Validator from "validator";
 import { actions } from "../redux/actions";
-import MaskedInput from "react-text-mask";
-import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,26 +42,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
-function TextMaskCustom(props) {
-  const { inputRef, ...other } = props;
-
-  return (
-    <MaskedInput
-      {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={["(", /\d/, /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/]}
-      placeholderChar={"\u2000"}
-      showMask
-    />
-  );
-}
-
-TextMaskCustom.propTypes = {
-  inputRef: PropTypes.func.isRequired,
-};
 
 function CreateCustomerPage({ createCustomer, userToken }) {
   const classes = useStyles();
@@ -192,9 +170,6 @@ function CreateCustomerPage({ createCustomer, userToken }) {
             variant="outlined"
             value={customer.phone || ""}
             onChange={setField("phone")}
-            InputProps={{
-              inputComponent: TextMaskCustom,
-            }}
           />
 
           <TextField
@@ -268,13 +243,7 @@ function CreateCustomerPage({ createCustomer, userToken }) {
           style={{ marginTop: "100px", marginBottom: "200px" }}
           onClick={() => {
             if (validate()) {
-              createCustomer(
-                {
-                  id: "100",
-                  ...customer,
-                },
-                userToken
-              );
+              createCustomer(customer, userToken);
             }
           }}
         >
@@ -285,7 +254,7 @@ function CreateCustomerPage({ createCustomer, userToken }) {
   );
 }
 
-function mapState(state, ownProps) {
+function mapState(state) {
   return {
     userToken: state.sessions.userToken,
   };
