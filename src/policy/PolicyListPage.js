@@ -6,11 +6,11 @@ import Table from "../table";
 
 const headCells = [
     { id: 'insuredName', disablePadding: true, label: 'Insured Name' },
-    { id: 'company', disablePadding: false, label: 'Phone Number' },
-    { id: 'plan', disablePadding: false, label: 'Email' },
-    { id: 'policyNumber', disablePadding: false, label: 'Wechat ID' },
-    { id: 'ownerName', disablePadding: false, label: 'Wechat Name' },
-    { id: 'policyDate', disablePadding: false, label: 'Followup Date' },
+    { id: 'company', disablePadding: false, label: 'Company' },
+    { id: 'plan', disablePadding: false, label: 'Plan' },
+    { id: 'policyNumber', disablePadding: false, label: 'Policy Number' },
+    { id: 'ownerName', disablePadding: false, label: 'Owner Name' },
+    { id: 'policyDate', disablePadding: false, label: 'Policy Date' },
 ];
 
 function PolicyListPage({ policies }) {
