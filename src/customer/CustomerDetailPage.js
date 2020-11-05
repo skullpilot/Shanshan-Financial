@@ -49,8 +49,20 @@ function CustomerDetailPage({ customer, userToken, updateCustomer, removeCustome
         <TextField
           label="Name"
           variant="outlined"
-          value={customerState.name}
+          value={customerState.name || ""}
           onChange={setField("name")}
+        />
+        <TextField
+          label="FirstName"
+          variant="outlined"
+          value={customerState.firstName || ""}
+          onChange={setField("firstName")}
+        />
+        <TextField
+          label="LastName"
+          variant="outlined"
+          value={customerState.lastName || ""}
+          onChange={setField("lastName")}
         />
         <TextField
           label="Gender"

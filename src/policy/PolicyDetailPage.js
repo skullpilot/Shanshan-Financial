@@ -4,7 +4,10 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import * as Lodash from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
-import Axios from "axios";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
 
 import { actions } from "../redux/actions";
 
@@ -22,14 +25,22 @@ const useStyles = makeStyles((theme) => ({
       width: 300,
     },
   },
+  formControl: {
+    margin: theme.spacing(1),
+    width: 300,
+  }
 }));
 
-function PolicyDetailPage({ policy, insurer, owner, userToken, updatePolicy, removePolicy }) {
+function PolicyDetailPage({ policy, customers, userToken, updatePolicy, removePolicy }) {
   const classes = useStyles();
   const [policyState, setpolicyState] = useState(policy);
 
   if (!policy) {
     return <div>Can't find the policy information</div>;
+  }
+
+  const createMenuItems = () => {
+    return Object.values(customers.data).map(customer => <MenuItem value={customer.id} key={customer.id}>{`${customer.firstName}, ${customer.lastName}`}</MenuItem>);
   }
 
   const setField = Lodash.curry((field, event) => {
@@ -41,13 +52,16 @@ function PolicyDetailPage({ policy, insurer, owner, userToken, updatePolicy, rem
     <div className={classes.TextFieldRoot}>
       <h3>Insurer Information</h3>
       <div>
-        <TextField
-          disabled
-          label="Name"
-          variant="outlined"
-          value={policyState.name}
-          onChange={setField("name")}
-        />
+        <FormControl className={classes.formControl}>
+          <InputLabel id="insurerId-label">Insurer</InputLabel>
+          <Select
+            labelId="insurerId-label"
+            value={policyState.insurerId || ""}
+            onChange={setField("insurerId")}
+          >
+            {createMenuItems()}
+          </Select>
+        </FormControl>
       </div>
 
       <h3>Policy Information</h3>
@@ -134,13 +148,16 @@ function PolicyDetailPage({ policy, insurer, owner, userToken, updatePolicy, rem
 
       <h3>Owner Information</h3>
       <div>
-        <TextField
-          disabled
-          label="Owner Name"
-          variant="outlined"
-          value={policyState.ownerName}
-          onChange={setField("ownerName")}
-        />
+        <FormControl className={classes.formControl}>
+          <InputLabel id="ownerId-label">Owner</InputLabel>
+          <Select
+            labelId="ownerId-label"
+            value={policyState.ownerId || ""}
+            onChange={setField("ownerId")}
+          >
+            {createMenuItems()}
+          </Select>
+        </FormControl>
       </div>
 
       <div className={classes.ButtonRoot}>
@@ -171,14 +188,10 @@ function PolicyDetailPage({ policy, insurer, owner, userToken, updatePolicy, rem
 
 function mapState(state, ownProps) {
   const policy = state.policies.data[ownProps.match.params.policy_id];
-  const insurer = (policy && policy.insurerId)
-    ? state.customers.data[policy.insurerId]
-    : null;
-  const owner = (policy && policy.ownerId) ? state.customers.data[policy.ownerId] : null;
+
   return {
     policy,
-    insurer,
-    owner,
+    customers: state.customers,
     userToken: state.sessions.userToken,
   };
 }

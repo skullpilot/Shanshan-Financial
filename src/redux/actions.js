@@ -273,7 +273,7 @@ function deleteAttachment(filename, userToken) {
 
 function fetchAttachments(userToken) {
   return (dispatch) => {
-    dispatch({ type: attachmentConstants.FETCH_ATTACHMENTS_REQUEST_SUCCESS, payload: [] });
+    setTimeout(() => dispatch({ type: attachmentConstants.FETCH_ATTACHMENTS_REQUEST_SUCCESS, payload: [] }), 1000)
   }
 }
 

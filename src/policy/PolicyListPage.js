@@ -5,25 +5,31 @@ import { useHistory } from "react-router-dom";
 import Table from "../table";
 
 const headCells = [
-    { id: 'insuredName', disablePadding: true, label: 'Insured Name' },
+    { id: 'insurerLegalName', disablePadding: true, label: 'Insurer Legal Name' },
+    { id: 'ownerLegalName', disablePadding: false, label: 'Owner Legal Name' },
     { id: 'company', disablePadding: false, label: 'Company' },
     { id: 'plan', disablePadding: false, label: 'Plan' },
     { id: 'policyNumber', disablePadding: false, label: 'Policy Number' },
-    { id: 'ownerName', disablePadding: false, label: 'Owner Name' },
     { id: 'policyDate', disablePadding: false, label: 'Policy Date' },
 ];
 
-function PolicyListPage({ policies }) {
+function PolicyListPage({ policies, customers }) {
     const history = useHistory();
 
+    const enhancedPolicies = policies.map(policy => {
+      const insurerLegalName = `${customers[policy.insurerId].firstName}, ${customers[policy.insurerId].lastName}`
+      const ownerLegalName = `${customers[policy.ownerId].firstName}, ${customers[policy.ownerId].lastName}`
+      return { ...policy, insurerLegalName, ownerLegalName}
+    })
     return (
-        <Table rows={policies} headCells={headCells} handleItemClick={(id) => history.push(`/policy/${id}`)} handleCreateItem={() => history.push(`/policy`)} createItemText="Create Policy" />
+        <Table rows={enhancedPolicies} headCells={headCells} handleItemClick={(id) => history.push(`/policy/${id}`)} handleCreateItem={() => history.push(`/policy`)} createItemText="Create Policy" />
     );
 }
 
 function mapState(state) {
   return {
     policies: Object.values(state.policies.data),
+    customers: state.customers.data,
   };
 }
 
