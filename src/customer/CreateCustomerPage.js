@@ -50,6 +50,7 @@ function CreateCustomerPage({ createCustomer, userToken }) {
     firstName: { helperText: "", error: false },
     lastName: { helperText: "", error: false },
     email: { helperText: "", error: false },
+    phone: { helperText: "", error: false },
   });
 
   const setField = Lodash.curry((field, event) => {
@@ -100,16 +101,22 @@ function CreateCustomerPage({ createCustomer, userToken }) {
         email: { helperText: "", error: false },
       }));
     }
-    if (customer.phone && customer.phone.length !== 10) {
+
+    function validatePhone(p) {
+      const phoneRe = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
+      return phoneRe.test(p);
+    }
+
+    if (!customer.phone || !validatePhone(customer.phone)) {
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
-        email: { helperText: "Please provide email", error: true },
+        phone: { helperText: "Please provide phone", error: true },
       }));
     } else {
       setCustomerError((prevState) => ({
         ...prevState,
-        email: { helperText: "", error: false },
+        phone: { helperText: "", error: false },
       }));
     }
 
@@ -170,6 +177,9 @@ function CreateCustomerPage({ createCustomer, userToken }) {
             variant="outlined"
             value={customer.phone || ""}
             onChange={setField("phone")}
+            error={customerError.phone.error}
+            helperText={customerError.phone.helperText}
+            required
           />
 
           <TextField
