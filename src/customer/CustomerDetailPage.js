@@ -4,12 +4,9 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import * as Lodash from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
-import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-
 import { actions } from "../redux/actions";
+import Relationships from "./Relationships";
 
 // TODO: (@peter) this page will generate following warnings:
 /*
@@ -41,74 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Relationships({ relationships, updateRelationships, menuItems }) {
-  const classes = useStyles();
-
-  const relationshipItems = relationships && relationships.map((relationship, index) => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <IconButton
-          aria-label="delete"
-          onClick={() => {
-            relationships.splice(index, 1);
-            updateRelationships(relationships);
-          }}
-        >
-          <DeleteIcon fontSize="inherit" />
-        </IconButton>
-        <TextField
-          label="Relation Name"
-          variant="outlined"
-          value={relationship.name || ""}
-          onChange={(event) => {
-            relationships[index].name = event.target.value;
-            updateRelationships(relationships);
-          }}
-        />
-        <span>:</span>
-        <Select
-          value={relationship.value}
-          className={classes.SelectInput}
-          onChange={(event) => {
-            relationships[index].value = event.target.value;
-            updateRelationships(relationships);
-          }}
-        >
-          {menuItems}
-        </Select>
-      </div>
-    );
-  });
-
-  return (
-    <div>
-      {relationshipItems}
-      <Button
-        variant="contained"
-        onClick={() =>
-          updateRelationships(relationships.concat([{ name: "", value: "" }]))
-        }
-      >
-        Add Relationship
-      </Button>
-    </div>
-  );
-}
-
-function CustomerDetailPage({
-  customerId,
-  customers,
-  userToken,
-  updateCustomer,
-  removeCustomer,
-}) {
+function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, removeCustomer }) {
   const customer = customers.data[customerId];
 
   const classes = useStyles();
@@ -234,6 +164,7 @@ function CustomerDetailPage({
         }
         menuItems={menuItems}
       />
+
       <div className={classes.ButtonRoot}>
         <Button
           variant="contained"
@@ -275,9 +206,6 @@ const actionCreators = {
   removeCustomer: actions.removeCustomer,
 };
 
-const ConnectedCustomerDetailPage = connect(
-  mapState,
-  actionCreators
-)(CustomerDetailPage);
+const ConnectedCustomerDetailPage = connect(mapState, actionCreators)(CustomerDetailPage);
 
 export default ConnectedCustomerDetailPage;
