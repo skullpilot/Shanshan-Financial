@@ -51,6 +51,7 @@ function CreateCustomerPage({ createCustomer, userToken }) {
     lastName: { helperText: "", error: false },
     email: { helperText: "", error: false },
     phone: { helperText: "", error: false },
+    gender: { helperText: "", error: false },
   });
 
   const setField = Lodash.curry((field, event) => {
@@ -120,6 +121,19 @@ function CreateCustomerPage({ createCustomer, userToken }) {
       }));
     }
 
+    if (!customer.gender) {
+      isValid = false;
+      setCustomerError((prevState) => ({
+        ...prevState,
+        gender: { helperText: "Please provide gender", error: true },
+      }));
+    } else {
+      setCustomerError((prevState) => ({
+        ...prevState,
+        gender: { helperText: "", error: false },
+      }));
+    }
+
     return isValid;
   };
 
@@ -161,7 +175,10 @@ function CreateCustomerPage({ createCustomer, userToken }) {
             label="Gender"
             variant="outlined"
             value={customer.gender || ""}
+            error={customerError.gender.error}
+            helperText={customerError.gender.helperText}
             onChange={setField("gender")}
+            required
           />
           <TextField
             label="Email"

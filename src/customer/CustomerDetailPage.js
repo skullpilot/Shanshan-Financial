@@ -50,6 +50,7 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
     lastName: { helperText: "", error: false },
     email: { helperText: "", error: false },
     phone: { helperText: "", error: false },
+    gender: { helperText: "", error: false },
   });
 
   if (!customer) {
@@ -128,6 +129,19 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
       }));
     }
 
+    if (!customerState.gender) {
+      isValid = false;
+      setCustomerError((prevState) => ({
+        ...prevState,
+        gender: { helperText: "Please provide gender", error: true },
+      }));
+    } else {
+      setCustomerError((prevState) => ({
+        ...prevState,
+        gender: { helperText: "", error: false },
+      }));
+    }
+
     return isValid;
   };
 
@@ -164,6 +178,9 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
           variant="outlined"
           value={customerState.gender || ""}
           onChange={setField("gender")}
+          error={customerError.gender.error}
+          helperText={customerError.gender.helperText}
+          required
         />
         <TextField
           label="Email"
