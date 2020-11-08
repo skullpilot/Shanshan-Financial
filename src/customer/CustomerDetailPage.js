@@ -5,6 +5,9 @@ import Button from "@material-ui/core/Button";
 import * as Lodash from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Validator from "validator";
 import { actions } from "../redux/actions";
 import Relationships from "./Relationships";
 
@@ -40,9 +43,14 @@ const useStyles = makeStyles((theme) => ({
 
 function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, removeCustomer }) {
   const customer = customers.data[customerId];
-
   const classes = useStyles();
   const [customerState, setCustomerState] = useState(customer);
+  const [customerError, setCustomerError] = useState({
+    firstName: { helperText: "", error: false },
+    lastName: { helperText: "", error: false },
+    email: { helperText: "", error: false },
+    phone: { helperText: "", error: false },
+  });
 
   if (!customer) {
     return <div>Can't find the customer information</div>;
@@ -60,6 +68,69 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
     setCustomerState((prevState) => ({ ...prevState, [field]: value }));
   });
 
+  const validate = () => {
+    let isValid = true;
+
+    if (!customerState.firstName) {
+      isValid = false;
+      setCustomerError((prevState) => ({
+        ...prevState,
+        firstName: { helperText: "Please provide first name", error: true },
+      }));
+    } else {
+      setCustomerError((prevState) => ({
+        ...prevState,
+        firstName: { helperText: "", error: false },
+      }));
+    }
+
+    if (!customerState.lastName) {
+      isValid = false;
+      setCustomerError((prevState) => ({
+        ...prevState,
+        lastName: { helperText: "Please provide last name", error: true },
+      }));
+    } else {
+      setCustomerError((prevState) => ({
+        ...prevState,
+        lastName: { helperText: "", error: false },
+      }));
+    }
+
+    if (!customerState.email || !Validator.isEmail(customerState.email)) {
+      isValid = false;
+      setCustomerError((prevState) => ({
+        ...prevState,
+        email: { helperText: "Please provide email", error: true },
+      }));
+    } else {
+      setCustomerError((prevState) => ({
+        ...prevState,
+        email: { helperText: "", error: false },
+      }));
+    }
+
+    function validatePhone(p) {
+      const phoneRe = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
+      return phoneRe.test(p);
+    }
+
+    if (!customerState.phone || !validatePhone(customerState.phone)) {
+      isValid = false;
+      setCustomerError((prevState) => ({
+        ...prevState,
+        phone: { helperText: "Please provide phone", error: true },
+      }));
+    } else {
+      setCustomerError((prevState) => ({
+        ...prevState,
+        phone: { helperText: "", error: false },
+      }));
+    }
+
+    return isValid;
+  };
+
   return (
     <div className={classes.TextFieldRoot}>
       <h5>Customer Detail Info</h5>
@@ -75,12 +146,18 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
           variant="outlined"
           value={customerState.firstName || ""}
           onChange={setField("firstName")}
+          error={customerError.firstName.error}
+          helperText={customerError.firstName.helperText}
+          required
         />
         <TextField
           label="LastName"
           variant="outlined"
           value={customerState.lastName || ""}
           onChange={setField("lastName")}
+          error={customerError.lastName.error}
+          helperText={customerError.lastName.helperText}
+          required
         />
         <TextField
           label="Gender"
@@ -93,12 +170,18 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
           variant="outlined"
           value={customerState.email || ""}
           onChange={setField("email")}
+          error={customerError.email.error}
+          helperText={customerError.email.helperText}
+          required
         />
         <TextField
           label="Phone"
           variant="outlined"
           value={customerState.phone || ""}
           onChange={setField("phone")}
+          error={customerError.phone.error}
+          helperText={customerError.phone.helperText}
+          required
         />
         <TextField
           label="Birthday"
@@ -171,9 +254,9 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
           color="primary"
           style={{ marginTop: "100px", marginBottom: "200px" }}
           onClick={() => {
-            updateCustomer(customerState, userToken);
-
-            //TODO: Maria
+            if (validate()) {
+              updateCustomer(customerState, userToken);
+            }
           }}
         >
           Submit
