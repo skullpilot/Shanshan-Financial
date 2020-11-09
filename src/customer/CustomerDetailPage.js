@@ -39,6 +39,22 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
+  label: {
+    [theme.breakpoints.up("md")]: {
+      "& .MuiTextField-root": {
+        position: "relative",
+        width: "50%",
+      },
+    },
+  },
+  label: {
+    [theme.breakpoints.up("md")]: {
+      "& .MuiTextField-root": {
+        position: "relative",
+        width: "50%",
+      },
+    },
+  },
 }));
 
 function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, removeCustomer }) {
@@ -267,10 +283,13 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
           value={customerState.customerSegment || ""}
           onChange={setField("customerSegment")}
         />
-        {/* TODO: @maria Make it similar to create customer page */}
+      </div>
+      <div className={classes.label}>
         <TextField
           label="Notes"
           variant="outlined"
+          rows={6}
+          multiline
           value={customerState.notes || ""}
           onChange={setField("notes")}
         />
