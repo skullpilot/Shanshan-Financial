@@ -51,6 +51,7 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
     email: { helperText: "", error: false },
     phone: { helperText: "", error: false },
     gender: { helperText: "", error: false },
+    birthday: { helperText: "", error: false },
   });
 
   if (!customer) {
@@ -142,6 +143,18 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
       }));
     }
 
+    if (customerState.birthday && Validator.isAfter(customerState.birthday)) {
+      isValid = false;
+      setCustomerError((prevState) => ({
+        ...prevState,
+        birthday: { helperText: "Please provide correct birthday", error: true },
+      }));
+    } else {
+      setCustomerError((prevState) => ({
+        ...prevState,
+        birthday: { helperText: "", error: false },
+      }));
+    }
     return isValid;
   };
 
@@ -201,10 +214,16 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
           required
         />
         <TextField
+          type="date"
           label="Birthday"
           variant="outlined"
           value={customerState.birthday || ""}
           onChange={setField("birthday")}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          error={customerError.birthday.error}
+          helperText={customerError.birthday.helperText}
         />
         <TextField
           label="Wechat Name"

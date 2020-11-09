@@ -52,6 +52,7 @@ function CreateCustomerPage({ createCustomer, userToken }) {
     email: { helperText: "", error: false },
     phone: { helperText: "", error: false },
     gender: { helperText: "", error: false },
+    birthday: { helperText: "", error: false },
   });
 
   const setField = Lodash.curry((field, event) => {
@@ -134,6 +135,19 @@ function CreateCustomerPage({ createCustomer, userToken }) {
       }));
     }
 
+    if (customer.birthday && Validator.isAfter(customer.birthday)) {
+      isValid = false;
+      setCustomerError((prevState) => ({
+        ...prevState,
+        birthday: { helperText: "Please provide correct birthday", error: true },
+      }));
+    } else {
+      setCustomerError((prevState) => ({
+        ...prevState,
+        birthday: { helperText: "", error: false },
+      }));
+    }
+
     return isValid;
   };
 
@@ -208,6 +222,8 @@ function CreateCustomerPage({ createCustomer, userToken }) {
             InputLabelProps={{
               shrink: true,
             }}
+            error={customerError.birthday.error}
+            helperText={customerError.birthday.helperText}
           />
           <TextField
             label="Wechat Name"
