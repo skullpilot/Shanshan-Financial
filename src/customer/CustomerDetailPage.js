@@ -5,11 +5,11 @@ import Button from "@material-ui/core/Button";
 import * as Lodash from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
 import Validator from "validator";
 import { actions } from "../redux/actions";
 import Relationships from "./Relationships";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 // TODO: (@peter) this page will generate following warnings:
 /*
@@ -302,7 +302,11 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
         }
         menuItems={menuItems}
       />
-
+      <div>
+        <Backdrop className={classes.backdrop} open={customers.isUpdatingCustomer}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
       <div className={classes.ButtonRoot}>
         <Button
           variant="contained"
