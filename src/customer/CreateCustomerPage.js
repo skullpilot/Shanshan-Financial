@@ -3,9 +3,11 @@ import { connect } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
+import MenuItem from "@material-ui/core/MenuItem";
 import * as Lodash from "lodash";
 import Validator from "validator";
 import { actions } from "../redux/actions";
+import Relationships from "./Relationships";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CreateCustomerPage({ createCustomer, userToken }) {
+function CreateCustomerPage({ createCustomer, userToken, customers }) {
   const classes = useStyles();
   const [customer, setCustomer] = useState({});
   const [customerError, setCustomerError] = useState({
@@ -54,6 +56,13 @@ function CreateCustomerPage({ createCustomer, userToken }) {
     gender: { helperText: "", error: false },
     birthday: { helperText: "", error: false },
   });
+
+  const menuItems = Object.values(customers.data).map((customer) => (
+    <MenuItem
+      value={customer.id}
+      key={customer.id}
+    >{`${customer.firstName}, ${customer.lastName}`}</MenuItem>
+  ));
 
   const setField = Lodash.curry((field, event) => {
     const { name, value } = event.target;
@@ -280,6 +289,15 @@ function CreateCustomerPage({ createCustomer, userToken }) {
             onChange={setField("notes")}
           />
         </div>
+        <h5>Relationships</h5>
+        <Relationships
+          relationships={customer.relationships || []}
+          updateRelationships={(relationships) =>
+            setCustomer((prev) => ({ ...prev, relationships }))
+          }
+          menuItems={menuItems}
+        />
+
         <Button
           variant="contained"
           color="primary"
@@ -297,8 +315,9 @@ function CreateCustomerPage({ createCustomer, userToken }) {
   );
 }
 
-function mapState(state) {
+function mapState(state, ownProps) {
   return {
+    customers: state.customers,
     userToken: state.sessions.userToken,
   };
 }
