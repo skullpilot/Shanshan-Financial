@@ -32,10 +32,10 @@ function customers(
   }
 }
 
-function policies(state = { isInitialized: false, data: {} }, action) {
+function policies(state = { isInitialized: false, data: {}, isUpdatingPolicy: false }, action) {
   switch (action.type) {
     case Actions.policyConstants.FETCH_POLICIES_REQUEST_SUCCESS:
-      return { isInitialized: true, data: Lodash.keyBy(action.payload, "id") };
+      return { ...state, isInitialized: true, data: Lodash.keyBy(action.payload, "id") };
     case Actions.policyConstants.CREATE_POLICY_REQUEST_SUCCESS:
       return {
         ...state,

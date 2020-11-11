@@ -4,11 +4,12 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import * as Lodash from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
-
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { actions } from "../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,10 +29,10 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     width: 300,
-  }
+  },
 }));
 
-function PolicyDetailPage({ policy, customers, userToken, updatePolicy, removePolicy }) {
+function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy, removePolicy }) {
   const classes = useStyles();
   const [policyState, setpolicyState] = useState(policy);
 
@@ -40,8 +41,13 @@ function PolicyDetailPage({ policy, customers, userToken, updatePolicy, removePo
   }
 
   const createMenuItems = () => {
-    return Object.values(customers.data).map(customer => <MenuItem value={customer.id} key={customer.id}>{`${customer.firstName}, ${customer.lastName}`}</MenuItem>);
-  }
+    return Object.values(customers.data).map((customer) => (
+      <MenuItem
+        value={customer.id}
+        key={customer.id}
+      >{`${customer.firstName}, ${customer.lastName}`}</MenuItem>
+    ));
+  };
 
   const setField = Lodash.curry((field, event) => {
     const { name, value } = event.target;
@@ -159,7 +165,11 @@ function PolicyDetailPage({ policy, customers, userToken, updatePolicy, removePo
           </Select>
         </FormControl>
       </div>
-
+      <div>
+        <Backdrop className={classes.backdrop} open={policies.isUpdatingPolicy}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
       <div className={classes.ButtonRoot}>
         <Button
           variant="contained"
@@ -191,6 +201,7 @@ function mapState(state, ownProps) {
 
   return {
     policy,
+    policies: state.policies,
     customers: state.customers,
     userToken: state.sessions.userToken,
   };
@@ -201,9 +212,6 @@ const actionCreators = {
   removePolicy: actions.removePolicy,
 };
 
-const ConnectedPolicyDetailPage = connect(
-  mapState,
-  actionCreators
-)(PolicyDetailPage);
+const ConnectedPolicyDetailPage = connect(mapState, actionCreators)(PolicyDetailPage);
 
 export default ConnectedPolicyDetailPage;
