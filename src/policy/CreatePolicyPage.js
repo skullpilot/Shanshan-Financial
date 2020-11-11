@@ -13,6 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
+import validator from "validator";
 
 const useStyles = makeStyles((theme) => ({
   TextFieldRoot: {
@@ -45,6 +46,8 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
     faceAmount: { helperText: "", error: false },
     applicationDate: { helperText: "", error: false },
     policyDate: { helperText: "", error: false },
+    insurerId: { helperText: "", error: false },
+    ownerId: { helperText: "", error: false },
   });
   const createMenuItems = () => {
     return Object.values(customers.data).map((customer) => (
@@ -62,16 +65,16 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
   const validate = () => {
     let isValid = true;
 
-    if (!policy.name) {
+    if (!policy.insurerId) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
-        name: { helperText: "Please provide policy name", error: true },
+        insurerId: { helperText: "Please select an insurer", error: true },
       }));
     } else {
       setPolicyError((prevState) => ({
         ...prevState,
-        name: { helperText: "", error: false },
+        insurerId: { helperText: "", error: false },
       }));
     }
 
@@ -127,11 +130,11 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       }));
     }
 
-    if (!policy.applicationDate) {
+    if (!policy.applicationDate || validator.isBefore(policy.applicationDate, (new Date(new Date() - 24 * 60 * 60 * 1000)).toString())) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
-        applicationDate: { helperText: "Please provide policy application date", error: true },
+        applicationDate: { helperText: "Please provide a valid policy application date", error: true },
       }));
     } else {
       setPolicyError((prevState) => ({
@@ -140,16 +143,28 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       }));
     }
 
-    if (!policy.policyDate) {
+    if (!policy.policyDate || validator.isBefore(policy.policyDate, (new Date(new Date() - 24 * 60 * 60 * 1000)).toString())) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
-        policyDate: { helperText: "Please provide policy date", error: true },
+        policyDate: { helperText: "Please provide a valid policy start date", error: true },
       }));
     } else {
       setPolicyError((prevState) => ({
         ...prevState,
         policyDate: { helperText: "", error: false },
+      }));
+    }
+    if (!policy.ownerId) {
+      isValid = false;
+      setPolicyError((prevState) => ({
+        ...prevState,
+        ownerId: { helperText: "Please select an owner", error: true },
+      }));
+    } else {
+      setPolicyError((prevState) => ({
+        ...prevState,
+        ownerId: { helperText: "", error: false },
       }));
     }
 
@@ -166,12 +181,11 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
             labelId="insurerId-label"
             value={policy.insurerId || ""}
             onChange={setField("insurerId")}
+            error={policyError.insurerId.error}
           >
             {createMenuItems()}
           </Select>
         </FormControl>
-
-        <TextField label="Name" value={policy.name || ""} onChange={setField("name")} required />
       </div>
 
       <h3>Policy Information</h3>
@@ -181,6 +195,8 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           variant="outlined"
           value={policy.company || ""}
           onChange={setField("company")}
+          error={policyError.company.error}
+          helperText={policyError.company.helperText}
           required
         />
         <TextField
@@ -188,6 +204,8 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           variant="outlined"
           value={policy.policyNumber || ""}
           onChange={setField("policyNumber")}
+          error={policyError.policyNumber.error}
+          helperText={policyError.policyNumber.helperText}
           required
         />
         <TextField
@@ -195,13 +213,18 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           variant="outlined"
           value={policy.plan || ""}
           onChange={setField("plan")}
+          error={policyError.plan.error}
+          helperText={policyError.plan.helperText}
           required
         />
         <TextField
+          type="number"
           label="Face Amount"
           variant="outlined"
           value={policy.faceAmount || ""}
           onChange={setField("faceAmount")}
+          error={policyError.faceAmount.error}
+          helperText={policyError.faceAmount.helperText}
           required
         />
         <TextField
@@ -210,6 +233,8 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           variant="outlined"
           value={policy.applicationDate || ""}
           onChange={setField("applicationDate")}
+          error={policyError.applicationDate.error}
+          helperText={policyError.applicationDate.helperText}
           InputLabelProps={{
             shrink: true,
           }}
@@ -221,6 +246,8 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           variant="outlined"
           value={policy.policyDate || ""}
           onChange={setField("policyDate")}
+          error={policyError.policyDate.error}
+          helperText={policyError.policyDate.helperText}
           InputLabelProps={{
             shrink: true,
           }}
@@ -282,12 +309,11 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
             labelId="ownerId-label"
             value={policy.ownerId || ""}
             onChange={setField("ownerId")}
+            error={policyError.ownerId.error}
           >
             {createMenuItems()}
           </Select>
         </FormControl>
-
-        <TextField disabled label="Owner Name" variant="outlined" value={""} />
       </div>
 
       <div className={classes.ButtonRoot}>
