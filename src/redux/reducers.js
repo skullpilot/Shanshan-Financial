@@ -32,7 +32,10 @@ function customers(
   }
 }
 
-function policies(state = { isInitialized: false, data: {}, isUpdatingPolicy: false }, action) {
+function policies(
+  state = { isInitialized: false, data: {}, isUpdatingPolicy: false, isCreatingPolicy: false },
+  action
+) {
   switch (action.type) {
     case Actions.policyConstants.FETCH_POLICIES_REQUEST_SUCCESS:
       return { ...state, isInitialized: true, data: Lodash.keyBy(action.payload, "id") };
@@ -40,7 +43,7 @@ function policies(state = { isInitialized: false, data: {}, isUpdatingPolicy: fa
       return {
         ...state,
         data: { ...state.data, [action.payload.id]: action.payload },
-        isUpdatingPolicy: false,
+        isCreatingPolicy: false,
       };
     case Actions.policyConstants.UPDATE_POLICY_REQUEST_SUCCESS:
       return {
@@ -50,6 +53,8 @@ function policies(state = { isInitialized: false, data: {}, isUpdatingPolicy: fa
       };
     case Actions.policyConstants.UPDATE_POLICY_REQUEST:
       return { ...state, isUpdatingPolicy: true };
+    case Actions.policyConstants.CREATE_POLICY_REQUEST:
+      return { ...state, isCreatingPolicy: true };
     case Actions.policyConstants.DELETE_POLICY_REQUEST_SUCCESS:
       return { ...state, data: { ...Lodash.omit(state.data, [action.payload]) } };
     default:

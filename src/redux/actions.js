@@ -26,6 +26,7 @@ export const customerConstants = {
 
 export const policyConstants = {
   FETCH_POLICIES_REQUEST_SUCCESS: "FETCH_POLICIES_REQUEST_SUCCESS",
+  CREATE_POLICY_REQUEST: "CREATE_POLICY_REQUEST",
   CREATE_POLICY_REQUEST_SUCCESS: "CREATE_POLICY_REQUEST_SUCCESS",
   UPDATE_POLICY_REQUEST_SUCCESS: "UPDATE_POLICY_REQUEST_SUCCESS",
   UPDATE_POLICY_REQUEST: "UPDATE_POLICY_REQUEST",
@@ -124,13 +125,27 @@ function fetchCustomers(userToken) {
 }
 
 function createPolicy(policy, userToken) {
-  //TODO: need to update once create policy api is fixed
   return (dispatch) => {
     dispatch({
-      type: policyConstants.CREATE_POLICY_REQUEST_SUCCESS,
-      payload: policy,
+      type: policyConstants.CREATE_POLICY_REQUEST,
     });
-    history.push("/policies");
+
+    axios
+      .post(`${SSF_API}/policy`, policy, {
+        headers: {
+          "x-auth-token": userToken,
+        },
+      })
+      .then((response) => {
+        dispatch({
+          type: policyConstants.CREATE_POLICY_REQUEST_SUCCESS,
+          payload: response.data,
+        });
+        history.push("/policies");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 }
 

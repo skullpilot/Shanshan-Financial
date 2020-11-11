@@ -9,6 +9,10 @@ import Axios from "axios";
 import { actions } from "../redux/actions";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
 
 const useStyles = makeStyles((theme) => ({
   TextFieldRoot: {
@@ -24,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
       width: 300,
     },
   },
+  formControl: {
+    margin: theme.spacing(1),
+    width: 300,
+  },
 }));
 
 function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
@@ -38,7 +46,14 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
     applicationDate: { helperText: "", error: false },
     policyDate: { helperText: "", error: false },
   });
-
+  const createMenuItems = () => {
+    return Object.values(customers.data).map((customer) => (
+      <MenuItem
+        value={customer.id}
+        key={customer.id}
+      >{`${customer.firstName}, ${customer.lastName}`}</MenuItem>
+    ));
+  };
   const setField = Lodash.curry((field, event) => {
     const { name, value } = event.target;
     setPolicy((prevState) => ({ ...prevState, [field]: value }));
@@ -137,19 +152,26 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
         policyDate: { helperText: "", error: false },
       }));
     }
+
+    return isValid;
   };
 
   return (
     <div className={classes.TextFieldRoot}>
       <h3>Insurer Information</h3>
       <div>
-        <TextField
-          disabled
-          label="Name"
-          value={policy.name || ""}
-          onChange={setField("name")}
-          required
-        />
+        <FormControl className={classes.formControl}>
+          <InputLabel id="insurerId-label">Insurer</InputLabel>
+          <Select
+            labelId="insurerId-label"
+            value={policy.insurerId || ""}
+            onChange={setField("insurerId")}
+          >
+            {createMenuItems()}
+          </Select>
+        </FormControl>
+
+        <TextField label="Name" value={policy.name || ""} onChange={setField("name")} required />
       </div>
 
       <h3>Policy Information</h3>
@@ -248,12 +270,23 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
         />
       </div>
       <div>
-        <Backdrop className={classes.backdrop} open={policies.isUpdatingPolicy || false}>
+        <Backdrop className={classes.backdrop} open={policies.isCreatingPolicy}>
           <CircularProgress color="inherit" />
         </Backdrop>
       </div>
       <h3>Owner Information</h3>
       <div>
+        <FormControl className={classes.formControl}>
+          <InputLabel id="ownerId-label">Insurer</InputLabel>
+          <Select
+            labelId="ownerId-label"
+            value={policy.ownerId || ""}
+            onChange={setField("ownerId")}
+          >
+            {createMenuItems()}
+          </Select>
+        </FormControl>
+
         <TextField disabled label="Owner Name" variant="outlined" value={""} />
       </div>
 
@@ -274,6 +307,7 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
     </div>
   );
 }
+
 function mapState(state) {
   return {
     customers: state.customers,
