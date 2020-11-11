@@ -7,6 +7,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Axios from "axios";
 
 import { actions } from "../redux/actions";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   TextFieldRoot: {
@@ -24,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CreatePolicyPage({ createPolicy, customer, userToken }) {
+function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
   const classes = useStyles();
   const [policy, setPolicy] = useState({});
   const [policyError, setPolicyError] = useState({
@@ -245,7 +247,11 @@ function CreatePolicyPage({ createPolicy, customer, userToken }) {
           onChange={setField("notes")}
         />
       </div>
-
+      <div>
+        <Backdrop className={classes.backdrop} open={policies.isUpdatingPolicy || false}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
       <h3>Owner Information</h3>
       <div>
         <TextField disabled label="Owner Name" variant="outlined" value={""} />
@@ -270,8 +276,9 @@ function CreatePolicyPage({ createPolicy, customer, userToken }) {
 }
 function mapState(state) {
   return {
-    customer: state.customers.data,
+    customers: state.customers,
     userToken: state.sessions.userToken,
+    policies: state.policies,
   };
 }
 

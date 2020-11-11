@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 Relationships.propTypes = {
   relationships: propTypes.array,
   updateRelationships: propTypes.func,
-  menuItems: propTypes.object,
+  menuItems: propTypes.array,
 };
 function Relationships({ relationships, updateRelationships, menuItems }) {
   const classes = useStyles();

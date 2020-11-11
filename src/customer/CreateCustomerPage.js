@@ -8,6 +8,8 @@ import * as Lodash from "lodash";
 import Validator from "validator";
 import { actions } from "../redux/actions";
 import Relationships from "./Relationships";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -297,7 +299,11 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
           }
           menuItems={menuItems}
         />
-
+        <div>
+          <Backdrop className={classes.backdrop} open={customers.isCreatingCustomer}>
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        </div>
         <Button
           variant="contained"
           color="primary"
@@ -315,7 +321,7 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
   );
 }
 
-function mapState(state, ownProps) {
+function mapState(state) {
   return {
     customers: state.customers,
     userToken: state.sessions.userToken,

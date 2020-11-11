@@ -17,6 +17,7 @@ export const sessionConstants = {
 
 export const customerConstants = {
   FETCH_CUSTOMERS_REQUEST_SUCCESS: "FETCH_CUSTOMERS_REQUEST_SUCCESS",
+  CREATE_CUSTOMER_REQUEST: "CREATE_CUSTOMER_REQUEST",
   CREATE_CUSTOMER_REQUEST_SUCCESS: "CREATE_CUSTOMER_REQUEST_SUCCESS",
   UPDATE_CUSTOMER_REQUEST_SUCCESS: "UPDATE_CUSTOMER_REQUEST_SUCCESS",
   UPDATE_CUSTOMER_REQUEST: "UPDATE_CUSTOMER_REQUEST",
@@ -36,22 +37,27 @@ export const attachmentConstants = {
   CREATE_ATTACHMENT: "CREATE_ATTACHMENT",
   CREATE_ATTACHMENT_SUCCESS: "CREATE_ATTACHMENT_SUCCESS",
   DELETE_ATTACHMENT: "DELETE_ATTACHMENT",
-  DELETE_ATTACHMENT_SUCCESS: "DELETE_ATTACHMENT_SUCCESS"
-}
+  DELETE_ATTACHMENT_SUCCESS: "DELETE_ATTACHMENT_SUCCESS",
+};
 
 function createCustomer(customer, userToken) {
   return (dispatch) => {
-    axios.post(`${SSF_API}/customer`, customer, {
-      headers: {
-        "x-auth-token": userToken,
-      },
-    }).then(response => {
-      dispatch({
-        type: customerConstants.CREATE_CUSTOMER_REQUEST_SUCCESS,
-        payload: response.data,
+    dispatch({
+      type: customerConstants.CREATE_CUSTOMER_REQUEST,
+    });
+    axios
+      .post(`${SSF_API}/customer`, customer, {
+        headers: {
+          "x-auth-token": userToken,
+        },
+      })
+      .then((response) => {
+        dispatch({
+          type: customerConstants.CREATE_CUSTOMER_REQUEST_SUCCESS,
+          payload: response.data,
+        });
+        history.push("/customers");
       });
-      history.push("/customers");
-    })
     // TODO: error handling
   };
 }
@@ -130,22 +136,23 @@ function createPolicy(policy, userToken) {
 
 function removePolicy(policyId, userToken) {
   return (dispatch) => {
-    axios.delete(`${SSF_API}/policy/${policyId}`, {
-      headers: {
-        "x-auth-token": userToken,
-      },
-    })
-    .then((res) => {
-      dispatch({
-        type: policyConstants.DELETE_POLICY_REQUEST_SUCCESS,
-        payload: policyId,
+    axios
+      .delete(`${SSF_API}/policy/${policyId}`, {
+        headers: {
+          "x-auth-token": userToken,
+        },
+      })
+      .then((res) => {
+        dispatch({
+          type: policyConstants.DELETE_POLICY_REQUEST_SUCCESS,
+          payload: policyId,
+        });
+        history.push("/policies");
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      history.push("/policies");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
+  };
 }
 
 function updatePolicy(policy, userToken) {
@@ -231,7 +238,7 @@ function createAttachment(file, userToken) {
         `${SSF_API}/attachment`,
         {
           fileName,
-          fileType
+          fileType,
         },
         {
           headers: {
@@ -264,17 +271,18 @@ function createAttachment(file, userToken) {
       // TODO: better error handling here(@maria)
       console.log(err);
     }
-  }
+  };
 }
 
-function deleteAttachment(filename, userToken) {
-
-}
+function deleteAttachment(filename, userToken) {}
 
 function fetchAttachments(userToken) {
   return (dispatch) => {
-    setTimeout(() => dispatch({ type: attachmentConstants.FETCH_ATTACHMENTS_REQUEST_SUCCESS, payload: [] }), 1000)
-  }
+    setTimeout(
+      () => dispatch({ type: attachmentConstants.FETCH_ATTACHMENTS_REQUEST_SUCCESS, payload: [] }),
+      1000
+    );
+  };
 }
 
 export const actions = {
@@ -290,5 +298,5 @@ export const actions = {
   deleteSession,
   createAttachment,
   deleteAttachment,
-  fetchAttachments
+  fetchAttachments,
 };
