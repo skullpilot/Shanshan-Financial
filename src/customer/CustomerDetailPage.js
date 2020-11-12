@@ -57,7 +57,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, removeCustomer }) {
+function CustomerDetailPage({
+  customerId,
+  customers,
+  policies,
+  userToken,
+  updateCustomer,
+  removeCustomer,
+}) {
   const customer = customers.data[customerId];
   const classes = useStyles();
   const [customerState, setCustomerState] = useState(customer);
@@ -85,6 +92,23 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
     const { name, value } = event.target;
     setCustomerState((prevState) => ({ ...prevState, [field]: value }));
   });
+
+  const validateDelete = () => {
+    if (Lodash.find(policies, { insurerId: customerId } || { ownerId: customerId })) {
+      return false;
+    }
+
+    Lodash.forEach(customers.data, function (customer, ID) {
+      if (
+        customer.relationships !== undefined &&
+        ID !== customerId &&
+        Lodash.find(customer.relationships, { value: customerId })
+      ) {
+        return false;
+      }
+    });
+    return true;
+  };
 
   const validate = () => {
     let isValid = true;
@@ -296,7 +320,7 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
       </div>
       <h5>Relationships</h5>
       <Relationships
-        relationships={customerState.relationships}
+        relationships={customerState.relationships || []}
         updateRelationships={(relationships) =>
           setCustomerState((prev) => ({ ...prev, relationships }))
         }
@@ -325,7 +349,11 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
           color="primary"
           style={{ marginTop: "100px", marginBottom: "200px" }}
           onClick={() => {
-            removeCustomer(customer.id, userToken);
+            if (validateDelete()) {
+              removeCustomer(customerId, userToken);
+            } else {
+              alert("Cannot delete the current user since we still have policies or users connected to this user.");
+            }
           }}
         >
           Remove
@@ -337,9 +365,10 @@ function CustomerDetailPage({ customerId, customers, userToken, updateCustomer, 
 
 function mapState(state, ownProps) {
   return {
-    customers: state.customers,
     userToken: state.sessions.userToken,
+    customers: state.customers,
     customerId: ownProps.match.params.customer_id,
+    policies: state.policies.data,
   };
 }
 
