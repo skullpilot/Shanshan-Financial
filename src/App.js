@@ -14,13 +14,10 @@ import { history } from "./history";
 import { store } from "./redux/store";
 import { actions } from "./redux/actions";
 import { PolicyDetailPage, PolicyListPage, CreatePolicyPage } from "./policy";
-import {
-  CustomerDetailPage,
-  CustomerListPage,
-  CreateCustomerPage,
-} from "./customer";
+import { CustomerDetailPage, CustomerListPage, CreateCustomerPage } from "./customer";
 import { BirthdayListPage } from "./birthday";
 import HomePage from "./homepage";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,6 +29,11 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  circularProgress: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+  }
 }));
 
 function AppTopBar({ title, needReturn = false, deleteSession }) {
@@ -56,32 +58,27 @@ function AppTopBar({ title, needReturn = false, deleteSession }) {
       </Button>
     </Toolbar>
   ) : (
-    <Toolbar>
-      <IconButton
-        edge="start"
-        className={classes.menuButton}
-        color="inherit"
-        aria-label="menu"
-      >
-        <HomeIcon />
-      </IconButton>
-      <Typography variant="h6" className={classes.title}>
-        {title}
-      </Typography>
-      <Button color="inherit" onClick={() => history.push("/customers")}>
-        <u>Customers</u>
+      <Toolbar>
+        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <HomeIcon />
+        </IconButton>
+        <Typography variant="h6" className={classes.title}>
+          {title}
+        </Typography>
+        <Button color="inherit" onClick={() => history.push("/customers")}>
+          <u>Customers</u>
+        </Button>
+        <Button color="inherit" onClick={() => history.push("/policies")}>
+          <u>Policies</u>
+        </Button>
+        <Button color="inherit" onClick={() => history.push("/birthdays")}>
+          <u>Birthdays</u>
+        </Button>
+        <Button color="inherit" onClick={() => deleteSession()}>
+          Logout
       </Button>
-      <Button color="inherit" onClick={() => history.push("/policies")}>
-        <u>Policies</u>
-      </Button>
-      <Button color="inherit" onClick={() => history.push("/birthdays")}>
-        <u>Birthdays</u>
-      </Button>
-      <Button color="inherit" onClick={() => deleteSession()}>
-        Logout
-      </Button>
-    </Toolbar>
-  );
+      </Toolbar>
+    );
 
   return (
     <div className={classes.root}>
@@ -94,20 +91,35 @@ const ConnectedAppTopBar = connect(null, {
   deleteSession: actions.deleteSession,
 })(AppTopBar);
 
-function PrivateApp({ customers, fetchCustomers, policies, fetchPolicies, attachments, fetchAttachments, userToken }) {
+function PrivateApp({
+  customers,
+  fetchCustomers,
+  policies,
+  fetchPolicies,
+  attachments,
+  fetchAttachments,
+  userToken,
+}) {
+  const classes = useStyles();
   if (!customers.isInitialized) {
     fetchCustomers(userToken);
-    return <div>Loading...</div>;
+    return (
+      <CircularProgress className={classes.circularProgress} />
+    );
   }
 
   if (!policies.isInitialized) {
     fetchPolicies(userToken);
-    return <div>Loading...</div>;
+    return (
+      <CircularProgress className={classes.circularProgress} />
+    );
   }
 
   if (!attachments.isInitialized) {
-    fetchAttachments(userToken)
-    return <div>Loading...</div>;
+    fetchAttachments(userToken);
+    return (
+      <CircularProgress className={classes.circularProgress} />
+    );
   }
 
   return (
@@ -183,7 +195,7 @@ function mapState(state) {
 const actionCreators = {
   fetchCustomers: actions.fetchCustomers,
   fetchPolicies: actions.fetchPolicies,
-  fetchAttachments: actions.fetchAttachments
+  fetchAttachments: actions.fetchAttachments,
 };
 
 const ConnectedPrivateApp = connect(mapState, actionCreators)(PrivateApp);
