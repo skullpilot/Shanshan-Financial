@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  label: {
+  note: {
     [theme.breakpoints.up("md")]: {
       "& .MuiTextField-root": {
         position: "relative",
@@ -281,7 +281,7 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
           />
         </div>
 
-        <div className={classes.label}>
+        <div className={classes.note}>
           <TextField
             label="Notes"
             variant="outlined"

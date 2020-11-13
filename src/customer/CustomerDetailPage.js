@@ -39,15 +39,7 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
-  label: {
-    [theme.breakpoints.up("md")]: {
-      "& .MuiTextField-root": {
-        position: "relative",
-        width: "50%",
-      },
-    },
-  },
-  label: {
+  note: {
     [theme.breakpoints.up("md")]: {
       "& .MuiTextField-root": {
         position: "relative",
@@ -308,7 +300,7 @@ function CustomerDetailPage({
           onChange={setField("customerSegment")}
         />
       </div>
-      <div className={classes.label}>
+      <div className={classes.note}>
         <TextField
           label="Notes"
           variant="outlined"

@@ -30,6 +30,14 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     width: 300,
   },
+  note: {
+    [theme.breakpoints.up("md")]: {
+      "& .MuiTextField-root": {
+        position: "relative",
+        width: "50%",
+      },
+    },
+  },
 }));
 
 function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy, removePolicy }) {
@@ -144,12 +152,16 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
           value={policyState.status}
           onChange={setField("status")}
         />
-        <TextField
-          label="Notes"
-          variant="outlined"
-          value={policyState.notes}
-          onChange={setField("notes")}
-        />
+        <div className={classes.note}>
+          <TextField
+            label="Notes"
+            variant="outlined"
+            rows={6}
+            multiline
+            value={policyState.notes}
+            onChange={setField("notes")}
+          />
+        </div>
       </div>
 
       <h3>Owner Information</h3>

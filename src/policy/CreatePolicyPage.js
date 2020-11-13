@@ -33,6 +33,14 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     width: 300,
   },
+  note: {
+    [theme.breakpoints.up("md")]: {
+      "& .MuiTextField-root": {
+        position: "relative",
+        width: "50%",
+      },
+    },
+  },
 }));
 
 function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
@@ -289,12 +297,16 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           value={policy.status || ""}
           onChange={setField("status")}
         />
-        <TextField
-          label="Notes"
-          variant="outlined"
-          value={policy.notes || ""}
-          onChange={setField("notes")}
-        />
+        <div className={classes.note}>
+          <TextField
+            label="Notes"
+            variant="outlined"
+            rows={6}
+            multiline
+            value={policy.notes || ""}
+            onChange={setField("notes")}
+          />
+        </div>
       </div>
       <div>
         <Backdrop className={classes.backdrop} open={policies.isCreatingPolicy}>
