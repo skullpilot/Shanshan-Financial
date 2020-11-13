@@ -310,6 +310,11 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
           style={{ marginTop: "100px", marginBottom: "200px" }}
           onClick={() => {
             if (validate()) {
+              if (customer.relationships) {
+                customer.relationships = Lodash.filter(customer.relationships, (relationship) => {
+                  return relationship.value !== "" && relationship.name !== "";
+                });
+              }
               createCustomer(customer, userToken);
             }
           }}

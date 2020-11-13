@@ -330,6 +330,14 @@ function CustomerDetailPage({
           style={{ marginTop: "100px", marginBottom: "200px" }}
           onClick={() => {
             if (validate()) {
+              if (customerState.relationships) {
+                customerState.relationships = Lodash.filter(
+                  customerState.relationships,
+                  (relationship) => {
+                    return relationship.value !== "" && relationship.name !== "";
+                  }
+                );
+              }
               updateCustomer(customerState, userToken);
             }
           }}
