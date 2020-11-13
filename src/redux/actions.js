@@ -57,7 +57,6 @@ function createCustomer(customer, userToken) {
           type: customerConstants.CREATE_CUSTOMER_REQUEST_SUCCESS,
           payload: response.data,
         });
-        history.push("/customers");
       });
     // TODO: error handling
   };

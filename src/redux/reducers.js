@@ -23,7 +23,7 @@ function customers(
       };
     case Actions.customerConstants.UPDATE_CUSTOMER_REQUEST:
       return { ...state, isUpdatingCustomer: true };
-    case Actions.customerConstants.UPDATE_CUSTOMER_REQUEST:
+    case Actions.customerConstants.CREATE_CUSTOMER_REQUEST:
       return { ...state, isCreatingCustomer: true };
     case Actions.customerConstants.DELETE_CUSTOMER_REQUEST_SUCCESS:
       return { ...state, data: { ...Lodash.omit(state.data, [action.payload]) } };
