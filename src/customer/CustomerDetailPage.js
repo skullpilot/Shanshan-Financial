@@ -131,11 +131,11 @@ function CustomerDetailPage({
       }));
     }
 
-    if (!customerState.email || !Validator.isEmail(customerState.email)) {
+    if (customerState.email && !Validator.isEmail(customerState.email)) {
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
-        email: { helperText: "Please provide email", error: true },
+        email: { helperText: "Please provide correct email", error: true },
       }));
     } else {
       setCustomerError((prevState) => ({
@@ -149,7 +149,7 @@ function CustomerDetailPage({
       return phoneRe.test(p);
     }
 
-    if (!customerState.phone || !validatePhone(customerState.phone)) {
+    if (customerState.phone && !validatePhone(customerState.phone)) {
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
@@ -234,7 +234,6 @@ function CustomerDetailPage({
           onChange={setField("email")}
           error={customerError.email.error}
           helperText={customerError.email.helperText}
-          required
         />
         <TextField
           label="Phone"
@@ -243,7 +242,6 @@ function CustomerDetailPage({
           onChange={setField("phone")}
           error={customerError.phone.error}
           helperText={customerError.phone.helperText}
-          required
         />
         <TextField
           type="date"

@@ -102,11 +102,11 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
       }));
     }
 
-    if (!customer.email || !Validator.isEmail(customer.email)) {
+    if (customer.email && !Validator.isEmail(customer.email)) {
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
-        email: { helperText: "Please provide email", error: true },
+        email: { helperText: "Please provide correct email", error: true },
       }));
     } else {
       setCustomerError((prevState) => ({
@@ -120,7 +120,7 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
       return phoneRe.test(p);
     }
 
-    if (!customer.phone || !validatePhone(customer.phone)) {
+    if (customer.phone && !validatePhone(customer.phone)) {
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
@@ -212,7 +212,6 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
             onChange={setField("email")}
             error={customerError.email.error}
             helperText={customerError.email.helperText}
-            required
           />
           <TextField
             label="Phone"
@@ -221,7 +220,6 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
             onChange={setField("phone")}
             error={customerError.phone.error}
             helperText={customerError.phone.helperText}
-            required
           />
 
           <TextField
