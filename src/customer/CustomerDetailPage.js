@@ -153,7 +153,7 @@ function CustomerDetailPage({
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
-        phone: { helperText: "Please provide phone", error: true },
+        phone: { helperText: "Please provide correct phone number", error: true },
       }));
     } else {
       setCustomerError((prevState) => ({
@@ -344,7 +344,9 @@ function CustomerDetailPage({
             if (validateDelete()) {
               removeCustomer(customerId, userToken);
             } else {
-              alert("Cannot delete the current user since we still have policies or users connected to this user.");
+              alert(
+                "Cannot delete the current user since we still have policies or users connected to this user."
+              );
             }
           }}
         >
