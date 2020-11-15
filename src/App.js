@@ -92,35 +92,25 @@ const ConnectedAppTopBar = connect(null, {
 })(AppTopBar);
 
 function PrivateApp({
-  customers,
-  fetchCustomers,
-  policies,
-  fetchPolicies,
-  attachments,
-  fetchAttachments,
+  initialization,
+  initialize,
   userToken,
 }) {
   const classes = useStyles();
-  if (!customers.isInitialized) {
-    fetchCustomers(userToken);
+
+  if (initialization.status === "loading") {
     return (
       <CircularProgress className={classes.circularProgress} />
     );
   }
 
-  if (!policies.isInitialized) {
-    fetchPolicies(userToken);
+  if (initialization.status === "none") {
+    initialize(userToken)
     return (
       <CircularProgress className={classes.circularProgress} />
     );
   }
 
-  if (!attachments.isInitialized) {
-    fetchAttachments(userToken);
-    return (
-      <CircularProgress className={classes.circularProgress} />
-    );
-  }
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -185,17 +175,13 @@ function PrivateApp({
 
 function mapState(state) {
   return {
-    customers: state.customers,
-    policies: state.policies,
-    attachments: state.attachments,
     userToken: state.sessions.userToken,
+    initialization: state.initialization
   };
 }
 
 const actionCreators = {
-  fetchCustomers: actions.fetchCustomers,
-  fetchPolicies: actions.fetchPolicies,
-  fetchAttachments: actions.fetchAttachments,
+  initialize: actions.initialize
 };
 
 const ConnectedPrivateApp = connect(mapState, actionCreators)(PrivateApp);

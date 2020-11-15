@@ -21,7 +21,8 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
-import Divider from '@material-ui/core/Divider';
+import Divider from "@material-ui/core/Divider";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import { actions } from "../redux/actions";
 
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   AttachmentsRoot: {
     "& .MuiAvatar-root": {
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function BirthdayTemplates({ attachments, createAttachment, userToken }) {
+function BirthdayTemplates({ attachments, createAttachment, deleteAttachment, userToken }) {
   const classes = useStyles();
   const [file, setFile] = useState(null);
 
@@ -63,7 +64,7 @@ function BirthdayTemplates({ attachments, createAttachment, userToken }) {
     if (!file) {
       return;
     }
-    createAttachment(file, userToken)
+    createAttachment(file, userToken);
   };
 
   return (
@@ -76,25 +77,30 @@ function BirthdayTemplates({ attachments, createAttachment, userToken }) {
         <List>
           {attachments.data &&
             attachments.data.map((attachment) => (
-              <ListItem
-                button
-                onClick={() =>
-                  document.getElementById(attachment.fileName).click()
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <AttachmentIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText secondary={attachment.fileName} />
-                <a
-                  id={attachment.fileName}
-                  href={attachment.url}
-                  download
-                  hidden
-                ></a>
-              </ListItem>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <DeleteIcon
+                  onClick={() => deleteAttachment(attachment.fileName, userToken)}
+                />
+                <ListItem
+                  button
+                  onClick={() =>
+                    document.getElementById(attachment.fileName).click()
+                  }
+                >
+                  <ListItemAvatar>
+                    <Avatar>
+                      <AttachmentIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText secondary={attachment.fileName} />
+                  <a
+                    id={attachment.fileName}
+                    href={attachment.url}
+                    download
+                    hidden
+                  ></a>
+                </ListItem>
+              </div>
             ))}
         </List>
       </div>
@@ -130,9 +136,18 @@ function BirthdayTemplates({ attachments, createAttachment, userToken }) {
   );
 }
 
-const ConnectedBirthdayTemplates = connect((state) => {
-  return { attachments: state.attachments, userToken: state.sessions.userToken }
-}, { createAttachment: actions.createAttachment, deleteAttachment: actions.deleteAttachment })(BirthdayTemplates)
+const ConnectedBirthdayTemplates = connect(
+  (state) => {
+    return {
+      attachments: state.attachments,
+      userToken: state.sessions.userToken,
+    };
+  },
+  {
+    createAttachment: actions.createAttachment,
+    deleteAttachment: actions.deleteAttachment,
+  }
+)(BirthdayTemplates);
 
 function BirthdayListPage({ customers }) {
   const classes = useStyles();

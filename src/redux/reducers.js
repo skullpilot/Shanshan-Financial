@@ -3,12 +3,12 @@ import * as Lodash from "lodash";
 import * as Actions from "./actions";
 
 function customers(
-  state = { isInitialized: false, data: {}, isUpdatingCustomer: false, isCreatingCustomer: false },
+  state = { data: {}, isUpdatingCustomer: false, isCreatingCustomer: false },
   action
 ) {
   switch (action.type) {
     case Actions.customerConstants.FETCH_CUSTOMERS_REQUEST_SUCCESS:
-      return { ...state, isInitialized: true, data: Lodash.keyBy(action.payload, "id") };
+      return { ...state, data: Lodash.keyBy(action.payload, "id") };
     case Actions.customerConstants.CREATE_CUSTOMER_REQUEST_SUCCESS:
       return {
         ...state,
@@ -33,12 +33,12 @@ function customers(
 }
 
 function policies(
-  state = { isInitialized: false, data: {}, isUpdatingPolicy: false, isCreatingPolicy: false },
+  state = { data: {}, isUpdatingPolicy: false, isCreatingPolicy: false },
   action
 ) {
   switch (action.type) {
     case Actions.policyConstants.FETCH_POLICIES_REQUEST_SUCCESS:
-      return { ...state, isInitialized: true, data: Lodash.keyBy(action.payload, "id") };
+      return { ...state, data: Lodash.keyBy(action.payload, "id") };
     case Actions.policyConstants.CREATE_POLICY_REQUEST_SUCCESS:
       return {
         ...state,
@@ -79,10 +79,10 @@ function sessions(state = { userToken, requesting: false }, action) {
   }
 }
 
-function attachments(state = { isInitialized: false, requesting: false, data: [] }, action) {
+function attachments(state = { requesting: false, data: [] }, action) {
   switch (action.type) {
     case Actions.attachmentConstants.FETCH_ATTACHMENTS_REQUEST_SUCCESS:
-      return { isInitialized: true, data: action.payload };
+      return { ...state, data: action.payload };
     case Actions.attachmentConstants.CREATE_ATTACHMENT:
       return { ...state, requesting: true };
     case Actions.attachmentConstants.CREATE_ATTACHMENT_SUCCESS:
@@ -106,4 +106,15 @@ function attachments(state = { isInitialized: false, requesting: false, data: []
   }
 }
 
-export default combineReducers({ customers, policies, sessions, attachments });
+function initialization(state = { status: "none" }, action) {
+  switch (action.type) {
+    case Actions.dataStatusConstants.FETCH_DATA_REQUEST:
+      return { status: "loading" }
+    case Actions.dataStatusConstants.FETCH_DATA_REQUEST_SUCCESS:
+      return { status: "loaded" }
+    default:
+        return state;
+  }
+}
+
+export default combineReducers({ customers, policies, sessions, attachments, initialization });

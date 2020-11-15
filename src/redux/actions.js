@@ -35,11 +35,17 @@ export const policyConstants = {
 
 export const attachmentConstants = {
   FETCH_ATTACHMENTS_REQUEST_SUCCESS: "FETCH_ATTACHMENTS_REQUEST_SUCCESS",
+  FETCH_ATTACHMENTS_REQUEST_FAILURE: "FETCH_ATTACHMENTS_REQUEST_FAILURE",
   CREATE_ATTACHMENT: "CREATE_ATTACHMENT",
   CREATE_ATTACHMENT_SUCCESS: "CREATE_ATTACHMENT_SUCCESS",
   DELETE_ATTACHMENT: "DELETE_ATTACHMENT",
   DELETE_ATTACHMENT_SUCCESS: "DELETE_ATTACHMENT_SUCCESS",
 };
+
+export const dataStatusConstants = {
+  FETCH_DATA_REQUEST: "FETCH_DATA_REQUEST",
+  FETCH_DATA_REQUEST_SUCCESS: "FETCH_DATA_REQUEST_SUCCESS",
+}
 
 function createCustomer(customer, userToken) {
   return (dispatch) => {
@@ -245,14 +251,11 @@ function createAttachment(file, userToken) {
   return async (dispatch) => {
     dispatch({ type: attachmentConstants.CREATE_ATTACHMENT });
 
-    const [fileName, fileType] = file.name.split(".");
-
     try {
       let response = await axios.post(
         `${SSF_API}/attachment`,
         {
-          fileName,
-          fileType,
+          fileName: file.name
         },
         {
           headers: {
@@ -260,27 +263,18 @@ function createAttachment(file, userToken) {
           },
         }
       );
-      const { signedRequest, url } = response.data.data.returnData;
+
+      const { signedRequest, url } = response.data;
 
       // TODO: need to verify if override and create behave similarily here(@peter)
       // I think if we need to implement delete, we only need to delete metadata in customer
       // no need to delete the actual file in S3, but this dependes the behavoir of S3 put api here
       response = await axios.put(
         signedRequest,
-        file,
-        {
-          headers: {
-            "Content-Type": fileType,
-          },
-        },
-        {
-          headers: {
-            "x-auth-token": userToken,
-          },
-        }
+        file
       );
 
-      dispatch({ type: attachmentConstants.CREATE_ATTACHMENT_SUCCESS, payload: { url, fileName } });
+      dispatch({ type: attachmentConstants.CREATE_ATTACHMENT_SUCCESS, payload: { url, fileName: file.name } });
     } catch (err) {
       // TODO: better error handling here(@maria)
       console.log(err);
@@ -288,29 +282,103 @@ function createAttachment(file, userToken) {
   };
 }
 
-function deleteAttachment(filename, userToken) {}
+function deleteAttachment(fileName, userToken) {
+  return (dispatch) => {
+    axios.delete(`${SSF_API}/attachment/${fileName}`, {
+      headers: {
+        "x-auth-token": userToken,
+      },
+    }).then(response => {
+      dispatch(
+        { type: attachmentConstants.DELETE_ATTACHMENT_SUCCESS, payload: fileName }
+      )
+    })
+  }
+}
 
 function fetchAttachments(userToken) {
   return (dispatch) => {
-    setTimeout(
-      () => dispatch({ type: attachmentConstants.FETCH_ATTACHMENTS_REQUEST_SUCCESS, payload: [] }),
-      1000
-    );
+    axios
+      .get(`${SSF_API}/attachments`, {
+        headers: {
+          "x-auth-token": userToken,
+        },
+      })
+      .then((response) => {
+        if (response.error) {
+
+          return dispatch({
+            type: attachmentConstants.FETCH_ATTACHMENTS_REQUEST_FAILURE
+          });
+        }
+        dispatch({
+          type: attachmentConstants.FETCH_ATTACHMENTS_REQUEST_SUCCESS,
+          payload: response.data.data,
+        });
+      });
   };
+}
+
+function initialize(userToken) {
+  return async (dispatch) => {
+    dispatch({
+      type: dataStatusConstants.FETCH_DATA_REQUEST,
+    })
+
+    const customersPromise = axios
+      .get(`${SSF_API}/customers`, {
+        headers: {
+          "x-auth-token": userToken,
+        },
+      })
+
+    const policiesPromise = axios
+      .get(`${SSF_API}/policies`, {
+        headers: {
+          "x-auth-token": userToken,
+        },
+      })
+
+    const attachmentsPromise = axios
+      .get(`${SSF_API}/attachments`, {
+        headers: {
+          "x-auth-token": userToken,
+        },
+      })
+
+    const [customersRes, policiesRes, attachmentsRes] = await Promise.all([customersPromise, policiesPromise, attachmentsPromise])
+
+    dispatch({
+      type: customerConstants.FETCH_CUSTOMERS_REQUEST_SUCCESS,
+      payload: customersRes.data,
+    });
+
+    dispatch({
+      type: policyConstants.FETCH_POLICIES_REQUEST_SUCCESS,
+      payload: policiesRes.data,
+    });
+
+    dispatch({
+      type: attachmentConstants.FETCH_ATTACHMENTS_REQUEST_SUCCESS,
+      payload: attachmentsRes.data.data,
+    });
+
+    dispatch({
+      type: dataStatusConstants.FETCH_DATA_REQUEST_SUCCESS,
+    })
+  }
 }
 
 export const actions = {
   createCustomer,
   removeCustomer,
   updateCustomer,
-  fetchCustomers,
   createPolicy,
   removePolicy,
   updatePolicy,
-  fetchPolicies,
   createSession,
   deleteSession,
   createAttachment,
   deleteAttachment,
-  fetchAttachments,
+  initialize
 };
