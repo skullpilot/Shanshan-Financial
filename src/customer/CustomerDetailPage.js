@@ -244,7 +244,6 @@ function CustomerDetailPage({
           helperText={customerError.phone.helperText}
         />
         <TextField
-          type="date"
           label="Birthday"
           variant="outlined"
           value={customerState.birthday || ""}
@@ -254,6 +253,7 @@ function CustomerDetailPage({
           }}
           error={customerError.birthday.error}
           helperText={customerError.birthday.helperText}
+          placeholder="YYYY-MM-DD"
         />
         <TextField
           label="Wechat Name"

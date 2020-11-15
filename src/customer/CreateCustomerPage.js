@@ -162,8 +162,6 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
     return isValid;
   };
 
-  // TODO: support ui form similar to detail page (@maria)
-  // TODO: add validation support (@maria)
   // TODO: add specific input support (@maria) eg. date format, phone format
   return (
     <div>
@@ -220,10 +218,10 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
             onChange={setField("phone")}
             error={customerError.phone.error}
             helperText={customerError.phone.helperText}
+            placeholder="xxx-xxx-xxxx"
           />
 
           <TextField
-            type="date"
             label="Birthday"
             variant="outlined"
             value={customer.birthday || ""}
@@ -233,6 +231,7 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
             }}
             error={customerError.birthday.error}
             helperText={customerError.birthday.helperText}
+            placeholder="YYYY-MM-DD"
           />
           <TextField
             label="Wechat Name"

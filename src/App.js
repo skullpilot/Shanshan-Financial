@@ -1,6 +1,6 @@
 import React from "react";
 import { Provider, connect } from "react-redux";
-import { Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -97,6 +97,10 @@ function PrivateApp({
   userToken,
 }) {
   const classes = useStyles();
+
+  if (userToken === null) {
+    return <Redirect  to="/"/>
+  }
 
   if (initialization.status === "loading") {
     return (

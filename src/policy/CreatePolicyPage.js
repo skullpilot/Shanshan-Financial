@@ -138,7 +138,7 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       }));
     }
 
-    if (!policy.applicationDate || validator.isBefore(policy.applicationDate, (new Date(new Date() - 24 * 60 * 60 * 1000)).toString())) {
+    if (!policy.applicationDate) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
@@ -151,18 +151,8 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       }));
     }
 
-    if (!policy.policyDate || validator.isBefore(policy.policyDate, (new Date(new Date() - 24 * 60 * 60 * 1000)).toString())) {
-      isValid = false;
-      setPolicyError((prevState) => ({
-        ...prevState,
-        policyDate: { helperText: "Please provide a valid policy start date", error: true },
-      }));
-    } else {
-      setPolicyError((prevState) => ({
-        ...prevState,
-        policyDate: { helperText: "", error: false },
-      }));
-    }
+    // TODO: @maria Add policy date format validation
+
     if (!policy.ownerId) {
       isValid = false;
       setPolicyError((prevState) => ({
@@ -210,7 +200,7 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
         <TextField
           label="Policy Number"
           variant="outlined"
-          value={policy.policyNumber || ""}
+          value={policy.policyNumber || "none"}
           onChange={setField("policyNumber")}
           error={policyError.policyNumber.error}
           helperText={policyError.policyNumber.helperText}
@@ -226,7 +216,6 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           required
         />
         <TextField
-          type="number"
           label="Face Amount"
           variant="outlined"
           value={policy.faceAmount || ""}
@@ -236,7 +225,6 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           required
         />
         <TextField
-          type="date"
           label="Application Date"
           variant="outlined"
           value={policy.applicationDate || ""}
@@ -246,10 +234,10 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           InputLabelProps={{
             shrink: true,
           }}
+          placeholder="YYYY-MM-DD"
           required
         />
         <TextField
-          type="date"
           label="Policy Date"
           variant="outlined"
           value={policy.policyDate || ""}
@@ -259,7 +247,7 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           InputLabelProps={{
             shrink: true,
           }}
-          required
+          placeholder="YYYY-MM-DD"
         />
         <TextField
           label="Ride"
@@ -296,6 +284,18 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           variant="outlined"
           value={policy.status || ""}
           onChange={setField("status")}
+        />
+        <TextField
+          label="Beneficaries"
+          variant="outlined"
+          value={policy.beneficaries || ""}
+          onChange={setField("beneficaries")}
+        />
+        <TextField
+          label="Beneficaries Relation"
+          variant="outlined"
+          value={policy.beneficariesRelation || ""}
+          onChange={setField("beneficariesRelation")}
         />
         <div className={classes.note}>
           <TextField

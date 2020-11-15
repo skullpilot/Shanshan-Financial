@@ -89,7 +89,7 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
         <TextField
           label="Policy Number"
           variant="outlined"
-          value={policyState.policyNumber}
+          value={policyState.policyNumber || "none"}
           onChange={setField("policyNumber")}
         />
         <TextField
@@ -109,12 +109,14 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
           variant="outlined"
           value={policyState.applicationDate}
           onChange={setField("applicationDate")}
+          placeholder="YYYY-MM-DD"
         />
         <TextField
           label="Policy Date"
           variant="outlined"
           value={policyState.policyDate}
           onChange={setField("policyDate")}
+          placeholder="YYYY-MM-DD"
         />
         <TextField
           label="Ride"
@@ -151,6 +153,18 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
           variant="outlined"
           value={policyState.status}
           onChange={setField("status")}
+        />
+        <TextField
+          label="Beneficaries"
+          variant="outlined"
+          value={policy.beneficaries || ""}
+          onChange={setField("beneficaries")}
+        />
+        <TextField
+          label="Beneficaries Relation"
+          variant="outlined"
+          value={policy.beneficariesRelation || ""}
+          onChange={setField("beneficariesRelation")}
         />
         <div className={classes.note}>
           <TextField
