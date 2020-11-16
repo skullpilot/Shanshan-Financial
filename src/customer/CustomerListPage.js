@@ -5,10 +5,10 @@ import { useHistory } from "react-router-dom";
 import Table from "../table";
 
 const headCells = [
-  { id: "name", numeric: false, disablePadding: true, label: "Name" },
+  { id: "firstName", numeric: false, disablePadding: true, label: "First Name" },
+  { id: "lastName", numeric: false, disablePadding: true, label: "Last Name" },
   { id: "phone", numeric: true, disablePadding: false, label: "Phone Number" },
   { id: "email", numeric: true, disablePadding: false, label: "Email" },
-  { id: "followUpDate", numeric: true, disablePadding: false, label: "Followup Date" },
 ];
 
 function CustomerListPage({ customers }) {

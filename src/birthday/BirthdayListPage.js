@@ -23,6 +23,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import DeleteIcon from "@material-ui/icons/Delete";
+import moment from 'moment';
 
 import { actions } from "../redux/actions";
 
@@ -152,21 +153,33 @@ const ConnectedBirthdayTemplates = connect(
 function BirthdayListPage({ customers }) {
   const classes = useStyles();
 
-  const customersWithFollowupDate = customers.filter((cx) => cx.followUpDate);
+  // TODO: @maria improve birthday logic here.
+  const customersWithBirthday = customers.filter((cx) => {
+    return cx.birthday && moment(cx.birthday).month() >= (new moment().month())
+  });
 
-  // TODO: sort only based on birthday month and day, and only checking for upcoming month
-  // for date compare, one could use moment(https://momentjs.com/)
+  customersWithBirthday.sort((a, b) => {
+    const aM = moment(a.birthday)
+    const bM = moment(b.birthday)
+
+    const monthDiff = aM.month() - bM.month();
+    if (monthDiff !== 0) {
+      return monthDiff
+    }
+
+    return aM.date() - bM.date()
+  })
 
   return (
     <div>
       <ConnectedBirthdayTemplates />
       <Divider />
-      <Timeline align="alternate">
-        {customersWithFollowupDate.map((cx) => (
+      <Timeline>
+        {customersWithBirthday.map((cx) => (
           <TimelineItem>
             <TimelineOppositeContent>
               <Typography variant="body2" color="textSecondary">
-                {cx.followUpDate}
+                {cx.birthday}
               </Typography>
             </TimelineOppositeContent>
             <TimelineSeparator>
@@ -180,7 +193,8 @@ function BirthdayListPage({ customers }) {
                 <Typography variant="h6" component="h1">
                   {`${cx.firstName}, ${cx.lastName}`}
                 </Typography>
-                <Typography>{`Email: ${cx.email}, Phone: ${cx.phone}`}</Typography>
+                <Typography>{`Birthday: ${cx.birthday || "unknown"}`}</Typography>
+                <Typography>{`Email: ${cx.email || "unknown"}, Phone: ${cx.phone || "unknown"}`}</Typography>
               </Paper>
             </TimelineContent>
           </TimelineItem>
