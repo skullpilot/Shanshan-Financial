@@ -78,7 +78,7 @@ function BirthdayTemplates({ attachments, createAttachment, deleteAttachment, us
         <List>
           {attachments.data &&
             attachments.data.map((attachment) => (
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div key={attachment.fileName} style={{ display: "flex", alignItems: "center" }}>
                 <IconButton
                   aria-label="delete"
                   onClick={() => {
