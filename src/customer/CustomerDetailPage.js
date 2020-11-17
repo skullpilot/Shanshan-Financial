@@ -47,6 +47,10 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  formControl: {
+    margin: theme.spacing(2, 5),
+    minWidth: 300,
+  },
 }));
 
 function CustomerDetailPage({
@@ -219,14 +223,24 @@ function CustomerDetailPage({
           required
         />
         <TextField
-          label="Gender"
           variant="outlined"
+          error={customerError.gender.error}
+          select
+          label="Gender"
           value={customerState.gender || ""}
           onChange={setField("gender")}
-          error={customerError.gender.error}
           helperText={customerError.gender.helperText}
           required
-        />
+        >
+          <MenuItem aria-label="None" value="" />
+          <MenuItem key={"M"} value={"M"}>
+            male
+          </MenuItem>
+          <MenuItem key={"F"} value={"F"}>
+            female
+          </MenuItem>
+        </TextField>
+
         <TextField
           label="Email"
           variant="outlined"

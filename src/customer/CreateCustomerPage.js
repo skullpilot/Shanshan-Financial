@@ -10,6 +10,10 @@ import { actions } from "../redux/actions";
 import Relationships from "./Relationships";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Select from "@material-ui/core/Select";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
         width: "50%",
       },
     },
+  },
+  formControl: {
+    margin: theme.spacing(2, 5),
+    minWidth: 300,
   },
 }));
 
@@ -193,14 +201,23 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
             onChange={setField("name")}
           />
           <TextField
-            label="Gender"
             variant="outlined"
-            value={customer.gender || ""}
             error={customerError.gender.error}
-            helperText={customerError.gender.helperText}
+            select
+            label="Gender"
+            value={customer.gender || ""}
             onChange={setField("gender")}
+            helperText={customerError.gender.helperText}
             required
-          />
+          >
+            <MenuItem aria-label="None" value="" />
+            <MenuItem key={"M"} value={"M"}>
+              male
+            </MenuItem>
+            <MenuItem key={"F"} value={"F"}>
+              female
+            </MenuItem>
+          </TextField>
           <TextField
             label="Email"
             variant="outlined"
