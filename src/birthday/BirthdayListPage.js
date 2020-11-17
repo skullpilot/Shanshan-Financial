@@ -24,7 +24,7 @@ import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import DeleteIcon from "@material-ui/icons/Delete";
 import moment from 'moment';
-
+import IconButton from "@material-ui/core/IconButton";
 import { actions } from "../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -79,9 +79,14 @@ function BirthdayTemplates({ attachments, createAttachment, deleteAttachment, us
           {attachments.data &&
             attachments.data.map((attachment) => (
               <div style={{ display: "flex", alignItems: "center" }}>
-                <DeleteIcon
-                  onClick={() => deleteAttachment(attachment.fileName, userToken)}
-                />
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => {
+                    deleteAttachment(attachment.fileName, userToken)
+                  }}
+                >
+                  <DeleteIcon fontSize="inherit" />
+                </IconButton>
                 <ListItem
                   button
                   onClick={() =>
