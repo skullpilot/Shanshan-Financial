@@ -13,6 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import Validator from "validator";
 
 const useStyles = makeStyles((theme) => ({
@@ -153,8 +154,21 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
         applicationDate: { helperText: "", error: false },
       }));
     }
-
-    // TODO: @maria Add policy date format validation
+    if (policy.policyDate && !Validator.isDate(policy.policyDate, "YYYY-MM-DD")) {
+      isValid = false;
+      setPolicyError((prevState) => ({
+        ...prevState,
+        policyDate: {
+          helperText: "Please provide a valid policy start date in format YYYY-MM-DD",
+          error: true,
+        },
+      }));
+    } else {
+      setPolicyError((prevState) => ({
+        ...prevState,
+        policyDate: { helperText: "", error: false },
+      }));
+    }
 
     if (!policy.ownerId) {
       isValid = false;
@@ -176,16 +190,16 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
     <div className={classes.TextFieldRoot}>
       <h3>Insurer Information</h3>
       <div>
-        <FormControl className={classes.formControl}>
+        <FormControl className={classes.formControl} error={policyError.insurerId.error}>
           <InputLabel id="insurerId-label">Insurer</InputLabel>
           <Select
             labelId="insurerId-label"
             value={policy.insurerId || ""}
             onChange={setField("insurerId")}
-            error={policyError.insurerId.error}
           >
             {createMenuItems()}
           </Select>
+          <FormHelperText>{policyError.insurerId.helperText}</FormHelperText>
         </FormControl>
       </div>
 
@@ -318,8 +332,8 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       </div>
       <h3>Owner Information</h3>
       <div>
-        <FormControl className={classes.formControl}>
-          <InputLabel id="ownerId-label">Insurer</InputLabel>
+        <FormControl className={classes.formControl} error={policyError.ownerId.error}>
+          <InputLabel id="ownerId-label">Owner</InputLabel>
           <Select
             labelId="ownerId-label"
             value={policy.ownerId || ""}
@@ -328,6 +342,7 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           >
             {createMenuItems()}
           </Select>
+          <FormHelperText>{policyError.ownerId.helperText}</FormHelperText>
         </FormControl>
       </div>
 

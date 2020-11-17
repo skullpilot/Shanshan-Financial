@@ -47,6 +47,8 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
   const [policyError, setPolicyError] = useState({
     applicationDate: { helperText: "", error: false },
     policyDate: { helperText: "", error: false },
+    insurerId: { helperText: "", error: false },
+    ownerId: { helperText: "", error: false },
   });
 
   if (!policy) {
@@ -70,6 +72,18 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
   const validate = () => {
     let isValid = true;
 
+    if (!policyState.insurerId) {
+      isValid = false;
+      setPolicyError((prevState) => ({
+        ...prevState,
+        insurerId: { helperText: "Please select an insurer", error: true },
+      }));
+    } else {
+      setPolicyError((prevState) => ({
+        ...prevState,
+        insurerId: { helperText: "", error: false },
+      }));
+    }
     if (
       policyState.applicationDate &&
       !Validator.isDate(policyState.applicationDate, "YYYY-MM-DD")
@@ -104,7 +118,18 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
         policyDate: { helperText: "", error: false },
       }));
     }
-
+    if (!policyState.ownerId) {
+      isValid = false;
+      setPolicyError((prevState) => ({
+        ...prevState,
+        ownerId: { helperText: "Please select an owner", error: true },
+      }));
+    } else {
+      setPolicyError((prevState) => ({
+        ...prevState,
+        ownerId: { helperText: "", error: false },
+      }));
+    }
     return isValid;
   };
 
@@ -112,7 +137,7 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
     <div className={classes.TextFieldRoot}>
       <h3>Insurer Information</h3>
       <div>
-        <FormControl className={classes.formControl}>
+        <FormControl className={classes.formControl} error={policyError.insurerId.error}>
           <InputLabel id="insurerId-label">Insurer</InputLabel>
           <Select
             labelId="insurerId-label"
@@ -121,6 +146,7 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
           >
             {createMenuItems()}
           </Select>
+          <FormHelperText>{policyError.insurerId.helperText}</FormHelperText>
         </FormControl>
       </div>
 
@@ -230,7 +256,7 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
 
       <h3>Owner Information</h3>
       <div>
-        <FormControl className={classes.formControl}>
+        <FormControl className={classes.formControl} error={policyError.ownerId.error}>
           <InputLabel id="ownerId-label">Owner</InputLabel>
           <Select
             labelId="ownerId-label"
@@ -239,6 +265,7 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
           >
             {createMenuItems()}
           </Select>
+          <FormHelperText>{policyError.ownerId.helperText}</FormHelperText>
         </FormControl>
       </div>
       <div>
