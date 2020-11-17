@@ -74,8 +74,6 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
   const validate = () => {
     let isValid = true;
 
-    // TODO: 1) Add validations to fields that you think it's necessary to validate
-    //       2) How to refactor these code (@maria)
     if (!customer.firstName) {
       isValid = false;
       setCustomerError((prevState) => ({
@@ -146,11 +144,11 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
       }));
     }
 
-    if (customer.birthday && Validator.isAfter(customer.birthday)) {
+    if (customer.birthday && !Validator.isDate(customer.birthday, "YYYY-MM-DD")) {
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
-        birthday: { helperText: "Please provide correct birthday", error: true },
+        birthday: { helperText: "Please provide birthday in format YYYY-MM-DD", error: true },
       }));
     } else {
       setCustomerError((prevState) => ({

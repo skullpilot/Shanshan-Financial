@@ -11,6 +11,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { actions } from "../redux/actions";
+import Validator from "validator";
 
 const useStyles = makeStyles((theme) => ({
   TextFieldRoot: {
@@ -43,6 +44,10 @@ const useStyles = makeStyles((theme) => ({
 function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy, removePolicy }) {
   const classes = useStyles();
   const [policyState, setpolicyState] = useState(policy);
+  const [policyError, setPolicyError] = useState({
+    applicationDate: { helperText: "", error: false },
+    policyDate: { helperText: "", error: false },
+  });
 
   if (!policy) {
     return <div>Can't find the policy information</div>;
@@ -61,6 +66,47 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
     const { name, value } = event.target;
     setpolicyState((prevState) => ({ ...prevState, [field]: value }));
   });
+
+  const validate = () => {
+    let isValid = true;
+
+    if (
+      policyState.applicationDate &&
+      !Validator.isDate(policyState.applicationDate, "YYYY-MM-DD")
+    ) {
+      isValid = false;
+      setPolicyError((prevState) => ({
+        ...prevState,
+        applicationDate: {
+          helperText: "Please provide a valid policy application date in format YYYY-MM-DD",
+          error: true,
+        },
+      }));
+    } else {
+      setPolicyError((prevState) => ({
+        ...prevState,
+        applicationDate: { helperText: "", error: false },
+      }));
+    }
+
+    if (policyState.policyDate && !Validator.isDate(policyState.policyDate, "YYYY-MM-DD")) {
+      isValid = false;
+      setPolicyError((prevState) => ({
+        ...prevState,
+        policyDate: {
+          helperText: "Please provide a valid policy start date in format YYYY-MM-DD",
+          error: true,
+        },
+      }));
+    } else {
+      setPolicyError((prevState) => ({
+        ...prevState,
+        policyDate: { helperText: "", error: false },
+      }));
+    }
+
+    return isValid;
+  };
 
   return (
     <div className={classes.TextFieldRoot}>
@@ -109,6 +155,8 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
           variant="outlined"
           value={policyState.applicationDate}
           onChange={setField("applicationDate")}
+          error={policyError.applicationDate.error}
+          helperText={policyError.applicationDate.helperText}
           placeholder="YYYY-MM-DD"
         />
         <TextField
@@ -116,6 +164,8 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
           variant="outlined"
           value={policyState.policyDate}
           onChange={setField("policyDate")}
+          error={policyError.policyDate.error}
+          helperText={policyError.policyDate.helperText}
           placeholder="YYYY-MM-DD"
         />
         <TextField
@@ -202,7 +252,9 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
           color="primary"
           style={{ marginTop: "100px", marginBottom: "200px" }}
           onClick={() => {
-            updatePolicy(policyState, userToken);
+            if (validate()) {
+              updatePolicy(policyState, userToken);
+            }
           }}
         >
           Submit

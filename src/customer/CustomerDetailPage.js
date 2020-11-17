@@ -175,11 +175,11 @@ function CustomerDetailPage({
       }));
     }
 
-    if (customerState.birthday && Validator.isAfter(customerState.birthday)) {
+    if (customerState.birthday && !Validator.isDate(customerState.birthday, "YYYY-MM-DD")) {
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
-        birthday: { helperText: "Please provide correct birthday", error: true },
+        birthday: { helperText: "Please provide birthday in format YYYY-MM-DD", error: true },
       }));
     } else {
       setCustomerError((prevState) => ({

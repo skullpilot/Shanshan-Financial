@@ -13,7 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
-import validator from "validator";
+import Validator from "validator";
 
 const useStyles = makeStyles((theme) => ({
   TextFieldRoot: {
@@ -138,11 +138,14 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       }));
     }
 
-    if (!policy.applicationDate) {
+    if (!policy.applicationDate || !Validator.isDate(policy.applicationDate, "YYYY-MM-DD")) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
-        applicationDate: { helperText: "Please provide a valid policy application date", error: true },
+        applicationDate: {
+          helperText: "Please provide a valid policy application date in format YYYY-MM-DD",
+          error: true,
+        },
       }));
     } else {
       setPolicyError((prevState) => ({
