@@ -23,7 +23,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import DeleteIcon from "@material-ui/icons/Delete";
-import moment from 'moment';
+import moment from "moment";
 import IconButton from "@material-ui/core/IconButton";
 import { actions } from "../redux/actions";
 
@@ -82,16 +82,14 @@ function BirthdayTemplates({ attachments, createAttachment, deleteAttachment, us
                 <IconButton
                   aria-label="delete"
                   onClick={() => {
-                    deleteAttachment(attachment.fileName, userToken)
+                    deleteAttachment(attachment.fileName, userToken);
                   }}
                 >
                   <DeleteIcon fontSize="inherit" />
                 </IconButton>
                 <ListItem
                   button
-                  onClick={() =>
-                    document.getElementById(attachment.fileName).click()
-                  }
+                  onClick={() => document.getElementById(attachment.fileName).click()}
                 >
                   <ListItemAvatar>
                     <Avatar>
@@ -99,12 +97,7 @@ function BirthdayTemplates({ attachments, createAttachment, deleteAttachment, us
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText secondary={attachment.fileName} />
-                  <a
-                    id={attachment.fileName}
-                    href={attachment.url}
-                    download
-                    hidden
-                  ></a>
+                  <a id={attachment.fileName} href={attachment.url} download hidden></a>
                 </ListItem>
               </div>
             ))}
@@ -158,22 +151,31 @@ const ConnectedBirthdayTemplates = connect(
 function BirthdayListPage({ customers }) {
   const classes = useStyles();
 
-  // TODO: @maria improve birthday logic here.
-  const customersWithBirthday = customers.filter((cx) => {
-    return cx.birthday && moment(cx.birthday).month() >= (new moment().month())
-  });
+  function sortDate(a, b) {
+    const A = Math.abs(moment(a.birthday).subtract(moment(a.birthday).year(), "years"));
+    const B = Math.abs(moment(b.birthday).subtract(moment(b.birthday).year(), "years"));
+    return B - A;
+  }
 
-  customersWithBirthday.sort((a, b) => {
-    const aM = moment(a.birthday)
-    const bM = moment(b.birthday)
+  function sortBirthday() {
+    let currYear = [];
+    let nextYear = [];
 
-    const monthDiff = aM.month() - bM.month();
-    if (monthDiff !== 0) {
-      return monthDiff
-    }
+    customers.map((customer) => {
+      if (customer.birthday) {
+        if (moment(customer.birthday).month() >= new moment().month()) {
+          currYear.push(customer);
+        } else {
+          nextYear.push(customer);
+        }
+      }
+    });
+    currYear.sort((a, b) => sortDate(a, b));
+    nextYear.sort((a, b) => sortDate(a, b));
+    return currYear.concat(nextYear);
+  }
 
-    return aM.date() - bM.date()
-  })
+  const customersWithBirthday = sortBirthday();
 
   return (
     <div>
@@ -184,7 +186,7 @@ function BirthdayListPage({ customers }) {
           <TimelineItem>
             <TimelineOppositeContent>
               <Typography variant="body2" color="textSecondary">
-                {cx.birthday}
+                {moment(cx.birthday).format("MM-DD")}
               </Typography>
             </TimelineOppositeContent>
             <TimelineSeparator>
@@ -199,7 +201,8 @@ function BirthdayListPage({ customers }) {
                   {`${cx.firstName}, ${cx.lastName}`}
                 </Typography>
                 <Typography>{`Birthday: ${cx.birthday || "unknown"}`}</Typography>
-                <Typography>{`Email: ${cx.email || "unknown"}, Phone: ${cx.phone || "unknown"}`}</Typography>
+                <Typography>{`Email: ${cx.email || "unknown"}, Phone: ${cx.phone || "unknown"
+                  }`}</Typography>
               </Paper>
             </TimelineContent>
           </TimelineItem>
