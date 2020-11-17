@@ -13,6 +13,10 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
+import validator from "validator";
+import { history } from "../history";
+import IconButton from "@material-ui/core/IconButton";
+import ContactsIcon from '@material-ui/icons/Contacts';
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Validator from "validator";
 
@@ -189,7 +193,12 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
   return (
     <div className={classes.TextFieldRoot}>
       <h3>Insurer Information</h3>
-      <div>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
         <FormControl className={classes.formControl} error={policyError.insurerId.error}>
           <InputLabel id="insurerId-label">Insurer</InputLabel>
           <Select
@@ -201,7 +210,13 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           </Select>
           <FormHelperText>{policyError.insurerId.helperText}</FormHelperText>
         </FormControl>
+        <IconButton
+          aria-label="info"
+        >
+          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policy.insurerId}`)} />
+        </IconButton>
       </div>
+
 
       <h3>Policy Information</h3>
       <div>
@@ -331,7 +346,12 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
         </Backdrop>
       </div>
       <h3>Owner Information</h3>
-      <div>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
         <FormControl className={classes.formControl} error={policyError.ownerId.error}>
           <InputLabel id="ownerId-label">Owner</InputLabel>
           <Select
@@ -344,8 +364,12 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           </Select>
           <FormHelperText>{policyError.ownerId.helperText}</FormHelperText>
         </FormControl>
+        <IconButton
+          aria-label="info"
+        >
+          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policy.ownerId}`)} />
+        </IconButton>
       </div>
-
       <div className={classes.ButtonRoot}>
         <Button
           variant="contained"

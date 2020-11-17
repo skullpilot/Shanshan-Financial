@@ -11,6 +11,9 @@ import FormControl from "@material-ui/core/FormControl";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { actions } from "../redux/actions";
+import { history } from "../history";
+import IconButton from "@material-ui/core/IconButton";
+import ContactsIcon from '@material-ui/icons/Contacts';
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Validator from "validator";
 
@@ -137,7 +140,12 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
   return (
     <div className={classes.TextFieldRoot}>
       <h3>Insurer Information</h3>
-      <div>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
         <FormControl className={classes.formControl} error={policyError.insurerId.error}>
           <InputLabel id="insurerId-label">Insurer</InputLabel>
           <Select
@@ -149,6 +157,11 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
           </Select>
           <FormHelperText>{policyError.insurerId.helperText}</FormHelperText>
         </FormControl>
+        <IconButton
+          aria-label="info"
+        >
+          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policyState.insurerId}`)} />
+        </IconButton>
       </div>
 
       <h3>Policy Information</h3>
@@ -256,7 +269,12 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
       </div>
 
       <h3>Owner Information</h3>
-      <div>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
         <FormControl className={classes.formControl} error={policyError.ownerId.error}>
           <InputLabel id="ownerId-label">Owner</InputLabel>
           <Select
@@ -268,6 +286,11 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
           </Select>
           <FormHelperText>{policyError.ownerId.helperText}</FormHelperText>
         </FormControl>
+        <IconButton
+          aria-label="info"
+        >
+          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policyState.ownerId}`)} />
+        </IconButton>
       </div>
       <div>
         <Backdrop className={classes.backdrop} open={policies.isUpdatingPolicy}>
