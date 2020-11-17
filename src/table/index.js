@@ -14,10 +14,13 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
+  const valueA = a[orderBy] || ""
+  const valueB = b[orderBy] || ""
+
+  if (valueB < valueA) {
     return -1;
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (valueB > valueA) {
     return 1;
   }
   return 0;
@@ -105,7 +108,7 @@ export default function EnhancedTable({
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
-  const [dense, setDense] = React.useState(false);
+  const [dense, setDense] = React.useState(true);
 
   const names = Object.values(headCells).map((cell) => cell.id);
 
