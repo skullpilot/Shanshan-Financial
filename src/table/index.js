@@ -14,8 +14,8 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 
 function descendingComparator(a, b, orderBy) {
-  const valueA = a[orderBy] || ""
-  const valueB = b[orderBy] || ""
+  const valueA = a[orderBy] || "";
+  const valueB = b[orderBy] || "";
 
   if (valueB < valueA) {
     return -1;
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
-    padding: "50px",
+    padding: "30px",
   },
   paper: {
     marginBottom: theme.spacing(2),
@@ -138,13 +138,9 @@ export default function EnhancedTable({
       >
         <FormControlLabel
           control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
+          label="Dense Padding"
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleCreateItem()}
-        >
+        <Button variant="contained" color="primary" onClick={() => handleCreateItem()}>
           {createItemText}
         </Button>
       </div>
@@ -159,24 +155,21 @@ export default function EnhancedTable({
               headCells={headCells}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy)).map(
-                (row) => {
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.id)}
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.id}
-                    >
-                      {names.map((name, index) => (
-                        <TableCell key={index}>{row[name]}</TableCell>
-                      ))}
-                    </TableRow>
-                  );
-                }
-              )}
+              {stableSort(rows, getComparator(order, orderBy)).map((row) => {
+                return (
+                  <TableRow
+                    hover
+                    onClick={(event) => handleClick(event, row.id)}
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={row.id}
+                  >
+                    {names.map((name, index) => (
+                      <TableCell key={index}>{row[name]}</TableCell>
+                    ))}
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
