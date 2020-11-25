@@ -2,6 +2,7 @@ const Fs = require("fs");
 const Lodash = require("lodash");
 const parse = require("csv-parse/lib/sync");
 const Axios = require("axios");
+const Moment = require("moment")
 
 const input = Fs.readFileSync("input_data.csv", "utf8");
 
@@ -53,7 +54,12 @@ async function main() {
     const postcode = record["owerner postcode"] || "";
     const email = record["owerner email"] || "";
     const phone = record["owerner phone"] || "";
-    const notes = record["memo"] || "";
+    let notes = ""
+    if (record["memo"]) {
+      notes = {
+       [Moment().format("YYYYMMDD-HH:mm:ss")]: record["memo"]
+      }
+    }
     const customerSegment = record["客户分类"] || "";
 
     if (
