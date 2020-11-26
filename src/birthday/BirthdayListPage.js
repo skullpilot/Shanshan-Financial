@@ -152,26 +152,28 @@ function BirthdayListPage({ customers }) {
   const classes = useStyles();
 
   function sortDate(a, b) {
-    const A = Math.abs(moment(a.birthday).subtract(moment(a.birthday).year(), "years"));
-    const B = Math.abs(moment(b.birthday).subtract(moment(b.birthday).year(), "years"));
+    const A = Math.abs(moment(a).subtract(moment(a).year(), "years"));
+    const B = Math.abs(moment(b).subtract(moment(b).year(), "years"));
     return B - A;
   }
 
   function sortBirthday() {
     let currYear = [];
     let nextYear = [];
+    let date = new Date();
+    date.setDate(date.getDate() - 1);
 
     customers.map((customer) => {
       if (customer.birthday) {
-        if (moment(customer.birthday).month() >= new moment().month()) {
+        if (sortDate(customer.birthday, date) > 0) {
           currYear.push(customer);
         } else {
           nextYear.push(customer);
         }
       }
     });
-    currYear.sort((a, b) => sortDate(a, b));
-    nextYear.sort((a, b) => sortDate(a, b));
+    currYear.sort((a, b) => sortDate(a.birthday, b.birthday));
+    nextYear.sort((a, b) => sortDate(a.birthday, b.birthday));
     return currYear.concat(nextYear);
   }
 
@@ -201,8 +203,9 @@ function BirthdayListPage({ customers }) {
                   {`${cx.firstName}, ${cx.lastName}`}
                 </Typography>
                 <Typography>{`Birthday: ${cx.birthday || "unknown"}`}</Typography>
-                <Typography>{`Email: ${cx.email || "unknown"}, Phone: ${cx.phone || "unknown"
-                  }`}</Typography>
+                <Typography>{`Email: ${cx.email || "unknown"}, Phone: ${
+                  cx.phone || "unknown"
+                }`}</Typography>
               </Paper>
             </TimelineContent>
           </TimelineItem>
