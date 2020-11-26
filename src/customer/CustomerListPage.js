@@ -5,7 +5,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Table from "../table";
 import TextField from "@material-ui/core/TextField";
-import { filter } from "lodash";
+
 import Button from "@material-ui/core/Button";
 const Lodash = require("lodash");
 
