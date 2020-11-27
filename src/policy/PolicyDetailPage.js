@@ -53,6 +53,7 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
     policyDate: { helperText: "", error: false },
     insurerId: { helperText: "", error: false },
     ownerId: { helperText: "", error: false },
+    contactId: { helperText: "", error: false },
   });
 
   if (!policy) {
@@ -75,6 +76,20 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
 
   const validate = () => {
     let isValid = true;
+
+    if (!policyState.contactId) {
+      isValid = false;
+
+      setPolicyError((prevState) => ({
+        ...prevState,
+        contactId: { helperText: "Please select an contact person", error: true },
+      }));
+    } else {
+      setPolicyError((prevState) => ({
+        ...prevState,
+        contactId: { helperText: "", error: false },
+      }));
+    }
 
     if (!policyState.insurerId) {
       isValid = false;
@@ -139,6 +154,33 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
 
   return (
     <div className={classes.TextFieldRoot}>
+
+      <h3>Contact Information</h3>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        <FormControl className={classes.formControl} error={policyError.contactId.error}>
+          <InputLabel id="contactId-label">Contact Person</InputLabel>
+          <Select
+            labelId="contactId-label"
+            value={policyState.contactId || ""}
+            onChange={setField("contactId")}
+          >
+            {createMenuItems()}
+          </Select>
+          <FormHelperText>{policyError.contactId.helperText}</FormHelperText>
+        </FormControl>
+        <IconButton
+          aria-label="info"
+        >
+          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policyState.contactId}`)} />
+        </IconButton>
+      </div>
+
+
       <h3>Insurer Information</h3>
       <div style={{
         display: "flex",

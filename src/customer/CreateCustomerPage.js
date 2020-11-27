@@ -168,7 +168,6 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
     return isValid;
   };
 
-  // TODO: add specific input support (@maria) eg. date format, phone format
   return (
     <div>
       <div className={classes.root}>

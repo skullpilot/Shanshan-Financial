@@ -61,6 +61,7 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
     policyDate: { helperText: "", error: false },
     insurerId: { helperText: "", error: false },
     ownerId: { helperText: "", error: false },
+    contactId: { helperText: "", error: false },
   });
   const createMenuItems = () => {
     return Object.values(customers.data).map((customer) => (
@@ -77,6 +78,19 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
 
   const validate = () => {
     let isValid = true;
+
+    if (!policy.contactId) {
+      isValid = false;
+      setPolicyError((prevState) => ({
+        ...prevState,
+        contactId: { helperText: "Please select an contact person", error: true },
+      }));
+    } else {
+      setPolicyError((prevState) => ({
+        ...prevState,
+        contactId: { helperText: "", error: false },
+      }));
+    }
 
     if (!policy.insurerId) {
       isValid = false;
@@ -192,6 +206,31 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
 
   return (
     <div className={classes.TextFieldRoot}>
+      <h3>Contact Information</h3>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+        <FormControl className={classes.formControl} error={policyError.contactId.error}>
+          <InputLabel id="contactId-label">Contact Person</InputLabel>
+          <Select
+            labelId="contactId-label"
+            value={policy.contactId || ""}
+            onChange={setField("contactId")}
+          >
+            {createMenuItems()}
+          </Select>
+          <FormHelperText>{policyError.contactId.helperText}</FormHelperText>
+        </FormControl>
+        <IconButton
+          aria-label="info"
+        >
+          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policy.contactId}`)} />
+        </IconButton>
+      </div>
+
       <h3>Insurer Information</h3>
       <div style={{
         display: "flex",
