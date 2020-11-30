@@ -10,6 +10,7 @@ import { actions } from "../redux/actions";
 import Relationships from "./Relationships";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Notes from "./Notes";
 
 // TODO: (@peter) this page will generate following warnings:
 /*
@@ -312,16 +313,6 @@ function CustomerDetailPage({
           onChange={setField("customerSegment")}
         />
       </div>
-      <div className={classes.note}>
-        <TextField
-          label="Notes"
-          variant="outlined"
-          rows={6}
-          multiline
-          value={customerState.notes || ""}
-          onChange={setField("notes")}
-        />
-      </div>
       <h5>Relationships</h5>
       <Relationships
         relationships={customerState.relationships || []}
@@ -329,6 +320,10 @@ function CustomerDetailPage({
           setCustomerState((prev) => ({ ...prev, relationships }))
         }
         menuItems={menuItems}
+      />
+      <Notes
+        notes={customerState.notes || {}}
+        updateNotes={(notes) => setCustomerState((prev) => ({ ...prev, notes: notes }))}
       />
       <div>
         <Backdrop className={classes.backdrop} open={customers.isUpdatingCustomer}>
@@ -350,6 +345,15 @@ function CustomerDetailPage({
                   }
                 );
               }
+              let filteredNote = {};
+              if (customerState.notes) {
+                for (let [key, value] of Object.entries(customerState.notes)) {
+                  if (value !== "") {
+                    filteredNote[key] = value;
+                  }
+                }
+              }
+              setCustomerState((prev) => ({ ...prev, notes: filteredNote }));
               updateCustomer(customerState, userToken);
             }
           }}

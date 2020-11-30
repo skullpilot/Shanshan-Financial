@@ -8,6 +8,7 @@ import * as Lodash from "lodash";
 import Validator from "validator";
 import { actions } from "../redux/actions";
 import Relationships from "./Relationships";
+import Notes from "./Notes";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Select from "@material-ui/core/Select";
@@ -292,16 +293,6 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
           />
         </div>
 
-        <div className={classes.note}>
-          <TextField
-            label="Notes"
-            variant="outlined"
-            rows={6}
-            multiline
-            value={customer.notes || ""}
-            onChange={setField("notes")}
-          />
-        </div>
         <h5>Relationships</h5>
         <Relationships
           relationships={customer.relationships || []}
@@ -309,6 +300,11 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
             setCustomer((prev) => ({ ...prev, relationships }))
           }
           menuItems={menuItems}
+        />
+
+        <Notes
+          notes={customer.notes || []}
+          updateNotes={(notes) => setCustomer((prev) => ({ ...prev, notes: notes }))}
         />
         <div>
           <Backdrop className={classes.backdrop} open={customers.isCreatingCustomer}>
@@ -326,6 +322,16 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
                   return relationship.value !== "" && relationship.name !== "";
                 });
               }
+
+              let filteredNote = {};
+              if (customer.notes) {
+                for (let [key, value] of Object.entries(customer.notes)) {
+                  if (value !== "") {
+                    filteredNote[key] = value;
+                  }
+                }
+              }
+              setCustomer((prev) => ({ ...prev, notes: filteredNote }));
               createCustomer(customer, userToken);
             }
           }}
