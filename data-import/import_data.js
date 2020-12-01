@@ -34,7 +34,30 @@ function createPolicy(policy) {
   });
 }
 
-async function main() {
+function print_invalid_contact(records, unique_users) {
+  const invalid = []
+
+  for (let record of records) {
+    const contact = record["contact"].toLowerCase()
+
+    if (contact === "") {
+      continue
+    }
+
+    if (!Lodash.find(
+      unique_users,
+      (user) => `${user.firstName} ${user.lastName}` === contact
+    )) {
+      invalid.push(contact)
+    }
+  }
+
+  if (invalid.length > 0) {
+    console.log(invalid)
+  }
+}
+
+async function insert_customers() {
   const records = parse(input, {
     columns: true,
     skip_empty_lines: true,
@@ -104,32 +127,42 @@ async function main() {
     }
   }
 
-  const createCustomerPromises = [];
+  print_invalid_contact(records, unique_users)
+
+  let data = "";
   for (let user of unique_users) {
-    createCustomerPromises.push(createCustomer(user));
+    const customer = await createCustomer(user)
+    data += `${customer.id},${customer.firstName} ${customer.lastName}\n`;
   }
 
-  const customerMap = {};
+  Fs.writeFileSync("./created_customers.csv", data);
+}
 
-  await Promise.all(createCustomerPromises).then((customers) => {
-    let data = "";
-    for (let customer of customers) {
-      customerMap[`${customer.firstName}-${customer.lastName}`] = customer.id;
-      data += `${customer.id},${customer.firstName}-${customer.lastName}\n`;
-    }
-    Fs.writeFileSync("./created_customers.csv", data);
+async function insert_policies() {
+  const records = parse(input, {
+    columns: true,
+    skip_empty_lines: true,
   });
+
+  const customers = await Fs.readFileSync("./created_customers.csv", "utf-8")
+
+  const customerMap = {};
+  for (let customer of customers.split('\n')) {
+    if (customer === "") continue
+    const [id, customerName] = customer.split(",")
+    customerMap[customerName] = id;
+  }
 
   const policies = [];
 
   for (let record of records) {
     const ownerId =
       customerMap[
-        `${record["owerner first name"]}-${record["owerner last name"]}`
+        `${record["owerner first name"]} ${record["owerner last name"]}`
       ];
     const insurerId =
       customerMap[
-        `${record["insurer first name"]}-${record["insurer last name"]}`
+        `${record["insurer first name"]} ${record["insurer last name"]}`
       ];
     const company = record["company"];
     const policyNumber = record["policyNumber"];
@@ -156,13 +189,16 @@ async function main() {
       ? record["relation"].toLowerCase()
       : "";
     const status = record["status"] ? record["status"].toLowerCase() : "";
-    const familyKeyPerson = record["family key person"]
-      ? record["family key person"].toLowerCase()
-      : "";
+    
+    let contactId = ""
+    if (record["contact"] && customerMap[record["contact"].toLowerCase()]) {
+      contactId = customerMap[record["contact"].toLowerCase()]
+    }
   
     policies.push({
       ownerId,
       insurerId,
+      contactId,
       company,
       policyNumber,
       plan,
@@ -179,19 +215,20 @@ async function main() {
       beneficaries,
       beneficariesRelation,
       status,
-      familyKeyPerson,
     });
   }
-  
-  const policyPromises = [];
+
+  let count = 0
   for (let policy of policies) {
-    policyPromises.push(createPolicy(policy));
+    await createPolicy(policy)
+    console.log(count)
+    count += 1
   }
-  
-  await Promise.all(policyPromises).then((responses) => {
-    console.log("All polices created");
-  });
-  
+}
+
+async function main() {
+  await insert_customers()
+  await insert_policies()
 }
 
 main()
