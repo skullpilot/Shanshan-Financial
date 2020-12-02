@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import * as Lodash from "lodash";
@@ -11,9 +9,23 @@ import { actions } from "../redux/actions";
 
 //TODO: move input form in the center
 const useStyles = makeStyles((theme) => ({
-  container: {
+  page: {
     padding: theme.spacing(3),
+    backgroundImage: "url(https://www.itl.cat/pngfile/big/34-349100_westworld-logo-tv-series-hbo-wallpaper-and-background.jpg)",
+    backgroundPosition: "center",         
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    height: '100vh',
+    display: 'flex', 
+    flexDirection: 'column', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    
   },
+  row: {
+    padding: theme.spacing(1),
+    width: '25%'
+  }
 }));
 
 function HomePage({ createSession }) {
@@ -34,46 +46,41 @@ function HomePage({ createSession }) {
   };
 
   return (
-    <Container className={classes.container} maxWidth="xs">
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                size="small"
-                variant="outlined"
-                onChange={setField("username")}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Password"
-                name="password"
-                size="small"
-                type="password"
-                variant="outlined"
-                onChange={setField("password")}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Button
-            color="secondary"
-            fullWidth
-            type="submit"
-            variant="contained"
-            onClick={() => login()}
-          >
-            Log in
-          </Button>
-        </Grid>
-      </Grid>
-    </Container>
+    <div className={classes.page} >
+      <div className={classes.row}>
+        <TextField 
+        fullWidth
+        color='white' 
+        label="Email" name="email" 
+        size="small" 
+        variant="outlined" 
+        onChange={setField("username")}
+        />
+      </div>
+
+      <div className={classes.row}>
+        <TextField 
+        fullWidth 
+        label="Password" 
+        name="password" 
+        size="small" 
+        type="password" 
+        variant="outlined" 
+        onChange={setField("password")}/>
+      </div>
+
+      <div className={classes.row}>
+        <Button 
+        color="secondary" 
+        fullWidth
+        type="submit" 
+        variant="contained" 
+        onClick={() => login()}>
+          Log in
+        </Button>
+      </div>
+    </div>
+    
   );
 }
 
