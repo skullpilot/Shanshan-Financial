@@ -26,6 +26,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import moment from "moment";
 import IconButton from "@material-ui/core/IconButton";
 import { actions } from "../redux/actions";
+import { history } from "../history";
+import ContactsIcon from '@material-ui/icons/Contacts';
+import { BorderLeft } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -199,13 +202,30 @@ function BirthdayListPage({ customers }) {
             </TimelineSeparator>
             <TimelineContent>
               <Paper elevation={3} className={classes.paper}>
-                <Typography variant="h6" component="h1">
-                  {`${cx.firstName}, ${cx.lastName}`}
-                </Typography>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography variant="h6" component="h1">
+                    {`${cx.firstName}, ${cx.lastName}`}
+                  </Typography>
+                  <Button onClick={() => {
+                    history.push(`/customer/${cx.id}`);
+                  }
+                  }>
+                    Customer Info
+                  </Button>
+                </div>
+
+                <label >
+                  <Typography
+                    variant="h6"
+                    component="h1"
+                    component="span">
+                    {`${cx.firstName}, ${cx.lastName}`}
+                  </Typography>
+                </label>
+
                 <Typography>{`Birthday: ${cx.birthday || "unknown"}`}</Typography>
-                <Typography>{`Email: ${cx.email || "unknown"}, Phone: ${
-                  cx.phone || "unknown"
-                }`}</Typography>
+                <Typography>{`Email: ${cx.email || "unknown"}, Phone: ${cx.phone || "unknown"
+                  }`}</Typography>
               </Paper>
             </TimelineContent>
           </TimelineItem>
