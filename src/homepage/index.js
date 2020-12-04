@@ -4,7 +4,6 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import * as Lodash from "lodash";
-
 import { actions } from "../redux/actions";
 
 //TODO: move input form in the center
@@ -20,12 +19,25 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column', 
     justifyContent: 'center',
     alignItems: 'center',
-    
   },
-  row: {
+  block: {
+    backgroundColor: 'white',
+    width: '35vw',
+    height: '40vh',
+    boxShadow: "3px 3px 1px grey",
+    display: 'flex', 
+    flexDirection: 'column', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputBox: {
     padding: theme.spacing(1),
-    width: '25%'
-  }
+    width: '55%',
+  },
+  buttonStyle: {
+    padding: theme.spacing(1),
+    width: '55%',
+  },
 }));
 
 function HomePage({ createSession }) {
@@ -46,41 +58,42 @@ function HomePage({ createSession }) {
   };
 
   return (
-    <div className={classes.page} >
-      <div className={classes.row}>
-        <TextField 
-        fullWidth
-        color='white' 
-        label="Email" name="email" 
-        size="small" 
-        variant="outlined" 
-        onChange={setField("username")}
-        />
-      </div>
+    <div className={classes.page}>
+      <div className={classes.block}>
+        <div className={classes.inputBox}>
+          <TextField 
+          fullWidth
+          label="Email" name="email" 
+          size="small" 
+          variant="outlined" 
+          onChange={setField("username")}
+          />
+        </div>
 
-      <div className={classes.row}>
-        <TextField 
-        fullWidth 
-        label="Password" 
-        name="password" 
-        size="small" 
-        type="password" 
-        variant="outlined" 
-        onChange={setField("password")}/>
-      </div>
+        <div className={classes.inputBox}>
+          <TextField 
+          fullWidth 
+          label="Password" 
+          name="password" 
+          size="small" 
+          type="password" 
+          variant="outlined" 
+          onChange={setField("password")}
+          />
+        </div>
 
-      <div className={classes.row}>
-        <Button 
-        color="secondary" 
-        fullWidth
-        type="submit" 
-        variant="contained" 
-        onClick={() => login()}>
-          Log in
-        </Button>
+        <div className={classes.buttonStyle}>
+          <Button 
+          color="secondary" 
+          fullWidth
+          type="submit"
+          variant="contained" 
+          onClick={() => login()}>
+            Log in
+          </Button>
+        </div>
       </div>
     </div>
-    
   );
 }
 
