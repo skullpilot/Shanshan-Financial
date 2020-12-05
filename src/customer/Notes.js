@@ -83,7 +83,7 @@ function Notes({ notes, updateNotes }) {
 
   return (
     <div >
-      <h5>Notes</h5>
+      <h5 style={{ marginTop: "50px" }}>Notes</h5>
       {noteItems}
       <Button
         variant="contained"

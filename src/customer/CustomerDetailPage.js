@@ -11,6 +11,10 @@ import Relationships from "./Relationships";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Notes from "./Notes";
+import List from "@material-ui/core/List";
+import Typography from "@material-ui/core/Typography";
+import { history } from "../history";
+import styles from "./CustomerDetailPage.module.css";
 
 // TODO: (@peter) this page will generate following warnings:
 /*
@@ -28,6 +32,12 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   ButtonRoot: {
+    "& .MuiButton-root": {
+      margin: theme.spacing(2, 5),
+      width: 300,
+    },
+  },
+  TypographyRoot: {
     "& .MuiButton-root": {
       margin: theme.spacing(2, 5),
       width: 300,
@@ -73,6 +83,10 @@ function CustomerDetailPage({
     gender: { helperText: "", error: false },
     birthday: { helperText: "", error: false },
   });
+
+  const policyAsOwner = Lodash.filter(policies, (policy) => policy.ownerId === customer.id);
+  const policyAsInsurer = Lodash.filter(policies, (policy) => policy.insurerId === customer.id);
+  const policyAsContact = Lodash.filter(policies, (policy) => policy.contactId === customer.id);
 
   if (!customer) {
     return <div>Can't find the customer information</div>;
@@ -195,6 +209,38 @@ function CustomerDetailPage({
     return isValid;
   };
 
+  function policyItem(filterdPolicy, title) {
+    return (
+      <div>
+        <div>
+          <h5>{title}</h5>
+        </div>
+        <div
+          style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}
+        >
+          {filterdPolicy.map((policy) => (
+            <div class={styles.policyItem} onClick={() => history.push(`/policy/${policy.id}`)}>
+              <Typography>
+                {`Policy Owner: ${customers.data[policy.ownerId].firstName}, ${
+                  customers.data[policy.ownerId].lastName
+                }`}
+              </Typography>
+              <Typography>
+                {`Policy Insurer: ${customers.data[policy.insurerId].firstName}, ${
+                  customers.data[policy.insurerId].lastName
+                }`}
+              </Typography>
+              <Typography>{`Company: ${policy.company}`}</Typography>
+              <Typography>{`Plan: ${policy.plan}`}</Typography>
+              <Typography>{`Policy Number: ${policy.policyNumber}`}</Typography>
+              <Typography>{`Policy Date: ${policy.policyDate}`}</Typography>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={classes.TextFieldRoot}>
       <h5>Customer Detail Info</h5>
@@ -313,7 +359,7 @@ function CustomerDetailPage({
           onChange={setField("customerSegment")}
         />
       </div>
-      <h5>Relationships</h5>
+      <h5 style={{ marginTop: "50px" }}>Relationships</h5>
       <Relationships
         relationships={customerState.relationships || []}
         updateRelationships={(relationships) =>
@@ -325,6 +371,13 @@ function CustomerDetailPage({
         notes={customerState.notes || {}}
         updateNotes={(notes) => setCustomerState((prev) => ({ ...prev, notes: notes }))}
       />
+      <h5 style={{ marginTop: "50px" }}>Related Policies</h5>
+      <List component="nav" className={classes.root}>
+        {policyItem(policyAsOwner, "Owner of Policy/Policies: ")}
+        {policyItem(policyAsInsurer, "Insurer of Policy/Policies: ")}
+        {policyItem(policyAsContact, "Contact Person of Policy/Policies: ")}
+      </List>
+
       <div>
         <Backdrop className={classes.backdrop} open={customers.isUpdatingCustomer}>
           <CircularProgress color="inherit" />

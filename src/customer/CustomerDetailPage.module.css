@@ -1,0 +1,16 @@
+.nested {
+  padding-left: 30px;
+}
+.policyItem {
+  width: 95%;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid black;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.policyItem:hover {
+  cursor: pointer;
+  background-color: lightgray;
+}
