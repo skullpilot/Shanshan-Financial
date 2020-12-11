@@ -84,9 +84,18 @@ function CustomerDetailPage({
     birthday: { helperText: "", error: false },
   });
 
-  const policyAsOwner = Lodash.filter(policies, (policy) => policy.ownerId === customer.id);
-  const policyAsInsurer = Lodash.filter(policies, (policy) => policy.insurerId === customer.id);
-  const policyAsContact = Lodash.filter(policies, (policy) => policy.contactId === customer.id);
+  const policyAsOwner = Lodash.filter(
+    policies,
+    (policy) => policy.ownerId === customer.id
+  );
+  const policyAsInsurer = Lodash.filter(
+    policies,
+    (policy) => policy.insurerId === customer.id
+  );
+  const policyAsContact = Lodash.filter(
+    policies,
+    (policy) => policy.contactId === customer.id
+  );
 
   if (!customer) {
     return <div>Can't find the customer information</div>;
@@ -105,7 +114,12 @@ function CustomerDetailPage({
   });
 
   const validateDelete = () => {
-    if (Lodash.find(policies, { insurerId: customerId } || { ownerId: customerId })) {
+    if (
+      Lodash.find(
+        policies,
+        { insurerId: customerId } || { ownerId: customerId }
+      )
+    ) {
       return false;
     }
 
@@ -172,7 +186,10 @@ function CustomerDetailPage({
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
-        phone: { helperText: "Please provide correct phone number", error: true },
+        phone: {
+          helperText: "Please provide correct phone number",
+          error: true,
+        },
       }));
     } else {
       setCustomerError((prevState) => ({
@@ -194,11 +211,17 @@ function CustomerDetailPage({
       }));
     }
 
-    if (customerState.birthday && !Validator.isDate(customerState.birthday, "YYYY-MM-DD")) {
+    if (
+      customerState.birthday &&
+      !Validator.isDate(customerState.birthday, "YYYY-MM-DD")
+    ) {
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
-        birthday: { helperText: "Please provide birthday in format YYYY-MM-DD", error: true },
+        birthday: {
+          helperText: "Please provide birthday in format YYYY-MM-DD",
+          error: true,
+        },
       }));
     } else {
       setCustomerError((prevState) => ({
@@ -216,19 +239,27 @@ function CustomerDetailPage({
           <h5>{title}</h5>
         </div>
         <div
-          style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+          }}
         >
           {filterdPolicy.map((policy) => (
-            <div class={styles.policyItem} onClick={() => history.push(`/policy/${policy.id}`)}>
+            <div
+              class={styles.policyItem}
+              onClick={() => history.push(`/policy/${policy.id}`)}
+            >
               <Typography>
                 {`Policy Owner: ${customers.data[policy.ownerId].firstName}, ${
                   customers.data[policy.ownerId].lastName
                 }`}
               </Typography>
               <Typography>
-                {`Policy Insurer: ${customers.data[policy.insurerId].firstName}, ${
-                  customers.data[policy.insurerId].lastName
-                }`}
+                {`Policy Insured: ${
+                  customers.data[policy.insurerId].firstName
+                }, ${customers.data[policy.insurerId].lastName}`}
               </Typography>
               <Typography>{`Company: ${policy.company}`}</Typography>
               <Typography>{`Plan: ${policy.plan}`}</Typography>
@@ -369,7 +400,9 @@ function CustomerDetailPage({
       />
       <Notes
         notes={customerState.notes || {}}
-        updateNotes={(notes) => setCustomerState((prev) => ({ ...prev, notes: notes }))}
+        updateNotes={(notes) =>
+          setCustomerState((prev) => ({ ...prev, notes: notes }))
+        }
       />
       <h5 style={{ marginTop: "50px" }}>Related Policies</h5>
       <List component="nav" className={classes.root}>
@@ -379,7 +412,10 @@ function CustomerDetailPage({
       </List>
 
       <div>
-        <Backdrop className={classes.backdrop} open={customers.isUpdatingCustomer}>
+        <Backdrop
+          className={classes.backdrop}
+          open={customers.isUpdatingCustomer}
+        >
           <CircularProgress color="inherit" />
         </Backdrop>
       </div>
@@ -394,7 +430,9 @@ function CustomerDetailPage({
                 customerState.relationships = Lodash.filter(
                   customerState.relationships,
                   (relationship) => {
-                    return relationship.value !== "" && relationship.name !== "";
+                    return (
+                      relationship.value !== "" && relationship.name !== ""
+                    );
                   }
                 );
               }
@@ -448,6 +486,9 @@ const actionCreators = {
   removeCustomer: actions.removeCustomer,
 };
 
-const ConnectedCustomerDetailPage = connect(mapState, actionCreators)(CustomerDetailPage);
+const ConnectedCustomerDetailPage = connect(
+  mapState,
+  actionCreators
+)(CustomerDetailPage);
 
 export default ConnectedCustomerDetailPage;

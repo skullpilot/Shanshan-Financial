@@ -16,7 +16,7 @@ import FormControl from "@material-ui/core/FormControl";
 import validator from "validator";
 import { history } from "../history";
 import IconButton from "@material-ui/core/IconButton";
-import ContactsIcon from '@material-ui/icons/Contacts';
+import ContactsIcon from "@material-ui/icons/Contacts";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Validator from "validator";
 
@@ -83,7 +83,10 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
-        contactId: { helperText: "Please select an contact person", error: true },
+        contactId: {
+          helperText: "Please select an contact person",
+          error: true,
+        },
       }));
     } else {
       setPolicyError((prevState) => ({
@@ -122,7 +125,10 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
-        policyNumber: { helperText: "Please provide policy number", error: true },
+        policyNumber: {
+          helperText: "Please provide policy number",
+          error: true,
+        },
       }));
     } else {
       setPolicyError((prevState) => ({
@@ -148,7 +154,10 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
-        faceAmount: { helperText: "Please provide policy face amount", error: true },
+        faceAmount: {
+          helperText: "Please provide policy face amount",
+          error: true,
+        },
       }));
     } else {
       setPolicyError((prevState) => ({
@@ -157,12 +166,16 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       }));
     }
 
-    if (!policy.applicationDate || !Validator.isDate(policy.applicationDate, "YYYY-MM-DD")) {
+    if (
+      !policy.applicationDate ||
+      !Validator.isDate(policy.applicationDate, "YYYY-MM-DD")
+    ) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
         applicationDate: {
-          helperText: "Please provide a valid policy application date in format YYYY-MM-DD",
+          helperText:
+            "Please provide a valid policy application date in format YYYY-MM-DD",
           error: true,
         },
       }));
@@ -172,12 +185,16 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
         applicationDate: { helperText: "", error: false },
       }));
     }
-    if (policy.policyDate && !Validator.isDate(policy.policyDate, "YYYY-MM-DD")) {
+    if (
+      policy.policyDate &&
+      !Validator.isDate(policy.policyDate, "YYYY-MM-DD")
+    ) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
         policyDate: {
-          helperText: "Please provide a valid policy start date in format YYYY-MM-DD",
+          helperText:
+            "Please provide a valid policy start date in format YYYY-MM-DD",
           error: true,
         },
       }));
@@ -207,13 +224,18 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
   return (
     <div className={classes.TextFieldRoot}>
       <h3>Contact Information</h3>
-      <div style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center"
-      }}>
-        <FormControl className={classes.formControl} error={policyError.contactId.error}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <FormControl
+          className={classes.formControl}
+          error={policyError.contactId.error}
+        >
           <InputLabel id="contactId-label">Contact Person</InputLabel>
           <Select
             labelId="contactId-label"
@@ -224,21 +246,27 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           </Select>
           <FormHelperText>{policyError.contactId.helperText}</FormHelperText>
         </FormControl>
-        <IconButton
-          aria-label="info"
-        >
-          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policy.contactId}`)} />
+        <IconButton aria-label="info">
+          <ContactsIcon
+            fontSize="inherit"
+            onClick={() => history.push(`/customer/${policy.contactId}`)}
+          />
         </IconButton>
       </div>
 
-      <h3>Insurer Information</h3>
-      <div style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center"
-      }}>
-        <FormControl className={classes.formControl} error={policyError.insurerId.error}>
+      <h3>Insured Information</h3>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <FormControl
+          className={classes.formControl}
+          error={policyError.insurerId.error}
+        >
           <InputLabel id="insurerId-label">Insurer</InputLabel>
           <Select
             labelId="insurerId-label"
@@ -249,13 +277,13 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           </Select>
           <FormHelperText>{policyError.insurerId.helperText}</FormHelperText>
         </FormControl>
-        <IconButton
-          aria-label="info"
-        >
-          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policy.insurerId}`)} />
+        <IconButton aria-label="info">
+          <ContactsIcon
+            fontSize="inherit"
+            onClick={() => history.push(`/customer/${policy.insurerId}`)}
+          />
         </IconButton>
       </div>
-
 
       <h3>Policy Information</h3>
       <div>
@@ -385,13 +413,18 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
         </Backdrop>
       </div>
       <h3>Owner Information</h3>
-      <div style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center"
-      }}>
-        <FormControl className={classes.formControl} error={policyError.ownerId.error}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <FormControl
+          className={classes.formControl}
+          error={policyError.ownerId.error}
+        >
           <InputLabel id="ownerId-label">Owner</InputLabel>
           <Select
             labelId="ownerId-label"
@@ -403,10 +436,11 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           </Select>
           <FormHelperText>{policyError.ownerId.helperText}</FormHelperText>
         </FormControl>
-        <IconButton
-          aria-label="info"
-        >
-          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policy.ownerId}`)} />
+        <IconButton aria-label="info">
+          <ContactsIcon
+            fontSize="inherit"
+            onClick={() => history.push(`/customer/${policy.ownerId}`)}
+          />
         </IconButton>
       </div>
       <div className={classes.ButtonRoot}>
@@ -439,6 +473,9 @@ const actionCreators = {
   createPolicy: actions.createPolicy,
 };
 
-const ConnectedCreatePolicyPage = connect(mapState, actionCreators)(CreatePolicyPage);
+const ConnectedCreatePolicyPage = connect(
+  mapState,
+  actionCreators
+)(CreatePolicyPage);
 
 export default ConnectedCreatePolicyPage;
