@@ -1,16 +1,8 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import Timeline from "@material-ui/lab/Timeline";
-import TimelineItem from "@material-ui/lab/TimelineItem";
-import TimelineSeparator from "@material-ui/lab/TimelineSeparator";
-import TimelineConnector from "@material-ui/lab/TimelineConnector";
-import TimelineContent from "@material-ui/lab/TimelineContent";
-import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
-import TimelineDot from "@material-ui/lab/TimelineDot";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import CakeIcon from "@material-ui/icons/Cake";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -27,12 +19,11 @@ import moment from "moment";
 import IconButton from "@material-ui/core/IconButton";
 import { actions } from "../redux/actions";
 import { history } from "../history";
-import ContactsIcon from '@material-ui/icons/Contacts';
-import { BorderLeft } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: "6px 16px",
+    width: "380px",
   },
   secondaryTail: {
     backgroundColor: theme.palette.secondary.main,
@@ -60,7 +51,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function BirthdayTemplates({ attachments, createAttachment, deleteAttachment, userToken }) {
+function BirthdayTemplates({
+  attachments,
+  createAttachment,
+  deleteAttachment,
+  userToken,
+}) {
   const classes = useStyles();
   const [file, setFile] = useState(null);
 
@@ -81,7 +77,10 @@ function BirthdayTemplates({ attachments, createAttachment, deleteAttachment, us
         <List>
           {attachments.data &&
             attachments.data.map((attachment) => (
-              <div key={attachment.fileName} style={{ display: "flex", alignItems: "center" }}>
+              <div
+                key={attachment.fileName}
+                style={{ display: "flex", alignItems: "center" }}
+              >
                 <IconButton
                   aria-label="delete"
                   onClick={() => {
@@ -92,7 +91,9 @@ function BirthdayTemplates({ attachments, createAttachment, deleteAttachment, us
                 </IconButton>
                 <ListItem
                   button
-                  onClick={() => document.getElementById(attachment.fileName).click()}
+                  onClick={() =>
+                    document.getElementById(attachment.fileName).click()
+                  }
                 >
                   <ListItemAvatar>
                     <Avatar>
@@ -100,7 +101,12 @@ function BirthdayTemplates({ attachments, createAttachment, deleteAttachment, us
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText secondary={attachment.fileName} />
-                  <a id={attachment.fileName} href={attachment.url} download hidden></a>
+                  <a
+                    id={attachment.fileName}
+                    href={attachment.url}
+                    download
+                    hidden
+                  ></a>
                 </ListItem>
               </div>
             ))}
@@ -186,51 +192,59 @@ function BirthdayListPage({ customers }) {
     <div>
       <ConnectedBirthdayTemplates />
       <Divider />
-      <Timeline>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         {customersWithBirthday.map((cx) => (
-          <TimelineItem>
-            <TimelineOppositeContent>
-              <Typography variant="body2" color="textSecondary">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              margin: "8px",
+            }}
+          >
+            <div>
+              <Typography variant="h3" color="textSecondary">
                 {moment(cx.birthday).format("MM-DD")}
               </Typography>
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-              <TimelineDot color="secondary">
-                <CakeIcon />
-              </TimelineDot>
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
+            </div>
+            <div style={{ width: "35px" }} />
+            <div>
               <Paper elevation={3} className={classes.paper}>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <Typography variant="h6" component="h1">
                     {`${cx.firstName}, ${cx.lastName}`}
                   </Typography>
-                  <Button onClick={() => {
-                    history.push(`/customer/${cx.id}`);
-                  }
-                  }>
+                  <Button
+                    onClick={() => {
+                      history.push(`/customer/${cx.id}`);
+                    }}
+                    //style={{ backgroundColor: "lightGrey" }}
+                  >
                     Customer Info
                   </Button>
                 </div>
-
-                <label >
-                  <Typography
-                    variant="h6"
-                    component="h1"
-                    component="span">
-                    {`${cx.firstName}, ${cx.lastName}`}
-                  </Typography>
-                </label>
-
-                <Typography>{`Birthday: ${cx.birthday || "unknown"}`}</Typography>
-                <Typography>{`Email: ${cx.email || "unknown"}, Phone: ${cx.phone || "unknown"
-                  }`}</Typography>
+                <Typography>{`Birthday: ${
+                  cx.birthday || "unknown"
+                }`}</Typography>
+                <Typography>{`Phone: ${cx.phone || "unknown"}`}</Typography>
+                <Typography>{`Email: ${cx.email || "unknown"}`}</Typography>
               </Paper>
-            </TimelineContent>
-          </TimelineItem>
+            </div>
+          </div>
         ))}
-      </Timeline>
+      </div>
     </div>
   );
 }
