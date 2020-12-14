@@ -2,7 +2,7 @@ const Fs = require("fs");
 const Lodash = require("lodash");
 const parse = require("csv-parse/lib/sync");
 const Axios = require("axios");
-const Moment = require("moment")
+const Moment = require("moment");
 
 const input = Fs.readFileSync("input_data.csv", "utf8");
 
@@ -35,25 +35,22 @@ function createPolicy(policy) {
 }
 
 function print_invalid_contact(records, unique_users) {
-  const invalid = []
+  const invalid = [];
 
   for (let record of records) {
-    const contact = record["contact"].toLowerCase()
+    const contact = record["contact"].toLowerCase();
 
     if (contact === "") {
-      continue
+      continue;
     }
 
-    if (!Lodash.find(
-      unique_users,
-      (user) => `${user.firstName} ${user.lastName}` === contact
-    )) {
-      invalid.push(contact)
+    if (!Lodash.find(unique_users, (user) => `${user.firstName} ${user.lastName}` === contact)) {
+      invalid.push(contact);
     }
   }
 
   if (invalid.length > 0) {
-    console.log(invalid)
+    console.log(invalid);
   }
 }
 
@@ -67,21 +64,23 @@ async function insert_customers() {
 
   for (let record of records) {
     const firstName = record["owerner first name"] || "";
-    const lastName = record["owerner last name"]|| "";
+    const lastName = record["owerner last name"] || "";
     const name = record["owerner name"] || "";
     const occupation = record["owerner occupation"] || "";
     const gender = record["owerner gender"] || "";
-    const birthday = record["owerner year"] ? `${record["owerner year"]}-${record["owerner month"]}-${record["owerner date"]}` : "";
+    const birthday = record["owerner year"]
+      ? `${record["owerner year"]}-${record["owerner month"]}-${record["owerner date"]}`
+      : "";
     const street = record["owerner street"] || "";
     const city = record["owerner city"] || "";
     const postcode = record["owerner postcode"] || "";
     const email = record["owerner email"] || "";
     const phone = record["owerner phone"] || "";
-    let notes = ""
+    let notes = "";
     if (record["memo"]) {
       notes = {
-       [Moment().format("YYYYMMDD-HH:mm:ss")]: record["memo"]
-      }
+        [Moment().format("YYYYMMDD-HH:mm:ss")]: record["memo"],
+      };
     }
     const customerSegment = record["客户分类"] || "";
 
@@ -113,9 +112,9 @@ async function insert_customers() {
     const firstName = record["insurer first name"];
     const lastName = record["insurer last name"];
     const gender = record["insurer gender"];
-    const birthday = record["insurer year"] ? `${record["insurer year"]}-${record["insurer month"]}-${
-      record["insurer date"] 
-    }`: "";
+    const birthday = record["insurer year"]
+      ? `${record["insurer year"]}-${record["insurer month"]}-${record["insurer date"]}`
+      : "";
 
     if (
       !Lodash.find(
@@ -127,11 +126,11 @@ async function insert_customers() {
     }
   }
 
-  print_invalid_contact(records, unique_users)
+  print_invalid_contact(records, unique_users);
 
   let data = "";
   for (let user of unique_users) {
-    const customer = await createCustomer(user)
+    const customer = await createCustomer(user);
     data += `${customer.id},${customer.firstName} ${customer.lastName}\n`;
   }
 
@@ -144,26 +143,20 @@ async function insert_policies() {
     skip_empty_lines: true,
   });
 
-  const customers = await Fs.readFileSync("./created_customers.csv", "utf-8")
+  const customers = await Fs.readFileSync("./created_customers.csv", "utf-8");
 
   const customerMap = {};
-  for (let customer of customers.split('\n')) {
-    if (customer === "") continue
-    const [id, customerName] = customer.split(",")
+  for (let customer of customers.split("\n")) {
+    if (customer === "") continue;
+    const [id, customerName] = customer.split(",");
     customerMap[customerName] = id;
   }
 
   const policies = [];
 
   for (let record of records) {
-    const ownerId =
-      customerMap[
-        `${record["owerner first name"]} ${record["owerner last name"]}`
-      ];
-    const insurerId =
-      customerMap[
-        `${record["insurer first name"]} ${record["insurer last name"]}`
-      ];
+    const ownerId = customerMap[`${record["owerner first name"]} ${record["owerner last name"]}`];
+    const insurerId = customerMap[`${record["insurer first name"]} ${record["insurer last name"]}`];
     const company = record["company"];
     const policyNumber = record["policyNumber"];
     const plan = record["plan"];
@@ -175,26 +168,20 @@ async function insert_policies() {
       : "";
     const ride = record["ride"];
     const rate = record["rate"];
-    const frequency = record["frequency"]
-      ? record["frequency"].toLowerCase()
-      : "";
+    const frequency = record["frequency"] ? record["frequency"].toLowerCase() : "";
     const premium = record["Premium"];
     const period = record["period"];
     const extraDeposit = record["extraDeposit"];
     const extraPeriod = record["extraPeriod"];
-    const beneficaries = record["beneficaries"]
-      ? record["beneficaries"].toLowerCase()
-      : "";
-    const beneficariesRelation = record["relation"]
-      ? record["relation"].toLowerCase()
-      : "";
+    const beneficaries = record["beneficaries"] ? record["beneficaries"].toLowerCase() : "";
+    const beneficariesRelation = record["relation"] ? record["relation"].toLowerCase() : "";
     const status = record["status"] ? record["status"].toLowerCase() : "";
-    
-    let contactId = ""
+
+    let contactId = "";
     if (record["contact"] && customerMap[record["contact"].toLowerCase()]) {
-      contactId = customerMap[record["contact"].toLowerCase()]
+      contactId = customerMap[record["contact"].toLowerCase()];
     }
-  
+
     policies.push({
       ownerId,
       insurerId,
@@ -218,17 +205,17 @@ async function insert_policies() {
     });
   }
 
-  let count = 0
+  let count = 0;
   for (let policy of policies) {
-    await createPolicy(policy)
-    console.log(count)
-    count += 1
+    await createPolicy(policy);
+    console.log(count);
+    count += 1;
   }
 }
 
 async function main() {
-  await insert_customers()
-  await insert_policies()
+  await insert_customers();
+  await insert_policies();
 }
 
-main()
+main();
