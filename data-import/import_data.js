@@ -7,8 +7,7 @@ const Moment = require("moment");
 const input = Fs.readFileSync("input_data.csv", "utf8");
 
 const SSF_API = "https://f067b6cmyf.execute-api.us-east-1.amazonaws.com/Prod";
-const userToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNzZiIsImlhdCI6MTYwNTE2MDcyMSwiZXhwIjoxNjA3NzUyNzIxfQ.cKhaDCcqVYBl9YcdPFkbqSeszu01Kxh0MD4JY2rFeGc";
+const userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNzZiIsImlhdCI6MTYwNzEyNTE4MSwiZXhwIjoxNjA5NzE3MTgxfQ.k6f6J_e4xwpQE0tbNEjnpt20u2EAaN0IqVUpUpOI-8U";
 
 function createCustomer(customer) {
   return Axios.post(`${SSF_API}/customer`, customer, {
@@ -20,7 +19,7 @@ function createCustomer(customer) {
       `user ${customer.firstName},${customer.lastName} created success with ${response.data.id}`
     );
     return response.data;
-  });
+  }).catch(err => console.log(err));
 }
 
 function createPolicy(policy) {

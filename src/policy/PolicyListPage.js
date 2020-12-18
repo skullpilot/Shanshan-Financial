@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import * as Lodash from "lodash";
 
 const headCells = [
-  { id: "insurerLegalName", disablePadding: true, label: "Insurer Legal Name" },
+  { id: "insuredLegalName", disablePadding: true, label: "Insured Legal Name" },
   { id: "ownerLegalName", disablePadding: false, label: "Owner Legal Name" },
   { id: "company", disablePadding: false, label: "Company" },
   { id: "plan", disablePadding: false, label: "Plan" },
@@ -22,10 +22,10 @@ function PolicyListPage({ policies, customers }) {
   function filterPolicy() {
     const filteredPolicies = Lodash.filter(policies, (policy) => {
       return (
-        (customers[policy.insurerId].name &&
-          customers[policy.insurerId].name.toLowerCase().includes(searchKeyword.toLowerCase())) ||
-        customers[policy.insurerId].firstName.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        customers[policy.insurerId].lastName.toLowerCase().includes(searchKeyword.toLowerCase())
+        (customers[policy.insuredId].name &&
+          customers[policy.insuredId].name.toLowerCase().includes(searchKeyword.toLowerCase())) ||
+        customers[policy.insuredId].firstName.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+        customers[policy.insuredId].lastName.toLowerCase().includes(searchKeyword.toLowerCase())
       );
     });
     return filteredPolicies;
@@ -42,13 +42,11 @@ function PolicyListPage({ policies, customers }) {
   let displayPolicy = filterPolicy();
 
   const enhancedPolicies = displayPolicy.map((policy) => {
-    const insurerLegalName = `${customers[policy.insurerId].firstName}, ${
-      customers[policy.insurerId].lastName
-    }`;
-    const ownerLegalName = `${customers[policy.ownerId].firstName}, ${
-      customers[policy.ownerId].lastName
-    }`;
-    return { ...policy, insurerLegalName, ownerLegalName };
+    const insuredLegalName = `${customers[policy.insuredId].firstName}, ${customers[policy.insuredId].lastName
+      }`;
+    const ownerLegalName = `${customers[policy.ownerId].firstName}, ${customers[policy.ownerId].lastName
+      }`;
+    return { ...policy, insuredLegalName, ownerLegalName };
   });
   return (
     <div>

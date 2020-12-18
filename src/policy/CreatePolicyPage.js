@@ -59,7 +59,7 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
     faceAmount: { helperText: "", error: false },
     applicationDate: { helperText: "", error: false },
     policyDate: { helperText: "", error: false },
-    insurerId: { helperText: "", error: false },
+    insuredId: { helperText: "", error: false },
     ownerId: { helperText: "", error: false },
     contactId: { helperText: "", error: false },
   });
@@ -95,16 +95,16 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       }));
     }
 
-    if (!policy.insurerId) {
+    if (!policy.insuredId) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
-        insurerId: { helperText: "Please select an insurer", error: true },
+        insuredId: { helperText: "Please select a person to be insured", error: true },
       }));
     } else {
       setPolicyError((prevState) => ({
         ...prevState,
-        insurerId: { helperText: "", error: false },
+        insuredId: { helperText: "", error: false },
       }));
     }
 
@@ -265,22 +265,22 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
       >
         <FormControl
           className={classes.formControl}
-          error={policyError.insurerId.error}
+          error={policyError.insuredId.error}
         >
-          <InputLabel id="insurerId-label">Insurer</InputLabel>
+          <InputLabel id="insuredId-label">Insured</InputLabel>
           <Select
-            labelId="insurerId-label"
-            value={policy.insurerId || ""}
-            onChange={setField("insurerId")}
+            labelId="insuredId-label"
+            value={policy.insuredId || ""}
+            onChange={setField("insuredId")}
           >
             {createMenuItems()}
           </Select>
-          <FormHelperText>{policyError.insurerId.helperText}</FormHelperText>
+          <FormHelperText>{policyError.insuredId.helperText}</FormHelperText>
         </FormControl>
         <IconButton aria-label="info">
           <ContactsIcon
             fontSize="inherit"
-            onClick={() => history.push(`/customer/${policy.insurerId}`)}
+            onClick={() => history.push(`/customer/${policy.insuredId}`)}
           />
         </IconButton>
       </div>
@@ -385,16 +385,16 @@ function CreatePolicyPage({ createPolicy, customers, policies, userToken }) {
           onChange={setField("status")}
         />
         <TextField
-          label="Beneficaries"
+          label="Beneficiaries"
           variant="outlined"
-          value={policy.beneficaries || ""}
-          onChange={setField("beneficaries")}
+          value={policy.beneficiaries || ""}
+          onChange={setField("beneficiaries")}
         />
         <TextField
-          label="Beneficaries Relation"
+          label="Beneficiaries Relation"
           variant="outlined"
-          value={policy.beneficariesRelation || ""}
-          onChange={setField("beneficariesRelation")}
+          value={policy.beneficiariesRelation || ""}
+          onChange={setField("beneficiariesRelation")}
         />
         <div className={classes.note}>
           <TextField

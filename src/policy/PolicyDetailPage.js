@@ -51,7 +51,7 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
   const [policyError, setPolicyError] = useState({
     applicationDate: { helperText: "", error: false },
     policyDate: { helperText: "", error: false },
-    insurerId: { helperText: "", error: false },
+    insuredId: { helperText: "", error: false },
     ownerId: { helperText: "", error: false },
     contactId: { helperText: "", error: false },
   });
@@ -91,16 +91,16 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
       }));
     }
 
-    if (!policyState.insurerId) {
+    if (!policyState.insuredId) {
       isValid = false;
       setPolicyError((prevState) => ({
         ...prevState,
-        insurerId: { helperText: "Please select an insurer", error: true },
+        insuredId: { helperText: "Please select a person to be insured", error: true },
       }));
     } else {
       setPolicyError((prevState) => ({
         ...prevState,
-        insurerId: { helperText: "", error: false },
+        insuredId: { helperText: "", error: false },
       }));
     }
     if (
@@ -181,28 +181,28 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
       </div>
 
 
-      <h3>Insurer Information</h3>
+      <h3>Insured Information</h3>
       <div style={{
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center"
       }}>
-        <FormControl className={classes.formControl} error={policyError.insurerId.error}>
-          <InputLabel id="insurerId-label">Insurer</InputLabel>
+        <FormControl className={classes.formControl} error={policyError.insuredId.error}>
+          <InputLabel id="insuredId-label">Insured</InputLabel>
           <Select
-            labelId="insurerId-label"
-            value={policyState.insurerId || ""}
-            onChange={setField("insurerId")}
+            labelId="insuredId-label"
+            value={policyState.insuredId || ""}
+            onChange={setField("insuredId")}
           >
             {createMenuItems()}
           </Select>
-          <FormHelperText>{policyError.insurerId.helperText}</FormHelperText>
+          <FormHelperText>{policyError.insuredId.helperText}</FormHelperText>
         </FormControl>
         <IconButton
           aria-label="info"
         >
-          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policyState.insurerId}`)} />
+          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policyState.insuredId}`)} />
         </IconButton>
       </div>
 
@@ -287,16 +287,16 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
           onChange={setField("status")}
         />
         <TextField
-          label="Beneficaries"
+          label="Beneficiaries"
           variant="outlined"
-          value={policy.beneficaries || ""}
-          onChange={setField("beneficaries")}
+          value={policy.beneficiaries || ""}
+          onChange={setField("beneficiaries")}
         />
         <TextField
-          label="Beneficaries Relation"
+          label="Beneficiaries Relation"
           variant="outlined"
-          value={policy.beneficariesRelation || ""}
-          onChange={setField("beneficariesRelation")}
+          value={policy.beneficiariesRelation || ""}
+          onChange={setField("beneficiariesRelation")}
         />
         <div className={classes.note}>
           <TextField

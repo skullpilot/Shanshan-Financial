@@ -88,9 +88,9 @@ function CustomerDetailPage({
     policies,
     (policy) => policy.ownerId === customer.id
   );
-  const policyAsInsurer = Lodash.filter(
+  const policyAsInsured = Lodash.filter(
     policies,
-    (policy) => policy.insurerId === customer.id
+    (policy) => policy.insuredId === customer.id
   );
   const policyAsContact = Lodash.filter(
     policies,
@@ -117,7 +117,7 @@ function CustomerDetailPage({
     if (
       Lodash.find(
         policies,
-        { insurerId: customerId } || { ownerId: customerId }
+        { insuredId: customerId } || { ownerId: customerId }
       )
     ) {
       return false;
@@ -252,14 +252,12 @@ function CustomerDetailPage({
               onClick={() => history.push(`/policy/${policy.id}`)}
             >
               <Typography>
-                {`Policy Owner: ${customers.data[policy.ownerId].firstName}, ${
-                  customers.data[policy.ownerId].lastName
-                }`}
+                {`Policy Owner: ${customers.data[policy.ownerId].firstName}, ${customers.data[policy.ownerId].lastName
+                  }`}
               </Typography>
               <Typography>
-                {`Policy Insured: ${
-                  customers.data[policy.insurerId].firstName
-                }, ${customers.data[policy.insurerId].lastName}`}
+                {`Policy Insured: ${customers.data[policy.insuredId].firstName
+                  }, ${customers.data[policy.insuredId].lastName}`}
               </Typography>
               <Typography>{`Company: ${policy.company}`}</Typography>
               <Typography>{`Plan: ${policy.plan}`}</Typography>
@@ -407,7 +405,7 @@ function CustomerDetailPage({
       <h5 style={{ marginTop: "50px" }}>Related Policies</h5>
       <List component="nav" className={classes.root}>
         {policyItem(policyAsOwner, "Owner of Policy/Policies: ")}
-        {policyItem(policyAsInsurer, "Insurer of Policy/Policies: ")}
+        {policyItem(policyAsInsured, "Insured of Policy/Policies: ")}
         {policyItem(policyAsContact, "Contact Person of Policy/Policies: ")}
       </List>
 

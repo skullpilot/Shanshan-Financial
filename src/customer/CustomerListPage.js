@@ -25,7 +25,7 @@ function CustomerListPage({ customers, policies }) {
   const customersWithPolicy = new Set();
   Lodash.forEach(policies, (policy) => {
     customersWithPolicy.add(policy.ownerId);
-    customersWithPolicy.add(policy.insurerId);
+    customersWithPolicy.add(policy.insuredId);
   });
 
   const customersWithoutPolicy = Lodash.filter(customers, (customer) => {
