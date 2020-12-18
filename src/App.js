@@ -14,8 +14,13 @@ import { history } from "./history";
 import { store } from "./redux/store";
 import { actions } from "./redux/actions";
 import { PolicyDetailPage, PolicyListPage, CreatePolicyPage } from "./policy";
-import { CustomerDetailPage, CustomerListPage, CreateCustomerPage } from "./customer";
+import {
+  CustomerDetailPage,
+  CustomerListPage,
+  CreateCustomerPage,
+} from "./customer";
 import { BirthdayListPage } from "./birthday";
+import NotFound from "./errorpage";
 import HomePage from "./homepage";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
@@ -33,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: "50%",
     left: "50%",
-  }
+  },
 }));
 
 function AppTopBar({ title, needReturn = false, deleteSession }) {
@@ -58,27 +63,32 @@ function AppTopBar({ title, needReturn = false, deleteSession }) {
       </Button>
     </Toolbar>
   ) : (
-      <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-          <HomeIcon />
-        </IconButton>
-        <Typography variant="h6" className={classes.title}>
-          {title}
-        </Typography>
-        <Button color="inherit" onClick={() => history.push("/customers")}>
-          <u>Customers</u>
-        </Button>
-        <Button color="inherit" onClick={() => history.push("/policies")}>
-          <u>Policies</u>
-        </Button>
-        <Button color="inherit" onClick={() => history.push("/birthdays")}>
-          <u>Birthdays</u>
-        </Button>
-        <Button color="inherit" onClick={() => deleteSession()}>
-          Logout
+    <Toolbar>
+      <IconButton
+        edge="start"
+        className={classes.menuButton}
+        color="inherit"
+        aria-label="menu"
+      >
+        <HomeIcon />
+      </IconButton>
+      <Typography variant="h6" className={classes.title}>
+        {title}
+      </Typography>
+      <Button color="inherit" onClick={() => history.push("/customers")}>
+        <u>Customers</u>
       </Button>
-      </Toolbar>
-    );
+      <Button color="inherit" onClick={() => history.push("/policies")}>
+        <u>Policies</u>
+      </Button>
+      <Button color="inherit" onClick={() => history.push("/birthdays")}>
+        <u>Birthdays</u>
+      </Button>
+      <Button color="inherit" onClick={() => deleteSession()}>
+        Logout
+      </Button>
+    </Toolbar>
+  );
 
   return (
     <div className={classes.root}>
@@ -91,43 +101,35 @@ const ConnectedAppTopBar = connect(null, {
   deleteSession: actions.deleteSession,
 })(AppTopBar);
 
-function PrivateApp({
-  initialization,
-  initialize,
-  userToken,
-}) {
+function PrivateApp({ initialization, initialize, userToken }) {
   const classes = useStyles();
 
   if (userToken === null) {
-    return <Redirect  to="/"/>
+    return <Redirect to="/" />;
   }
 
   if (initialization.status === "loading") {
-    return (
-      <CircularProgress className={classes.circularProgress} />
-    );
+    return <CircularProgress className={classes.circularProgress} />;
   }
 
   if (initialization.status === "none") {
-    initialize(userToken)
-    return (
-      <CircularProgress className={classes.circularProgress} />
-    );
+    initialize(userToken);
+    return <CircularProgress className={classes.circularProgress} />;
   }
-
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <Switch>
-        <Route path="/customers">
+        <Route exact path="/customers">
           <ConnectedAppTopBar title="珊珊财富 - 用户列表" />
           <CustomerListPage />
         </Route>
-        <Route path="/policies">
+        <Route exact path="/policies">
           <ConnectedAppTopBar title="珊珊财富 - 保单列表" />
           <PolicyListPage />
         </Route>
         <Route
+          exact
           path="/customer/:customer_id"
           render={(props) => (
             <div>
@@ -137,6 +139,7 @@ function PrivateApp({
           )}
         />
         <Route
+          exact
           path="/customer"
           render={(props) => (
             <div>
@@ -146,6 +149,7 @@ function PrivateApp({
           )}
         />
         <Route
+          exact
           path="/policy/:policy_id"
           render={(props) => (
             <div>
@@ -155,6 +159,7 @@ function PrivateApp({
           )}
         />
         <Route
+          exact
           path="/policy"
           render={(props) => (
             <div>
@@ -164,6 +169,7 @@ function PrivateApp({
           )}
         />
         <Route
+          exact
           path="/birthdays"
           render={(props) => (
             <div>
@@ -172,6 +178,8 @@ function PrivateApp({
             </div>
           )}
         ></Route>
+        <Route path="/404" component={NotFound} />
+        <Redirect to="/404" />
       </Switch>
     </div>
   );
@@ -180,12 +188,12 @@ function PrivateApp({
 function mapState(state) {
   return {
     userToken: state.sessions.userToken,
-    initialization: state.initialization
+    initialization: state.initialization,
   };
 }
 
 const actionCreators = {
-  initialize: actions.initialize
+  initialize: actions.initialize,
 };
 
 const ConnectedPrivateApp = connect(mapState, actionCreators)(PrivateApp);
