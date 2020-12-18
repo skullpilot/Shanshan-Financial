@@ -63,26 +63,26 @@ async function insert_customers() {
   const unique_users = [];
 
   for (let record of records) {
-    const firstName = record["owerner first name"] || "";
-    const lastName = record["owerner last name"] || "";
-    const name = record["owerner name"] || "";
-    const occupation = record["owerner occupation"] || "";
-    const gender = record["owerner gender"] || "";
-    const birthday = record["owerner year"]
-      ? `${record["owerner year"]}-${record["owerner month"]}-${record["owerner date"]}`
+    const firstName = record["owner first name"] || "";
+    const lastName = record["owner last name"] || "";
+    const name = record["owner name"] || "";
+    const occupation = record["owner occupation"] || "";
+    const gender = record["owner gender"] || "";
+    const birthday = record["owner year"]
+      ? `${record["owner year"]}-${record["owner month"]}-${record["owner date"]}`
       : "";
-    const street = record["owerner street"] || "";
-    const city = record["owerner city"] || "";
-    const postcode = record["owerner postcode"] || "";
-    const email = record["owerner email"] || "";
-    const phone = record["owerner phone"] || "";
+    const street = record["owner street"] || "";
+    const city = record["owner city"] || "";
+    const postcode = record["owner postcode"] || "";
+    const email = record["owner email"] || "";
+    const phone = record["owner phone"] || "";
     let notes = "";
     if (record["memo"]) {
       notes = {
         [Moment().format("YYYYMMDD-HH:mm:ss")]: record["memo"],
       };
     }
-    const customerSegment = record["客户分类"] || "";
+    const customerSegment = record["customer segment"] || "";
 
     if (
       !Lodash.find(
@@ -109,11 +109,11 @@ async function insert_customers() {
   }
 
   for (let record of records) {
-    const firstName = record["insurer first name"];
-    const lastName = record["insurer last name"];
-    const gender = record["insurer gender"];
-    const birthday = record["insurer year"]
-      ? `${record["insurer year"]}-${record["insurer month"]}-${record["insurer date"]}`
+    const firstName = record["insured first name"];
+    const lastName = record["insured last name"];
+    const gender = record["insured gender"];
+    const birthday = record["insured year"]
+      ? `${record["insured year"]}-${record["insured month"]}-${record["insured date"]}`
       : "";
 
     if (
@@ -155,8 +155,8 @@ async function insert_policies() {
   const policies = [];
 
   for (let record of records) {
-    const ownerId = customerMap[`${record["owerner first name"]} ${record["owerner last name"]}`];
-    const insuredId = customerMap[`${record["insurer first name"]} ${record["insurer last name"]}`];
+    const ownerId = customerMap[`${record["owner first name"]} ${record["owner last name"]}`];
+    const insuredId = customerMap[`${record["insured first name"]} ${record["insured last name"]}`];
     const company = record["company"];
     const policyNumber = record["policyNumber"];
     const plan = record["plan"];
@@ -173,8 +173,8 @@ async function insert_policies() {
     const period = record["period"];
     const extraDeposit = record["extraDeposit"];
     const extraPeriod = record["extraPeriod"];
-    const beneficaries = record["beneficaries"] ? record["beneficaries"].toLowerCase() : "";
-    const beneficariesRelation = record["relation"] ? record["relation"].toLowerCase() : "";
+    const beneficiaries = record["beneficiaries"] ? record["beneficiaries"].toLowerCase() : "";
+    const beneficiariesRelation = record["relation"] ? record["relation"].toLowerCase() : "";
     const status = record["status"] ? record["status"].toLowerCase() : "";
 
     let contactId = "";
@@ -199,8 +199,8 @@ async function insert_policies() {
       period,
       extraDeposit,
       extraPeriod,
-      beneficaries,
-      beneficariesRelation,
+      beneficiaries,
+      beneficiariesRelation,
       status,
     });
   }
