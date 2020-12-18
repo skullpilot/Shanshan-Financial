@@ -156,7 +156,7 @@ async function insert_policies() {
 
   for (let record of records) {
     const ownerId = customerMap[`${record["owerner first name"]} ${record["owerner last name"]}`];
-    const insurerId = customerMap[`${record["insurer first name"]} ${record["insurer last name"]}`];
+    const insuredId = customerMap[`${record["insurer first name"]} ${record["insurer last name"]}`];
     const company = record["company"];
     const policyNumber = record["policyNumber"];
     const plan = record["plan"];
@@ -184,7 +184,7 @@ async function insert_policies() {
 
     policies.push({
       ownerId,
-      insurerId,
+      insuredId,
       contactId,
       company,
       policyNumber,
