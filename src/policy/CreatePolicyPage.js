@@ -4,7 +4,6 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import * as Lodash from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
-import Axios from "axios";
 
 import { actions } from "../redux/actions";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -13,7 +12,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
-import validator from "validator";
 import { history } from "../history";
 import IconButton from "@material-ui/core/IconButton";
 import ContactsIcon from "@material-ui/icons/Contacts";
