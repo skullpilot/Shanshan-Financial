@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import Lodash from "lodash";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import * as Lodash from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import Validator from "validator";
@@ -101,7 +101,7 @@ function CustomerDetailPage({
     return <div>Can't find the customer information</div>;
   }
 
-  const menuItems = Object.values(customers.data).map((customer) => (
+  const menuItems = Lodash.sortBy(Object.values(customers.data), ["firstName", "lastName"]).map((customer) => (
     <MenuItem
       value={customer.id}
       key={customer.id}

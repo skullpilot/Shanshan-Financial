@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
@@ -60,7 +60,7 @@ function Relationships({ relationships, updateRelationships, menuItems }) {
             <DeleteIcon fontSize="inherit" />
           </IconButton>
           <TextField
-            label="Relation Name"
+            label="Relationship"
             variant="outlined"
             value={relationship.name || ""}
             onChange={(event) => {
