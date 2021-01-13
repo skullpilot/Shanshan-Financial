@@ -84,6 +84,11 @@ function CustomerDetailPage({
     birthday: { helperText: "", error: false },
   });
 
+  if (!customer) {
+    history.push("/customers")
+    return <div>Redirecting...</div>
+  }
+
   const policyAsOwner = Lodash.filter(
     policies,
     (policy) => policy.ownerId === customer.id
@@ -248,8 +253,9 @@ function CustomerDetailPage({
         >
           {filterdPolicy.map((policy) => (
             <div
-              class={styles.policyItem}
+              className={styles.policyItem}
               onClick={() => history.push(`/policy/${policy.id}`)}
+              key={policy.id}
             >
               <Typography>
                 {`Policy Owner: ${customers.data[policy.ownerId].firstName}, ${customers.data[policy.ownerId].lastName

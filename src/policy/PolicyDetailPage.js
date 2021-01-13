@@ -175,8 +175,9 @@ function PolicyDetailPage({ policy, policies, customers, userToken, updatePolicy
         </FormControl>
         <IconButton
           aria-label="info"
+          onClick={() => history.push(`/customer/${policyState.contactId}`)} 
         >
-          <ContactsIcon fontSize="inherit" onClick={() => history.push(`/customer/${policyState.contactId}`)} />
+          <ContactsIcon fontSize="inherit"/>
         </IconButton>
       </div>
 

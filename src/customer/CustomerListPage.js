@@ -72,8 +72,8 @@ function CustomerListPage({ customers, policies }) {
   }
 
   const searchCustomerWithoutPoliciesValue = searchContent.searchType === "CUSTOMER_NO_POLICIES" && searchContent.searchValue
-  const searchCustomerValue = searchContent.searchType === "CUSTOMER_NAME" && searchContent.searchValue ? searchContent.searchValue : null
-  const searchCustomerSegmentValue = searchContent.searchType === "CUSTOMER_SEGMENT" && searchContent.searchValue ? searchContent.searchValue : null
+  const searchCustomerValue = searchContent.searchType === "CUSTOMER_NAME" && searchContent.searchValue ? searchContent.searchValue : ""
+  const searchCustomerSegmentValue = searchContent.searchType === "CUSTOMER_SEGMENT" && searchContent.searchValue ? searchContent.searchValue : ""
 
   return (
     <div>
