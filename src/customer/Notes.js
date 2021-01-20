@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import Select from "@material-ui/core/Select";
-import IconButton from "@material-ui/core/IconButton";
 import propTypes from "prop-types";
 import moment from "moment";
 
@@ -52,11 +50,13 @@ function Notes({ notes, updateNotes }) {
   notesArray.sort((a, b) => a[0] - b[0]);
 
   const noteItems = notesArray.map((note, index) => {
+    const time = moment(note[0], "YYYYMMDD-HH:mm:ss").format('MMM Do YYYY, HH:mm:ss');
     return (
       <div
         className={classes.note}
+        key={index}
       >
-        <div styles={{ flexGrow: 1 }}>{note[0] || ""}</div>
+        <div styles={{ flexGrow: 1 }}>{time}</div>
         <div styles={{ flexGrow: 10 }}>
           <TextField
             label="Note Detail"

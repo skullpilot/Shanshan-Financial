@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Table from "../table";
@@ -17,9 +17,25 @@ const headCells = [
   { id: "customerSegment", numeric: false, disablePadding: false, label: "Customer Segment" },
 ];
 
+// A custom hook that builds on useLocation to parse
+// the query string for you.
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 function CustomerListPage({ customers, policies }) {
   const history = useHistory();
+  const query = useQuery();
   const [searchContent, setSearchContent] = useState({ searchType: null, searchValue: null });
+
+  useEffect(() => {
+    const searchType = query.get("type");
+    let searchValue = query.get("value");
+    if (searchValue === 'true') {
+      searchValue = true
+    }
+    setSearchContent({searchType, searchValue})
+  }, [])
 
   const customersWithFollowupInfo = customers.map(customer => {
     if (!customer.notes) {
@@ -52,10 +68,22 @@ function CustomerListPage({ customers, policies }) {
 
   const handleInputUpdate = (type, event) => {
     if (type === "CUSTOMER_NAME") {
+      history.push({
+        pathname: '/customers',
+        search: `?type=${type}&value=${event.target.value}`
+      })
       setSearchContent({ searchType: type, searchValue: event.target.value })
     } else if (type === "CUSTOMER_NO_POLICIES") {
+      history.push({
+        pathname: '/customers',
+        search: `?type=${type}&value=${event.target.checked}`
+      })
       setSearchContent({ searchType: type, searchValue: event.target.checked })
     } else if (type === "CUSTOMER_SEGMENT") {
+      history.push({
+        pathname: '/customers',
+        search: `?type=${type}&value=${event.target.value}`
+      })
       setSearchContent({ searchType: type, searchValue: event.target.value })
     }
   }
