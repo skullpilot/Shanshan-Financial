@@ -40,7 +40,7 @@ function HomePage({ createSession }) {
         />
 
         <div
-          className="mt-1 cursor-pointer text-lg text-white h-10 w-3/4 bg-grey-darker hover:bg-grey-darkest rounded shadow-md flex justify-center items-center"
+          className="mt-1 cursor-pointer text-lg text-white h-10 w-3/4 bg-blue-500 hover:bg-blue-600 rounded shadow-md flex justify-center items-center"
           onClick={() => login()}
         >
           Log in
