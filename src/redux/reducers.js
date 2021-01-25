@@ -96,10 +96,11 @@ function attachments(state = { requesting: false, data: [] }, action) {
     case Actions.attachmentConstants.DELETE_ATTACHMENT:
       return state;
     case Actions.attachmentConstants.DELETE_ATTACHMENT_SUCCESS:
+      console.log(state.data)
       return {
         ...state,
         requesting: false,
-        data: state.data.filter((attachment) => attachment.fileName !== action.payload.fileName),
+        data: state.data.filter((attachment) => attachment.fileName !== action.payload),
       };
     default:
       return state;

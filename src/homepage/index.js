@@ -1,48 +1,9 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
 import * as Lodash from "lodash";
 import { actions } from "../redux/actions";
 
-//TODO: move input form in the center
-const useStyles = makeStyles((theme) => ({
-  page: {
-    padding: theme.spacing(3),
-    backgroundImage: "url(https://www.itl.cat/pngfile/big/34-349100_westworld-logo-tv-series-hbo-wallpaper-and-background.jpg)",
-    backgroundPosition: "center",         
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    height: '100vh',
-    display: 'flex', 
-    flexDirection: 'column', 
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  block: {
-    backgroundColor: 'white',
-    width: '35vw',
-    height: '40vh',
-    boxShadow: "3px 3px 1px grey",
-    display: 'flex', 
-    flexDirection: 'column', 
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inputBox: {
-    padding: theme.spacing(1),
-    width: '55%',
-  },
-  buttonStyle: {
-    padding: theme.spacing(1),
-    width: '55%',
-  },
-}));
-
 function HomePage({ createSession }) {
-  const classes = useStyles();
-
   const [user, setUser] = useState({ username: "", password: "" });
 
   const setField = Lodash.curry((field, event) => {
@@ -51,46 +12,38 @@ function HomePage({ createSession }) {
   });
 
   const login = () => {
-    // TODO: better error message here
     if (!Lodash.isEmpty(user.username) && !Lodash.isEmpty(user.password)) {
       createSession(user.username, user.password);
     }
   };
 
   return (
-    <div className={classes.page}>
-      <div className={classes.block}>
-        <div className={classes.inputBox}>
-          <TextField 
-          fullWidth
-          label="Email" name="email" 
-          size="small" 
-          variant="outlined" 
+    <div
+      className="bg-local bg-center bg-cover bg-no-repeat h-screen flex flex-col justify-center items-center"
+      style={{
+        backgroundImage: `url(https://images.unsplash.com/photo-1488998427799-e3362cec87c3?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80)`,
+      }}
+    >
+      <div className="w-1/3 h-72 bg-blue-50 shadow flex flex-col justify-center items-center rounded-sm">
+        <input
+          name="email"
+          placeholder=" Email"
+          className="border rounded pl-2 mt-1 mb-2 w-3/4 h-10 shadow-md"
           onChange={setField("username")}
-          />
-        </div>
+        />
 
-        <div className={classes.inputBox}>
-          <TextField 
-          fullWidth 
-          label="Password" 
-          name="password" 
-          size="small" 
-          type="password" 
-          variant="outlined" 
+        <input
+          name="Password"
+          placeholder=" Password"
+          className="border rounded pl-2 mt-1 mb-2 w-3/4 h-10 shadow-md"
           onChange={setField("password")}
-          />
-        </div>
+        />
 
-        <div className={classes.buttonStyle}>
-          <Button 
-          color="secondary" 
-          fullWidth
-          type="submit"
-          variant="contained" 
-          onClick={() => login()}>
-            Log in
-          </Button>
+        <div
+          className="mt-1 cursor-pointer text-lg text-white h-10 w-3/4 bg-grey-darker hover:bg-grey-darkest rounded shadow-md flex justify-center items-center"
+          onClick={() => login()}
+        >
+          Log in
         </div>
       </div>
     </div>

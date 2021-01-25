@@ -85,7 +85,8 @@ function PolicyListPage({ policies, customers }) {
   const searchCompanyValue = searchContent.searchType === "COMPANY" && searchContent.searchValue ? searchContent.searchValue : ""
 
   return (
-    <div>
+    <div className="flex flex-col">
+      <div className="text-2xl mx-auto ">珊珊财富 - 保单列表</div>
       <div
         style={{
           display: "flex",

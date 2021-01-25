@@ -1,50 +1,13 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import AttachmentIcon from "@material-ui/icons/Attachment";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
-import DeleteIcon from "@material-ui/icons/Delete";
 import moment from "moment";
-import IconButton from "@material-ui/core/IconButton";
 import { actions } from "../redux/actions";
 import { history } from "../history";
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: "6px 16px",
-    width: "380px",
-  },
-  secondaryTail: {
-    backgroundColor: theme.palette.secondary.main,
-  },
-  AttachmentsContainer: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  AttachmentsRoot: {
-    "& .MuiAvatar-root": {
-      width: "30px",
-      height: "30px",
-    },
-    "& .MuiListItemAvatar-root": {
-      minWidth: "40px",
-    },
-    display: "flex",
-    justifyContent: "center",
-  },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
@@ -68,77 +31,64 @@ function BirthdayTemplates({
   };
 
   return (
-    <div className={classes.AttachmentsContainer}>
+    <div className="flex flex-col justify-center items-center">
       <Backdrop className={classes.backdrop} open={attachments.requesting}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <h5>Birthday Attachments: </h5>
-      <div className={classes.AttachmentsRoot}>
-        <List>
+      <div className="text-xl">Birthday Attachments</div>
+      <div className="flex justify-center">
+        <ul>
           {attachments.data &&
             attachments.data.map((attachment) => (
-              <div
-                key={attachment.fileName}
-                style={{ display: "flex", alignItems: "center" }}
-              >
-                <IconButton
-                  aria-label="delete"
-                  onClick={() => {
-                    deleteAttachment(attachment.fileName, userToken);
-                  }}
-                >
-                  <DeleteIcon fontSize="inherit" />
-                </IconButton>
-                <ListItem
-                  button
-                  onClick={() =>
-                    document.getElementById(attachment.fileName).click()
-                  }
-                >
-                  <ListItemAvatar>
-                    <Avatar>
-                      <AttachmentIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText secondary={attachment.fileName} />
+              <div key={attachment.fileName} className="flex items-center my-4">
+                <div className="flex flex-row">
+                  <div
+                    className="cursor-pointer text-grey-darker underline mr-4 text-lg"
+                    onClick={() =>
+                      document.getElementById(attachment.fileName).click()
+                    }
+                  >
+                    {attachment.fileName}
+                  </div>
+                  <div
+                    className="cursor-pointer text-red-500 text-lg"
+                    onClick={() => {
+                      deleteAttachment(attachment.fileName, userToken);
+                    }}
+                  >
+                    delete
+                  </div>
                   <a
                     id={attachment.fileName}
                     href={attachment.url}
                     download
                     hidden
                   ></a>
-                </ListItem>
+                </div>
               </div>
             ))}
-        </List>
+        </ul>
       </div>
-      <h5>Selected File To Upload: {file && file.name}</h5>
-      <div>
-        <label style={{ margin: "10px" }}>
+      <h5 className="mb-2 mt-4">
+        Selected File To Upload: {file && file.name}
+      </h5>
+      <div className="flex flex-row mb-2">
+        <label className="mr-6">
           <input
-            style={{ display: "none" }}
+            className="hidden"
             type="file"
             onChange={(event) => setFile(event.target.files[0])}
           />
-          <Button
-            color="default"
-            variant="contained"
-            component="span"
-            startIcon={<AttachmentIcon />}
-          >
-            Choose File
-          </Button>
+          <div className="cursor-pointer h-8 w-32 bg-blue-400 hover:bg-blue-600 rounded shadow flex justify-center items-center">
+            <div>CHOOSE FILE</div>
+          </div>
         </label>
-        <Button
-          color="default"
-          variant="contained"
-          component="span"
-          startIcon={<CloudUploadIcon />}
-          style={{ margin: "10px" }}
+        <div
+          className="cursor-pointer h-8 w-32 bg-blue-400 hover:bg-blue-600 rounded shadow flex justify-center items-center"
           onClick={() => handleFileUpload()}
         >
-          Upload File
-        </Button>
+          <div>UPLOAD FILE</div>
+        </div>
       </div>
     </div>
   );
@@ -158,8 +108,6 @@ const ConnectedBirthdayTemplates = connect(
 )(BirthdayTemplates);
 
 function BirthdayListPage({ customers }) {
-  const classes = useStyles();
-
   function sortDate(a, b) {
     const A = Math.abs(moment(a).subtract(moment(a).year(), "years"));
     const B = Math.abs(moment(b).subtract(moment(b).year(), "years"));
@@ -191,56 +139,24 @@ function BirthdayListPage({ customers }) {
   return (
     <div>
       <ConnectedBirthdayTemplates />
-      <Divider />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <div className="h-px bg-grey-dark" />
+      <div className="flex flex-col items-center">
         {customersWithBirthday.map((cx) => (
           <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              margin: "8px",
+            className="flex flex-row items-center my-6"
+            key={cx.id}
+            onClick={() => {
+              history.push(`/customer/${cx.id}`);
             }}
           >
-            <div>
-              <Typography variant="h3" color="textSecondary">
-                {moment(cx.birthday).format("MM-DD")}
-              </Typography>
+            <div className="text-2xl mr-4">
+              {moment(cx.birthday).format("MM-DD")}
             </div>
-            <div style={{ width: "35px" }} />
-            <div>
-              <Paper elevation={3} className={classes.paper}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography variant="h6" component="h1">
-                    {`${cx.firstName}, ${cx.lastName}`}
-                  </Typography>
-                  <Button
-                    onClick={() => {
-                      history.push(`/customer/${cx.id}`);
-                    }}
-                    //style={{ backgroundColor: "lightGrey" }}
-                  >
-                    Customer Info
-                  </Button>
-                </div>
-                <Typography>{`Birthday: ${
-                  cx.birthday || "unknown"
-                }`}</Typography>
-                <Typography>{`Phone: ${cx.phone || "unknown"}`}</Typography>
-                <Typography>{`Email: ${cx.email || "unknown"}`}</Typography>
-              </Paper>
+            <div className="shadow-2xl rounded-lg w-96 p-4 cursor-pointer hover:bg-blue-500">
+              <div className="mb-4">{`${cx.firstName}, ${cx.lastName}`}</div>
+              <div className="">{`Birthday: ${cx.birthday || "unknown"}`}</div>
+              <div className="">{`Phone: ${cx.phone || "unknown"}`}</div>
+              <div className="">{`Email: ${cx.email || "unknown"}`}</div>
             </div>
           </div>
         ))}

@@ -1,60 +1,16 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
 import * as Lodash from "lodash";
 import Validator from "validator";
 import { actions } from "../redux/actions";
 import Relationships from "./Relationships";
 import Notes from "./Notes";
+
+import { makeStyles } from "@material-ui/core/styles";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Select from "@material-ui/core/Select";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(1),
-    [theme.breakpoints.down("xs")]: {
-      "& .MuiTextField-root": {
-        margin: theme.spacing(1, 1),
-        width: 250,
-      },
-
-      textAlign: "center",
-    },
-    [theme.breakpoints.up("sm")]: {
-      "& .MuiTextField-root": {
-        margin: theme.spacing(1, 5),
-        width: 290,
-      },
-
-      textAlign: "center",
-    },
-    [theme.breakpoints.up("md")]: {
-      "& .MuiTextField-root": {
-        margin: theme.spacing(2, 5),
-        width: 400,
-      },
-    },
-  },
-  note: {
-    [theme.breakpoints.up("md")]: {
-      "& .MuiTextField-root": {
-        position: "relative",
-        width: "50%",
-      },
-    },
-  },
-  formControl: {
-    margin: theme.spacing(2, 5),
-    minWidth: 300,
-  },
-}));
+const useStyles = makeStyles((theme) => ({}));
 
 function CreateCustomerPage({ createCustomer, userToken, customers }) {
   const classes = useStyles();
@@ -69,10 +25,11 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
   });
 
   const menuItems = Object.values(customers.data).map((customer) => (
-    <MenuItem
+    <div
+      className="flex flex-row cursor:pointer hover:bg-grey-lighter"
       value={customer.id}
       key={customer.id}
-    >{`${customer.firstName}, ${customer.lastName}`}</MenuItem>
+    >{`${customer.firstName}, ${customer.lastName}`}</div>
   ));
 
   const setField = Lodash.curry((field, event) => {
@@ -131,7 +88,10 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
-        phone: { helperText: "Please provide correct phone number", error: true },
+        phone: {
+          helperText: "Please provide correct phone number",
+          error: true,
+        },
       }));
     } else {
       setCustomerError((prevState) => ({
@@ -153,11 +113,17 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
       }));
     }
 
-    if (customer.birthday && !Validator.isDate(customer.birthday, "YYYY-MM-DD")) {
+    if (
+      customer.birthday &&
+      !Validator.isDate(customer.birthday, "YYYY-MM-DD")
+    ) {
       isValid = false;
       setCustomerError((prevState) => ({
         ...prevState,
-        birthday: { helperText: "Please provide birthday in format YYYY-MM-DD", error: true },
+        birthday: {
+          helperText: "Please provide birthday in format YYYY-MM-DD",
+          error: true,
+        },
       }));
     } else {
       setCustomerError((prevState) => ({
@@ -171,129 +137,165 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
 
   return (
     <div>
-      <div className={classes.root}>
+      <div className="flex flex-col items-center">
         <h3>New Customer</h3>
-        <div>
-          <TextField
-            label="First Name"
-            variant="outlined"
-            value={customer.firstName || ""}
-            onChange={setField("firstName")}
-            error={customerError.firstName.error}
-            helperText={customerError.firstName.helperText}
-            type="text"
-            required
-          />
-          <TextField
-            label="Last Name"
-            variant="outlined"
-            value={customer.lastName || ""}
-            onChange={setField("lastName")}
-            error={customerError.lastName.error}
-            helperText={customerError.lastName.helperText}
-            type="text"
-            required
-          />
-          <TextField
-            label="Name"
-            variant="outlined"
-            value={customer.name || ""}
-            onChange={setField("name")}
-          />
-          <TextField
-            variant="outlined"
-            error={customerError.gender.error}
-            select
-            label="Gender"
-            value={customer.gender || ""}
-            onChange={setField("gender")}
-            helperText={customerError.gender.helperText}
-            required
-          >
-            <MenuItem aria-label="None" value="" />
-            <MenuItem key={"M"} value={"M"}>
-              male
-            </MenuItem>
-            <MenuItem key={"F"} value={"F"}>
-              female
-            </MenuItem>
-          </TextField>
-          <TextField
-            label="Email"
-            variant="outlined"
-            value={customer.email || ""}
-            onChange={setField("email")}
-            error={customerError.email.error}
-            helperText={customerError.email.helperText}
-          />
-          <TextField
-            label="Phone"
-            variant="outlined"
-            value={customer.phone || ""}
-            onChange={setField("phone")}
-            error={customerError.phone.error}
-            helperText={customerError.phone.helperText}
-            placeholder="xxx-xxx-xxxx"
-          />
-
-          <TextField
-            label="Birthday"
-            variant="outlined"
-            value={customer.birthday || ""}
-            onChange={setField("birthday")}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            error={customerError.birthday.error}
-            helperText={customerError.birthday.helperText}
-            placeholder="YYYY-MM-DD"
-          />
-          <TextField
-            label="Wechat Name"
-            variant="outlined"
-            value={customer.wechatName || ""}
-            onChange={setField("wechatName")}
-          />
-          <TextField
-            label="Wechat ID"
-            variant="outlined"
-            value={customer.wechatId || ""}
-            onChange={setField("wechatId")}
-          />
-          <TextField
-            label="City"
-            variant="outlined"
-            value={customer.city || ""}
-            onChange={setField("city")}
-            type="text"
-          />
-          <TextField
-            label="Address"
-            variant="outlined"
-            value={customer.address || ""}
-            onChange={setField("address")}
-          />
-          <TextField
-            label="Postcode"
-            variant="outlined"
-            value={customer.postcode || ""}
-            onChange={setField("postcode")}
-          />
-          <TextField
-            label="Occupation"
-            variant="outlined"
-            value={customer.occupation || ""}
-            onChange={setField("occupation")}
-          />
-          <TextField
-            label="CustomerSegment"
-            variant="outlined"
-            value={customer.customerSegment || ""}
-            onChange={setField("customerSegment")}
-          />
+        <div className="flex flex-wrap justify-center max-w-xl">
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">First Name</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="First Name"
+              value={customer.firstName || ""}
+              onChange={setField("firstName")}
+              error={customerError.firstName.error}
+              helperText={customerError.firstName.helperText}
+              type="text"
+              required
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">Last Name</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="Last Name"
+              value={customer.lastName || ""}
+              onChange={setField("lastName")}
+              error={customerError.lastName.error}
+              helperText={customerError.lastName.helperText}
+              type="text"
+              required
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">Name</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="Last Name"
+              value={customer.name || ""}
+              onChange={setField("name")}
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">Gender*</label>
+            <select
+              className="w-96 h-12 mr-6 ml-6 border rounded text-align-last-center"
+              name="gender"
+              error={customerError.gender.error}
+              value={customer.gender || ""}
+              onChange={setField("gender")}
+              helperText={customerError.gender.helperText}
+              required
+            >
+              <option value=""> None</option>
+              <option value="M"> Male</option>
+              <option value="F"> Female</option>
+            </select>
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">Email</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="Email"
+              value={customer.email || ""}
+              onChange={setField("email")}
+              error={customerError.email.error}
+              helperText={customerError.email.helperText}
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">Phone</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="Phone"
+              value={customer.phone || ""}
+              onChange={setField("phone")}
+              error={customerError.phone.error}
+              helperText={customerError.phone.helperText}
+              placeholder="xxx-xxx-xxxx"
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">Birthday</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="Birthday"
+              value={customer.birthday || ""}
+              onChange={setField("birthday")}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              error={customerError.birthday.error}
+              helperText={customerError.birthday.helperText}
+              placeholder="YYYY-MM-DD"
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">Wechat Name</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="Wechat Name"
+              value={customer.wechatName || ""}
+              onChange={setField("wechatName")}
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">Wechat ID</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="Wechat ID"
+              value={customer.wechatId || ""}
+              onChange={setField("wechatId")}
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">City</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="City"
+              value={customer.city || ""}
+              onChange={setField("city")}
+              type="text"
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">Address</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="Address"
+              value={customer.address || ""}
+              onChange={setField("address")}
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">Postcode</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="Postcode"
+              value={customer.postcode || ""}
+              onChange={setField("postcode")}
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">Occupation</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="Occupation"
+              value={customer.occupation || ""}
+              onChange={setField("occupation")}
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <label className="mt-4 ml-8 text-xs">CustomerSegment</label>
+            <input
+              className="w-96 h-12 mr-6 ml-6 border rounded text-center"
+              placeholder="CustomerSegment"
+              value={customer.customerSegment || ""}
+              onChange={setField("customerSegment")}
+            />
+          </div>
         </div>
 
-        <h5>Relationships</h5>
+        <h5 className="mt-4">Relationships</h5>
         <Relationships
           relationships={customer.relationships || []}
           updateRelationships={(relationships) =>
@@ -304,23 +306,32 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
 
         <Notes
           notes={customer.notes || []}
-          updateNotes={(notes) => setCustomer((prev) => ({ ...prev, notes: notes }))}
+          updateNotes={(notes) =>
+            setCustomer((prev) => ({ ...prev, notes: notes }))
+          }
         />
         <div>
-          <Backdrop className={classes.backdrop} open={customers.isCreatingCustomer}>
+          <Backdrop
+            className={classes.backdrop}
+            open={customers.isCreatingCustomer}
+          >
             <CircularProgress color="inherit" />
           </Backdrop>
         </div>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: "100px", marginBottom: "200px" }}
+
+        <div
+          className="active:bg-grey-darker mt-100px mb-8 cursor-pointer h-8 w-96 border-solid border bg-grey-light hover:bg-grey rounded shadow-md flex flex-row justify-center items-center"
           onClick={() => {
             if (validate()) {
               if (customer.relationships) {
-                customer.relationships = Lodash.filter(customer.relationships, (relationship) => {
-                  return relationship.value !== "" && relationship.name !== "";
-                });
+                customer.relationships = Lodash.filter(
+                  customer.relationships,
+                  (relationship) => {
+                    return (
+                      relationship.value !== "" && relationship.name !== ""
+                    );
+                  }
+                );
               }
 
               let filteredNote = {};
@@ -336,8 +347,8 @@ function CreateCustomerPage({ createCustomer, userToken, customers }) {
             }
           }}
         >
-          Create Customer
-        </Button>
+          <div className="font-semibold text-grey-darkest">Create Customer</div>
+        </div>
       </div>
     </div>
   );
@@ -354,6 +365,9 @@ const actionCreators = {
   createCustomer: actions.createCustomer,
 };
 
-const ConnectedCreateCustomerPage = connect(mapState, actionCreators)(CreateCustomerPage);
+const ConnectedCreateCustomerPage = connect(
+  mapState,
+  actionCreators
+)(CreateCustomerPage);
 
 export default ConnectedCreateCustomerPage;

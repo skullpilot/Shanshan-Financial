@@ -1,48 +1,8 @@
-import React, { useState } from "react";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
-import propTypes from "prop-types";
+import React from "react";
 import moment from "moment";
 
-const useStyles = makeStyles((theme) => ({
-  textField: {
-    [theme.breakpoints.down("xs")]: {
-
-      "& .MuiTextField": {
-        backgroundColor: "red",
-        flexGrow: 4
-      },
-    },
-    [theme.breakpoints.up("sm")]: {
-      "& .MuiTextField-root": {
-        backgroundColor: "green",
-        flexGrow: 6
-      }
-
-    },
-    [theme.breakpoints.up("md")]: {
-      backgroundColor: "blue",
-      flexGrow: 10
-
-    },
-  },
-  note: {
-    padding: theme.spacing(1),
-    display: "flex",
-    flexDirection: "row",
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-}));
-
-Notes.propTypes = {
-  notes: propTypes.object,
-  updateNotes: propTypes.func,
-};
 function Notes({ notes, updateNotes }) {
   let notesArray = [];
-  let classes = useStyles();
 
   for (let [key, val] of Object.entries(notes)) {
     notesArray.push([key, val]);
@@ -50,51 +10,52 @@ function Notes({ notes, updateNotes }) {
   notesArray.sort((a, b) => a[0] - b[0]);
 
   const noteItems = notesArray.map((note, index) => {
-    const time = moment(note[0], "YYYYMMDD-HH:mm:ss").format('MMM Do YYYY, HH:mm:ss');
+    const time = moment(note[0], "YYYYMMDD-HH:mm:ss").format(
+      "MMM Do YYYY, HH:mm:ss"
+    );
     return (
-      <div
-        className={classes.note}
-        key={index}
-      >
-        <div styles={{ flexGrow: 1 }}>{time}</div>
-        <div styles={{ flexGrow: 10 }}>
-          <TextField
-            label="Note Detail"
-            variant="outlined"
-            rows={3}
-            multiline
-            value={note[1] || ""}
-            onChange={(event) => {
-              let notesCopy = {};
-              for (let [key, val] of Object.entries(notes)) {
-                if (key === note[0]) {
-                  notesCopy[key] = event.target.value;
-                } else {
-                  notesCopy[key] = val;
-                }
-              }
-              updateNotes(notesCopy);
+      <div className="flex flex-row justify-center mb-6" key={note[0]}>
+        <div className="flex flex-col mr-6 justify-center items-center">
+          <div>{time}</div>
+          <button
+            className="text-white bg-red-500 hover:bg-red-600 mt-8 w-24 rounded"
+            onClick={() => {
+              delete notes[note[0]]
+              updateNotes({ ...notes });
             }}
-          />
+          >
+            Delete
+          </button>
         </div>
+
+        <textarea
+          rows="5"
+          className="border p-2 rounded w-96"
+          placeholder="请输入信息..."
+          value={note[1] || ""}
+          onChange={(event) => {
+            updateNotes({ ...notes, [note[0]]: event.target.value });
+          }}
+        />
       </div>
     );
   });
 
   return (
-    <div >
-      <h5 style={{ marginTop: "50px" }}>Notes</h5>
-      {noteItems}
-      <Button
-        variant="contained"
+    <div className="flex flex-col">
+      <h5 className="my-8 text-xl mx-auto">Notes</h5>
+      <div className="flex flex-col">{noteItems}</div>
+
+      <button
+        className="mx-auto bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
         onClick={() => {
-          let date = moment().format("YYYYMMDD-HH:mm:ss");
+          const date = moment().format("YYYYMMDD-HH:mm:ss");
           notes[date] = "";
           updateNotes(notes);
         }}
       >
         Add Note
-      </Button>
+      </button>
     </div>
   );
 }

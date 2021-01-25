@@ -1,55 +1,13 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
-import Select from "@material-ui/core/Select";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import propTypes from "prop-types";
 
-const useStyles = makeStyles((theme) => ({
-  TextFieldRoot: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(2, 5),
-      width: 300,
-    },
-    textAlign: "center",
-  },
-  ButtonRoot: {
-    "& .MuiButton-root": {
-      margin: theme.spacing(2, 5),
-      width: 300,
-    },
-  },
-  SelectInput: {
-    margin: theme.spacing(2, 5),
-    width: 300,
-  },
-  margin: {
-    margin: theme.spacing(1),
-  },
-}));
-
-Relationships.propTypes = {
-  relationships: propTypes.array,
-  updateRelationships: propTypes.func,
-  menuItems: propTypes.array,
-};
 function Relationships({ relationships, updateRelationships, menuItems }) {
-  const classes = useStyles();
-
   const relationshipItems =
     relationships &&
     relationships.map((relationship, index) => {
       return (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+        <div className="flex flex-row mb-6 justify-center items-center" key={relationship.name}>
           <IconButton
             aria-label="delete"
             onClick={() => {
@@ -59,39 +17,42 @@ function Relationships({ relationships, updateRelationships, menuItems }) {
           >
             <DeleteIcon fontSize="inherit" />
           </IconButton>
-          <TextField
-            label="Relationship"
-            variant="outlined"
+          <input
+            className="border p-2 rounded w-48"
+            placeholder="Relationship"
             value={relationship.name || ""}
             onChange={(event) => {
               relationships[index].name = event.target.value;
               updateRelationships(relationships);
             }}
           />
-          <span>:</span>
-          <Select
+          <span className="mx-6">is</span>
+          <select
             value={relationship.value}
-            className={classes.SelectInput}
+            className="border p-2 rounded w-48"
             onChange={(event) => {
               relationships[index].value = event.target.value;
               updateRelationships(relationships);
             }}
           >
             {menuItems}
-          </Select>
+          </select>
         </div>
       );
     });
 
   return (
-    <div>
+    <div className="flex flex-col">
+      <h5 className="my-8 text-xl mx-auto">Relationships</h5>
       {relationshipItems}
-      <Button
-        variant="contained"
-        onClick={() => updateRelationships(relationships.concat([{ name: "", value: "" }]))}
+      <button
+        className="mx-auto bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+        onClick={() =>
+          updateRelationships(relationships.concat([{ name: "", value: "" }]))
+        }
       >
         Add Relationship
-      </Button>
+      </button>
     </div>
   );
 }
