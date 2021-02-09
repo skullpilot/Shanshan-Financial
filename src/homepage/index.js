@@ -34,6 +34,7 @@ function HomePage({ createSession }) {
 
         <input
           name="Password"
+          type="password"
           placeholder=" Password"
           className="border rounded pl-2 mt-1 mb-2 w-3/4 h-10 shadow-md"
           onChange={setField("password")}

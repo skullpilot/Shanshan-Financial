@@ -12,6 +12,14 @@ import { history } from "../history";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
+}));
 
 function CustomerDetailPage({
   customerId,
@@ -21,6 +29,7 @@ function CustomerDetailPage({
   updateCustomer,
   removeCustomer,
 }) {
+  const classes = useStyles();
   const customer = customers.data[customerId];
   const [customerState, setCustomerState] = useState(customer);
   const [customerError, setCustomerError] = useState({
@@ -338,8 +347,8 @@ function CustomerDetailPage({
         {policyItem(policyAsContact, "Contact Person of Policies")}
       </ul>
 
-      <div>
-        <Backdrop open={customers.isUpdatingCustomer}>
+      <div >
+        <Backdrop className={classes.backdrop} open={customers.isUpdatingCustomer}>
           <CircularProgress color="inherit" />
         </Backdrop>
       </div>
@@ -348,8 +357,9 @@ function CustomerDetailPage({
           className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
           onClick={() => {
             if (validate()) {
+              let relationships = []
               if (customerState.relationships) {
-                customerState.relationships = Lodash.filter(
+                relationships = Lodash.filter(
                   customerState.relationships,
                   (relationship) => {
                     return (
@@ -366,7 +376,7 @@ function CustomerDetailPage({
                   }
                 }
               }
-              setCustomerState((prev) => ({ ...prev, notes: filteredNote }));
+              setCustomerState((prev) => ({ ...prev, relationships, notes: filteredNote }));
               updateCustomer(customerState, userToken);
             }
           }}
