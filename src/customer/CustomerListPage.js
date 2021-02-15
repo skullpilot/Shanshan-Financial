@@ -46,17 +46,17 @@ function CustomerListPage({ customers, policies }) {
   const [searchContent, setSearchContent] = useState({ searchType: null, searchValue: null });
 
   useEffect(() => {
-    const searchType = query.get("type");
-    let searchValue = query.get("value");
-    if (searchValue === 'true') {
-      searchValue = true
+    const searchType = query.get("searchType");
+    let searchValue = query.get("searchValue");
+    if (searchValue === "true") {
+      searchValue = true;
     } else {
-      searchValue = false
+      searchValue = false;
     }
-    setSearchContent({searchType, searchValue})
-  }, [])
+    setSearchContent({ searchType, searchValue });
+  }, []);
 
-  const customersWithFollowupInfo = customers.map(customer => {
+  const customersWithFollowupInfo = customers.map((customer) => {
     if (!customer.notes) {
       return { ...customer, lastFollowupDate: "", lastFollowupNote: "" };
     }
@@ -74,19 +74,15 @@ function CustomerListPage({ customers, policies }) {
     customerIdsWithPolicy.add(policy.insuredId);
   });
 
-  const customersWithoutPolicy = Lodash.filter(
-    customersWithFollowupInfo,
-    (customer) => {
-      return !customerIdsWithPolicy.has(customer.id);
-    }
-  );
+  const customersWithoutPolicy = Lodash.filter(customersWithFollowupInfo, (customer) => {
+    return !customerIdsWithPolicy.has(customer.id);
+  });
 
   function filterCustomer(customers, name) {
     return Lodash.filter(customers, (customer) => {
       return (
         (customer.name && customer.name.toLowerCase().includes(name)) ||
-        (customer.firstName &&
-          customer.firstName.toLowerCase().includes(name)) ||
+        (customer.firstName && customer.firstName.toLowerCase().includes(name)) ||
         (customer.lastName && customer.lastName.toLowerCase().includes(name))
       );
     });
@@ -94,23 +90,29 @@ function CustomerListPage({ customers, policies }) {
 
   const handleInputUpdate = (type, event) => {
     if (type === "CUSTOMER_NAME") {
+      query.set("searchType", type);
+      query.set("searchValue", event.target.value);
       history.push({
-        pathname: '/customers',
-        search: `?type=${type}&value=${event.target.value}`
-      })
-      setSearchContent({ searchType: type, searchValue: event.target.value })
+        pathname: "/customers",
+        search: query.toString(),
+      });
+      setSearchContent({ searchType: type, searchValue: event.target.value });
     } else if (type === "CUSTOMER_NO_POLICIES") {
+      query.set("searchType", type);
+      query.set("searchValue", event.target.checked);
       history.push({
-        pathname: '/customers',
-        search: `?type=${type}&value=${event.target.checked}`
-      })
-      setSearchContent({ searchType: type, searchValue: event.target.checked })
+        pathname: "/customers",
+        search: query.toString(),
+      });
+      setSearchContent({ searchType: type, searchValue: event.target.checked });
     } else if (type === "CUSTOMER_SEGMENT") {
+      query.set("searchType", type);
+      query.set("searchValue", event.target.value);
       history.push({
-        pathname: '/customers',
-        search: `?type=${type}&value=${event.target.value}`
-      })
-      setSearchContent({ searchType: type, searchValue: event.target.value })
+        pathname: "/customers",
+        search: query.toString(),
+      });
+      setSearchContent({ searchType: type, searchValue: event.target.value });
     }
   };
 
@@ -130,16 +132,13 @@ function CustomerListPage({ customers, policies }) {
         customersWithFollowupInfo,
         (customer) =>
           customer.customerSegment &&
-          customer.customerSegment
-            .toLowerCase()
-            .includes(searchContent.searchValue.toLowerCase())
+          customer.customerSegment.toLowerCase().includes(searchContent.searchValue.toLowerCase())
       );
     }
   }
 
   const searchCustomerWithoutPoliciesValue =
-    searchContent.searchType === "CUSTOMER_NO_POLICIES" &&
-    searchContent.searchValue;
+    searchContent.searchType === "CUSTOMER_NO_POLICIES" && searchContent.searchValue;
   const searchCustomerValue =
     searchContent.searchType === "CUSTOMER_NAME" && searchContent.searchValue
       ? searchContent.searchValue
@@ -158,9 +157,7 @@ function CustomerListPage({ customers, policies }) {
           <input
             type="checkbox"
             checked={searchCustomerWithoutPoliciesValue}
-            onChange={(event) =>
-              handleInputUpdate("CUSTOMER_NO_POLICIES", event)
-            }
+            onChange={(event) => handleInputUpdate("CUSTOMER_NO_POLICIES", event)}
           />
           <label className="ml-4">显示未办保险用户</label>
         </div>
@@ -182,11 +179,13 @@ function CustomerListPage({ customers, policies }) {
         </div>
       </div>
       <Table
+        pagePath="customers"
         rows={displayCustomers}
         headCells={headCells}
         handleItemClick={(id) => history.push(`/customer/${id}`)}
         handleCreateItem={() => history.push(`/customer`)}
         createItemText="Create Customer"
+        defaultOrderBy="lastFollowupDate"
       />
     </div>
   );

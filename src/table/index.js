@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -41,10 +42,13 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function EnhancedTableHead(props) {
-  const { classes, order, orderBy, onRequestSort, headCells } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
+function EnhancedTableHead({ classes, order, orderBy, onRequestSort, headCells }) {
+  const handleClick = (cellID) => {
+    onRequestSort(cellID);
   };
 
   return (
@@ -59,7 +63,7 @@ function EnhancedTableHead(props) {
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
+              onClick={() => handleClick(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -98,23 +102,41 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EnhancedTable({
+  pagePath,
   rows,
   headCells,
   handleItemClick,
   handleCreateItem,
   createItemText,
+  defaultOrderBy,
 }) {
   const classes = useStyles();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const query = useQuery();
+  const history = useHistory();
+
+  const [order, setOrder] = React.useState("desc");
+  const [orderBy, setOrderBy] = React.useState(defaultOrderBy);
   const [dense, setDense] = React.useState(true);
+
+  useLayoutEffect(() => {
+    const sortOrder = query.get("sortOrder") ? query.get("sortOrder") : order;
+    const sortType = query.get("sortType") ? query.get("sortType") : orderBy;
+    setOrder(sortOrder);
+    setOrderBy(sortType);
+  }, []);
 
   const names = Object.values(headCells).map((cell) => cell.id);
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+  const handleRequestSort = (cellID) => {
+    const updatedOrder = order === "asc" && orderBy === cellID ? "desc" : "asc";
+    query.set("sortOrder", updatedOrder);
+    query.set("sortType", cellID);
+    history.push({
+      pathname: pagePath,
+      search: query.toString(),
+    });
+    setOrder(updatedOrder);
+    setOrderBy(cellID);
   };
 
   const handleClick = (event, id) => {
