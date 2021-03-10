@@ -1,6 +1,8 @@
 import { combineReducers } from "redux";
 import * as Lodash from "lodash";
 import * as Actions from "./actions";
+import JWT from "jsonwebtoken";
+import moment from "moment"
 
 function customers(
   state = { data: {}, isUpdatingCustomer: false, isCreatingCustomer: false },
@@ -62,7 +64,16 @@ function policies(
   }
 }
 
-const userToken = localStorage.getItem("user") ? localStorage.getItem("user") : null;
+let userToken = null;
+if (localStorage.getItem("user")) {
+  const token = localStorage.getItem("user");
+
+  if (moment.unix(JWT.decode(token).exp).isBefore(moment())) {
+    localStorage.removeItem("user");
+  } else {
+    userToken = localStorage.getItem("user");
+  }
+}
 
 function sessions(state = { userToken, requesting: false }, action) {
   switch (action.type) {
